@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!--
+********************************************************************************
+* Ant Script Library - Ivy repository module
+* Targets used to configure and manipulate Ivy repositories
+* Module property prefix: "repo-ivy"
+********************************************************************************
+* Copyright 2009 Joe Schmetzer
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+********************************************************************************
+ -->
+<project name="asl-repo-ivy" xmlns:ivy="antlib:org.apache.ivy.ant">
+    <dirname property="repo-ivy.basedir" file="${ant.file.asl-repo-ivy}"/>
+
+    <!-- ***********************************************************************
+    * Set up the Ivy tasks
+    ************************************************************************ -->
+    <path id="rep-ivy.lib-path">
+        <pathelement location="${repo-ivy.basedir}/lib/apache-ivy/ivy-2.0.0.jar"/>
+    </path>
+    <taskdef resource="org/apache/ivy/ant/antlib.xml" 
+        uri="antlib:org.apache.ivy.ant" 
+        classpathref="rep-ivy.lib-path"/>
+
+    
+    <!-- ***********************************************************************
+    * target: -repo-configure-ivy
+    ************************************************************************ -->
+    <target name="-repo-configure-ivy" >
+        <property name="repo-ivy.settings-file" location="${repo-ivy.basedir}/ivysettings.xml" />
+        <ivy:configure file="${repo-ivy.settings-file}" />
+    </target>
+
+    <!-- ***********************************************************************
+    * target: -repo-cachepath
+    ************************************************************************ -->
+    <target name="-repo-cachepath" depends="repo-resolve">
+        <property name="repo-ivy.cache-pathid" value="java-build.classpath"/>
+        <ivy:cachepath pathid="${repo-ivy.cache-pathid}"/>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: repo-resolve
+    ************************************************************************ -->
+    <target name="repo-resolve" depends="-repo-configure-ivy"
+            description="Resolves dependencies with ivy">
+        <ivy:resolve />
+    </target>
+
+    <!-- ***********************************************************************
+    * target: repo-retrieve
+    ************************************************************************ -->
+    <target name="repo-retrieve" depends="-repo-configure-ivy"  
+            description="Retrieve dependencies with ivy">
+        <ivy:retrieve />
+    </target>
+
+    <!-- ***********************************************************************
+    * target: repo-report
+    ************************************************************************ -->
+    <target name="repo-report" depends="repo-resolve"
+            description="Generate an Ivy dependencies report">
+        <property name="repo-ivy.report-dir" location="target/dist/reports/ivy-report"/>
+        <ivy:report todir="${repo-ivy.report-dir}" />
+    </target>
+
+    <!-- ***********************************************************************
+    * target: repo-clearcache
+    ************************************************************************ -->
+    <target name="repo-cleancache" depends="-repo-configure-ivy"
+            description="Clean ivy repository cache">
+        <ivy:cleancache />
+    </target>
+</project>

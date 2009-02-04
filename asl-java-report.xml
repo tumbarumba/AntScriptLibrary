@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!--
+********************************************************************************
+* Ant Script Library - Java reports module 
+* Contains ant targets related to the reports on java code
+* Module property prefix: "java-report"
+********************************************************************************
+* Copyright 2009 Joe Schmetzer
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+********************************************************************************
+ -->
+<project name="asl-java-report">
+    <dirname property="java-report.basedir" file="${ant.file.asl-java-report}"/>
+    <import file="${java-report.basedir}/asl-java-build.xml"/>
+    <import file="${java-report.basedir}/asl-java-test.xml"/>
+
+    <!-- ***********************************************************************
+    * Set up the PMD task
+    ************************************************************************ -->
+    <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask">
+        <classpath>
+            <fileset dir="${java-report.basedir}/lib/pmd">
+                <include name="*.jar"/>
+            </fileset>
+        </classpath>
+    </taskdef>
+
+    <!-- ***********************************************************************
+    * Set up the checkstyle task
+    ************************************************************************ -->
+    <taskdef resource="checkstyletask.properties"
+             classpath="${java-report.basedir}/lib/checkstyle/checkstyle-all-5.0-beta01.jar"/>
+
+    <!-- ***********************************************************************
+    * Default values for java-report properties.
+    ************************************************************************ -->
+    <property name="java-report.report-dir"             location="${common.dist-dir}/reports"/>
+    <property name="java-report.javadoc-dir"            location="${java-report.report-dir}/javadoc"/>
+    <property name="java-report.test-dir"               location="${java-report.report-dir}/test-report"/>
+    <property name="java-report.coverage-dir"           location="${java-report.report-dir}/coverage-report"/>
+    <property name="java-report.pmd-dir"                location="${java-report.report-dir}/pmd-report"/>
+    <property name="java-report.jdepend-data-dir"       location="${common.target-dir}/jdepend-data"/>
+    <property name="java-report.jdepend-report-dir"     location="${java-report.report-dir}/jdepend-report"/>
+    <property name="java-report.checkstyle-data-dir"    location="${common.target-dir}/checkstyle-data"/>
+    <property name="java-report.checkstyle-report-dir"  location="${java-report.report-dir}/checkstyle-report"/>
+
+    <!-- ***********************************************************************
+    * target: report-all
+    ************************************************************************ -->
+    <target name="report-all"
+            depends="report-javadoc, report-tests, report-cobertura, report-jdepend, report-pmd" 
+            description="Runs all reports"/>
+
+    <!-- ***********************************************************************
+    * target: report-javadoc
+    ************************************************************************ -->
+    <target name="report-javadoc" depends="-init-time"
+            description="Creates javadoc for the source code">
+        <mkdir dir="${java-report.javadoc-dir}"/>
+        <javadoc
+                sourcepath="${java-build.src-dir}"
+                packagenames="*"
+                destdir="${java-report.javadoc-dir}"
+                author="true"
+                version="true"
+                use="true"
+                verbose="false"
+                source="${java-build.source-ver}"
+                windowtitle="${ant.project.name}"
+                doctitle="${ant.project.name} - ${common.timestamp-long}">
+            <classpath refid="java-build.classpath"/>
+        </javadoc>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: report-tests
+    ************************************************************************ -->
+    <target name="report-tests" depends="test-execute"
+            description="Creates a test report">
+        <mkdir dir="${java-report.test-dir}"/>
+        
+        <junitreport todir="${java-report.test-dir}">
+            <fileset dir="${java-test.test-data-dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${java-report.test-dir}"/>
+        </junitreport>
+    </target>
+    
+
+    <!-- ***********************************************************************
+    * target: report-cobertura
+    ************************************************************************ -->
+    <target name="report-cobertura" depends="test-execute"
+            description="Generates a test coverage report">
+    
+        <cobertura-report
+            datafile="${java-test.instrumented-datafile}"
+            srcdir="${java-build.src-dir}"
+            destdir="${java-report.coverage-dir}"/>
+    
+    </target>
+
+    <!-- ***********************************************************************
+    * target: report-pmd
+    ************************************************************************ -->
+    <target name="report-pmd"
+            description="Generates the code quality report from PMD">
+        <mkdir dir="${java-report.pmd-dir}"/>
+        <pmd shortFilenames="true">
+            <ruleset>rulesets/favorites.xml</ruleset>
+            <ruleset>basic</ruleset>
+            <formatter type="html"
+                       toFile="${java-report.pmd-dir}/index.html"/>
+            <fileset dir="${java-build.src-dir}">
+                <include name="**/*.java"/>
+            </fileset>
+        </pmd>
+    </target>
+    
+    <!-- ***********************************************************************
+    * target: report-jdepend
+    ************************************************************************ -->
+    <target name="report-jdepend" depends="compile"
+            description="Creates a package dependency report">
+        <mkdir dir="${java-report.jdepend-data-dir}"/>
+        <jdepend outputfile="${java-report.jdepend-data-dir}/jdepend.xml" format="xml">
+            <exclude name="java.*"/>
+            <exclude name="javax.*"/>
+            <classespath>
+                <pathelement location="${java-build.classes-dir}"/>
+            </classespath>
+        </jdepend>
+    
+        <mkdir dir="${java-report.jdepend-report-dir}"/>
+        <xslt basedir="${java-report.jdepend-data-dir}"
+               destdir="${java-report.jdepend-report-dir}"
+               includes="jdepend.xml"
+               style="${ant.home}/etc/jdepend.xsl"/>
+    </target>    
+    
+    
+    <!-- ***********************************************************************
+    * target: report-checkstyle
+    ************************************************************************ -->
+    <target name="report-checkstyle"
+            description="Creates a Checkstyle report">
+
+        <mkdir dir="${java-report.checkstyle-data-dir}"/>
+        <checkstyle config="${java-report.basedir}/lib/checkstyle/sun_checks.xml"
+                failureProperty="checkstyle.failure"
+                failOnViolation="false">
+            <formatter type="xml" tofile="${java-report.checkstyle-data-dir}/report.xml"/>
+            <fileset dir="${java-build.src-dir}" includes="**/*.java"/>
+        </checkstyle>
+    
+        <mkdir dir="${java-report.checkstyle-report-dir}"/>
+        <xslt in="${java-report.checkstyle-data-dir}/report.xml"
+              out="${java-report.checkstyle-report-dir}/report.html"
+              style="${java-report.basedir}/lib/checkstyle/contrib/checkstyle-noframes.xsl"/>
+    </target>
+    
+</project>

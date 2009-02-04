@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!--
+********************************************************************************
+* Ant Script Library - Java install module
+* Module that arranges the application jar, libraries and configuration file
+* ready for installation.
+* Module property prefix: "java-install"
+********************************************************************************
+* Copyright 2009 Joe Schmetzer
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+********************************************************************************
+ -->
+<project name="asl-java-install">
+    <dirname property="asl-java-install.basedir" file="${ant.file.asl-java-install}"/>
+
+    <import file="${asl-java-install.basedir}/asl-java-build.xml"/>
+
+    <property name="java-install.app-dir"        location="${common.target-dir}/install"/>
+    <property name="java-install.app-lib-dir"    location="${java-install.app-dir}/lib"/>
+    <property name="java-install.app-config-dir" location="${java-install.app-dir}/config"/>
+    
+    <!-- ***********************************************************************
+    * target: install
+    ************************************************************************ -->
+    <target name="install" depends="dist, -install-jar, -install-libs, -install-config"
+            description="Creates an installable directory structure"/>
+    
+    
+    <!-- ***********************************************************************
+    * target: -install-jar
+    ************************************************************************ -->
+    <target name="-install-jar">
+        <mkdir dir="${java-install.app-dir}"/>
+        <copy todir="${java-install.app-dir}" file="${java-build.dist-file}"/>
+    </target>
+        
+    <!-- ***********************************************************************
+    * target: -install-libs
+    ************************************************************************ -->
+    <target name="-install-libs">
+        <mkdir dir="${java-install.app-lib-dir}"/>
+        <copy todir="${java-install.app-lib-dir}">
+            <path refid="java-build.classpath"/>
+        </copy>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: -install-config
+    ************************************************************************ -->
+    <target name="-install-config">
+        <mkdir dir="${java-install.app-config-dir}"/>
+        <copy todir="${java-install.app-config-dir}">
+            <path refid="java-build.classpath"/>
+        </copy>
+    </target>
+</project>
