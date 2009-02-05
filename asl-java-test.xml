@@ -102,7 +102,7 @@
     * target: test-run-unit
     ************************************************************************ -->
     <target name="test-run-unit"
-            depends="-test-prepare, -init-test-fileset-unit"
+            depends="-test-prepare, -test-init-fileset-unit"
             description="Runs the unit tests">
         <junit-asl test-fileset-refid="java-test.unit-fileset"/>
     </target>
@@ -111,7 +111,7 @@
     * target: test-run-integration
     ************************************************************************ -->
     <target name="test-run-integration"
-            depends="-test-prepare, -init-test-fileset-integration"
+            depends="-test-prepare, -test-init-fileset-integration"
             description="Runs the integration tests">
         <junit-asl test-fileset-refid="java-test.integration-fileset"/>
     </target>
@@ -126,7 +126,7 @@
     <!-- ***********************************************************************
     * target: -test-compile
     ************************************************************************ -->
-    <target name="-test-compile" depends="dist, -init-test-classpath">
+    <target name="-test-compile" depends="dist, -test-init-classpath">
         <mkdir dir="${java-test.classes-dir}"/>
         
         <javac  srcdir="${java-test.src-dir}"                
@@ -136,9 +136,9 @@
     </target>
     
     <!-- ***********************************************************************
-    * target: -init-test-classpath
+    * target: -test-init-classpath
     ************************************************************************ -->
-    <target name="-init-test-classpath">
+    <target name="-test-init-classpath">
         <path id="java-test.classpath">
             <path refid="java-build.classpath"/>
             <pathelement location="${java-build.dist-file}"/>
@@ -173,7 +173,7 @@
     <!-- ***********************************************************************
     * target: -init-test-fileset-unit
     ************************************************************************ -->
-    <target name="-init-test-fileset-unit">
+    <target name="-test-init-fileset-unit">
         <fileset id="java-test.unit-fileset" dir="${java-test.classes-dir}">
             <include name="**/*Test.class"/>
             <exclude name="**/*IntegrationTest.class"/>
@@ -183,7 +183,7 @@
     <!-- ***********************************************************************
     * target: -init-test-fileset-integration
     ************************************************************************ -->
-    <target name="-init-test-fileset-integration">
+    <target name="-test-init-fileset-integration">
         <fileset id="java-test.integration-fileset" dir="${java-test.classes-dir}">
             <include name="**/*IntegrationTest.class"/>
         </fileset>
