@@ -86,7 +86,7 @@
     <!-- ***********************************************************************
     * target: report-tests
     ************************************************************************ -->
-    <target name="report-tests" depends="test-execute"
+    <target name="report-tests"
             description="Creates a test report">
         <mkdir dir="${java-report.test-dir}"/>
         
@@ -102,7 +102,7 @@
     <!-- ***********************************************************************
     * target: report-cobertura
     ************************************************************************ -->
-    <target name="report-cobertura" depends="test-execute"
+    <target name="report-cobertura"
             description="Generates a test coverage report">
     
         <cobertura-report

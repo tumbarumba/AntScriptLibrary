@@ -31,6 +31,6 @@
     <!-- ***********************************************************************
     * target: smoketest
     ************************************************************************ -->
-    <target name="smoketest" depends="clean, dist, test-execute, report-all, test"
+    <target name="smoketest" depends="clean, dist, test-run-unit, report-all, test-unit"
             description="Runs smoketests on a clean compile"/>
 </project>

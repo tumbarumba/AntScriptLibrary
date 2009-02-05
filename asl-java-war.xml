@@ -28,7 +28,7 @@
     <property name="java-war.dist-filename"     value="${ant.project.name}.war"/>
     <property name="java-war.dist-file"         location="${common.dist-dir}/${java-war.dist-filename}"/>
     <property name="java-war.libs-dir"          location="${common.dist-dir}/war-libs"/>
-    <property name="java-war.web-content-dir"   location="WebContent"/>
+    <property name="java-war.web-content-dir"   location="src/main/webapp"/>
     <property name="java-war.web-xml"           location="web.xml"/>
 
     <!-- ***********************************************************************

@@ -44,41 +44,84 @@
     <property name="java-test.instrumented-datafile" location="${java-test.instrumented-classes-dir}/cobertura.ser"/>
     
     <!-- ***********************************************************************
-    * target: test
+    * target: test-all
     ************************************************************************ -->
-    <target name="test"
-            depends="test-execute"
+    <target name="test-all"
+            depends="test-run-unit, test-run-integration"
             description="Runs all tests">
         <fail message="Tests failed. Check log and/or reports" if="java-test.failed"/>
     </target>
 
     <!-- ***********************************************************************
-    * target: test-execute
+    * target: test-unit
     ************************************************************************ -->
-    <target name="test-execute"
-            depends="-test-compile, -test-copy-resources, -test-instrument, -init-test-fileset"
-            description="Execututes the junit tests">
-        <mkdir dir="${java-test.test-data-dir}"/>
-
-        <junit errorProperty="java-test.failed"
-                failureProperty="java-test.failed"
-                fork="true" forkmode="once"
-                printsummary="false">
-            <sysproperty key="net.sourceforge.cobertura.datafile" file="${java-test.instrumented-datafile}" />
-            <classpath>
-                <pathelement location="${java-test.instrumented-classes-dir}"/>
-                <pathelement location="${java-test.classes-dir}"/>
-                <path refid="java-test.classpath"/>
-                <path refid="java-test.cobertura-classpath"/>
-            </classpath>
-            <formatter type="brief" usefile="false"/>
-            <formatter type="xml"/>
-            <test name="${testcase}" if="testcase"/>
-            <batchtest todir="${java-test.test-data-dir}" unless="testcase">
-                <fileset refid="java-test.fileset"/>
-            </batchtest>
-        </junit>
+    <target name="test-unit"
+            depends="test-run-unit"
+            description="Runs unit tests">
+        <fail message="Unit tests failed. Check log and/or reports" if="java-test.failed"/>
     </target>
+
+    <!-- ***********************************************************************
+    * target: test-integration
+    ************************************************************************ -->
+    <target name="test-integration"
+            depends="test-run-integration"
+            description="Runs integration tests">
+        <fail message="Integration tests failed. Check log and/or reports" if="java-test.failed"/>
+    </target>
+
+    <!-- ***********************************************************************
+    * macrodef: junit-asl
+    ************************************************************************ -->
+    <macrodef name="junit-asl">
+        <attribute name="test-fileset-refid"/>
+        <sequential>
+            <mkdir dir="${java-test.test-data-dir}"/>
+
+            <junit errorProperty="java-test.failed"
+                    failureProperty="java-test.failed"
+                    fork="true" forkmode="once"
+                    printsummary="false">
+                <sysproperty key="net.sourceforge.cobertura.datafile" file="${java-test.instrumented-datafile}" />
+                <classpath>
+                    <pathelement location="${java-test.instrumented-classes-dir}"/>
+                    <pathelement location="${java-test.classes-dir}"/>
+                    <path refid="java-test.classpath"/>
+                    <path refid="java-test.cobertura-classpath"/>
+                </classpath>
+                <formatter type="brief" usefile="false"/>
+                <formatter type="xml"/>
+                <batchtest todir="${java-test.test-data-dir}">
+                    <fileset refid="@{test-fileset-refid}"/>
+                </batchtest>
+            </junit>
+        </sequential>
+    </macrodef>    
+    
+    <!-- ***********************************************************************
+    * target: test-run-unit
+    ************************************************************************ -->
+    <target name="test-run-unit"
+            depends="-test-prepare, -init-test-fileset-unit"
+            description="Runs the unit tests">
+        <junit-asl test-fileset-refid="java-test.unit-fileset"/>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: test-run-integration
+    ************************************************************************ -->
+    <target name="test-run-integration"
+            depends="-test-prepare, -init-test-fileset-integration"
+            description="Runs the integration tests">
+        <junit-asl test-fileset-refid="java-test.integration-fileset"/>
+    </target>
+    
+    <!-- ***********************************************************************
+    * target: -test-prepare
+    ************************************************************************ -->
+    <target name="-test-prepare"
+            depends="-test-compile, -test-copy-resources, -test-instrument"/>
+    
 
     <!-- ***********************************************************************
     * target: -test-compile
@@ -128,12 +171,22 @@
     </target>
 
     <!-- ***********************************************************************
-    * target: -init-test-fileset
+    * target: -init-test-fileset-unit
     ************************************************************************ -->
-    <target name="-init-test-fileset">
-	    <fileset id="java-test.fileset" dir="${java-test.classes-dir}">
-	        <include name="**/*Test.class"/>
-	    </fileset>
+    <target name="-init-test-fileset-unit">
+        <fileset id="java-test.unit-fileset" dir="${java-test.classes-dir}">
+            <include name="**/*Test.class"/>
+            <exclude name="**/*IntegrationTest.class"/>
+        </fileset>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: -init-test-fileset-integration
+    ************************************************************************ -->
+    <target name="-init-test-fileset-integration">
+        <fileset id="java-test.integration-fileset" dir="${java-test.classes-dir}">
+            <include name="**/*IntegrationTest.class"/>
+        </fileset>
     </target>
 
 </project>
