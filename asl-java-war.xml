@@ -34,7 +34,7 @@
     <!-- ***********************************************************************
     * target: war
     ************************************************************************ -->
-    <target name="war" depends="compile, copy-resources, jar, -init-time, -prepare-war-libs"
+    <target name="war" depends="compile, copy-resources, jar, -init-time, -war-prepare-libs"
             description="Create a war for this web project">
             
         <mkdir dir="${common.dist-dir}"/>
@@ -57,7 +57,7 @@
     <!-- ***********************************************************************
     * target: -prepare-war-libs
     ************************************************************************ -->
-    <target name="-prepare-war-libs">
+    <target name="-war-prepare-libs">
         <mkdir dir="${java-war.libs-dir}"/>
         <copy todir="${java-war.libs-dir}">
             <path refid="java-build.classpath"/>
