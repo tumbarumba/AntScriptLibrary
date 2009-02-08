@@ -51,20 +51,21 @@
     		
         <mkdir dir="${common.dist-dir}"/>
         
+        <property name="java-build.jar-title"       value="${ant.project.name}"/>
         <property name="java-build.jar-version"     value="dev-${DSTAMP}${TSTAMP}"/>
         <property name="java-build.jar-compress"    value="true"/>
-        <property name="java-build.jar-vendor"      value="Please override the property 'java-build.jar-vendor'"/>
+        <property name="java-build.jar-vendor"      value=""/>
         <property name="java-build.jar-build-id"    value="Built by ${user.name} at ${common.timestamp} running on ${os.name} ${os.version} ${os.arch}"/>
-        <property name="java-build.main-class"      value=""/>
+        <property name="java-build.jar-main-class"  value=""/>
         
         <jar destfile="${java-build.dist-file}" compress="${java-build.jar-compress}">
             <fileset dir="${java-build.classes-dir}" />
             <manifest>
-                <attribute name="Implementation-Title"   value="${ant.project.name}"/>
+                <attribute name="Implementation-Title"   value="${java-build.jar-title}"/>
                 <attribute name="Implementation-Version" value="${java-build.jar-version}"/>
                 <attribute name="Implementation-Vendor"	 value="${java-build.jar-vendor}"/>
                 <attribute name="Build-Id"               value="${java-build.jar-build-id}"/>
-                <attribute name="Main-Class"             value="${java-build.main-class}"/>
+                <attribute name="Main-Class"             value="${java-build.jar-main-class}"/>
                 <attribute name="Class-Path"             value="${java-build.jar-classpath}"/>
             </manifest>
         </jar>
