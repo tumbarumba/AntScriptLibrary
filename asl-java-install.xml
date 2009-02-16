@@ -23,45 +23,108 @@
  -->
 <project name="asl-java-install">
     <dirname property="asl-java-install.basedir" file="${ant.file.asl-java-install}"/>
-
     <import file="${asl-java-install.basedir}/asl-java-build.xml"/>
 
-    <property name="java-install.app-dir"        location="${common.target-dir}/install"/>
-    <property name="java-install.app-lib-dir"    location="${java-install.app-dir}/lib"/>
-    <property name="java-install.app-config-dir" location="${java-install.app-dir}/config"/>
-    
     <!-- ***********************************************************************
-    * target: install
+    * target: install-appdir
     ************************************************************************ -->
-    <target name="install" depends="dist, -install-jar, -install-libs, -install-config"
-            description="Creates an installable directory structure"/>
+    <target name="install-appdir" depends="dist, -install-appdir-init, -install-appdir-jar, -install-appdir-libs, -install-appdir-config, -install-appdir-scripts"
+            description="Installs an executable application jar to a directory structure"/>
     
     
     <!-- ***********************************************************************
-    * target: -install-jar
+    * target: -install-appdir-init
     ************************************************************************ -->
-    <target name="-install-jar">
-        <mkdir dir="${java-install.app-dir}"/>
-        <copy todir="${java-install.app-dir}" file="${java-build.dist-file}"/>
+    <target name="-install-appdir-init" depends="-install-appdir-init-userdir, -install-appdir-init-nouserdir">
+        <property name="java-install.appdir-lib-dir"    location="${java-install.appdir}/lib"/>
+        <property name="java-install.appdir-config-dir" location="${java-install.appdir}/config"/>
     </target>
         
     <!-- ***********************************************************************
-    * target: -install-libs
+    * target: -install-appdir-init-userdir
     ************************************************************************ -->
-    <target name="-install-libs">
-        <mkdir dir="${java-install.app-lib-dir}"/>
-        <copy todir="${java-install.app-lib-dir}">
+    <target name="-install-appdir-init-userdir" if="install-dir">
+        <property name="java-install.appdir" location="${install-dir}"/>
+        <echo>
+:
+: Installing to user specified directory
+:   -> ${java-install.appdir}
+:
+        </echo>
+    </target>
+    
+    <!-- ***********************************************************************
+    * target: -install-appdir-init-nouserdir
+    ************************************************************************ -->
+    <target name="-install-appdir-init-nouserdir" unless="install-dir">
+        <property name="java-install.appdir" location="${common.target-dir}/install"/>
+        <echo>
+:
+: Installing to default directory
+:   -> ${java-install.appdir}
+:
+: (use "-Dinstall-dir=&lt;folder&gt;" to override)
+:
+        </echo>
+    </target>
+    
+    <!-- ***********************************************************************
+    * target: -install-appdir-jar
+    ************************************************************************ -->
+    <target name="-install-appdir-jar">
+        <mkdir dir="${java-install.appdir}"/>
+        <copy todir="${java-install.appdir}" file="${java-build.dist-file}"/>
+    </target>
+        
+    <!-- ***********************************************************************
+    * target: -install-appdir-libs
+    ************************************************************************ -->
+    <target name="-install-appdir-libs" depends="-init-classpath">
+        <mkdir dir="${java-install.appdir-lib-dir}"/>
+        <copy todir="${java-install.appdir-lib-dir}" flatten="true">
             <path refid="java-build.classpath"/>
         </copy>
     </target>
 
     <!-- ***********************************************************************
-    * target: -install-config
+    * target: -install-appdir-config
     ************************************************************************ -->
-    <target name="-install-config">
-        <mkdir dir="${java-install.app-config-dir}"/>
-        <copy todir="${java-install.app-config-dir}">
-            <path refid="java-build.classpath"/>
+    <target name="-install-appdir-config">
+        <property name="java-install.appconfig-dir" location="config"/>
+        <mkdir dir="${java-install.appdir-config-dir}"/>
+        <copy todir="${java-install.appdir-config-dir}">
+            <fileset dir="${java-install.appconfig-dir}"/>
         </copy>
     </target>
+    
+    <!-- ***********************************************************************
+    * target: -install-appdir-scripts
+    ************************************************************************ -->
+    <target name="-install-appdir-scripts" depends="-install-appdir-scripts-cmd, -install-appdir-scripts-sh"/>
+    
+    <!-- ***********************************************************************
+    * target: -install-appdir-scripts-cmd
+    ************************************************************************ -->
+    <target name="-install-appdir-scripts-cmd">
+        <property name="java-install.run-cmd-name" value="run.cmd"/>
+        
+        <echo file="${java-install.appdir}/${java-install.run-cmd-name}">@echo off
+REM %~dp0 is name of current script under NT
+set JARDIR=%~dp0
+java -jar %JARDIR%${java-build.dist-filename} %*        
+        </echo>
+    </target>
+    
+    <!-- ***********************************************************************
+    * target: -install-appdir-scripts-sh
+    ************************************************************************ -->
+    <target name="-install-appdir-scripts-sh">
+        <property name="java-install.run-sh-name" value="run.sh"/>
+        
+        <echo file="${java-install.appdir}/${java-install.run-sh-name}">#!/bin/sh
+set JARDIR=`dirname "$0"`
+java -jar %JARDIR%/${java-build.dist-filename} %@
+        </echo>
+    </target>
+    
 </project>
