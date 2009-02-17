@@ -120,11 +120,13 @@ java -jar %JARDIR%${java-build.dist-filename} %*
     ************************************************************************ -->
     <target name="-install-appdir-scripts-sh">
         <property name="java-install.run-sh-name" value="run.sh"/>
+        <property name="java-install.run-sh-file" value="${java-install.appdir}/${java-install.run-sh-name}"/>
         
-        <echo file="${java-install.appdir}/${java-install.run-sh-name}">#!/bin/sh
-set JARDIR=`dirname "$0"`
-java -jar %JARDIR%/${java-build.dist-filename} %@
+        <echo file="${java-install.run-sh-file}">#!/bin/sh
+JARDIR=`dirname "$0"`
+java -jar %JARDIR%/${java-build.dist-filename} $@
         </echo>
+        <chmod file="${java-install.run-sh-file}" perm="ugo+rx"/>
     </target>
     
 </project>
