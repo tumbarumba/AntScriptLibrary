@@ -30,6 +30,9 @@
     <property name="java-war.libs-dir"          location="${common.dist-dir}/war-libs"/>
     <property name="java-war.web-content-dir"   location="src/main/webapp"/>
     <property name="java-war.web-xml"           location="web.xml"/>
+    <property name="java-war.webapp-name"       location="${ant.project.name}"/>
+    <property name="java-war.deploy-base"       location="${tomcat.home}/webapps"/>
+    <property name="java-war.deploy-dir"        location="${java-war.deploy-base}/${java-war.webapp-name}"/>
 
     <!-- ***********************************************************************
     * target: war
@@ -55,13 +58,22 @@
     </target>
 
     <!-- ***********************************************************************
-    * target: -prepare-war-libs
+    * target: -war-prepare-libs
     ************************************************************************ -->
     <target name="-war-prepare-libs">
         <mkdir dir="${java-war.libs-dir}"/>
         <copy todir="${java-war.libs-dir}">
             <path refid="java-build.classpath"/>
         </copy>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: war-deploy
+    ************************************************************************ -->
+    <target name="war-deploy" depends="war"
+            description="Deploys the war to the application server">
+        <unwar src="${java-war.dist-file}"
+               dest="${java-war.deploy-dir}"/>
     </target>
 
 </project>
