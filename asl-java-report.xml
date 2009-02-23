@@ -26,12 +26,6 @@
     <import file="${java-report.basedir}/asl-java-test.xml"/>
 
     <!-- ***********************************************************************
-    * Set up the checkstyle task
-    ************************************************************************ -->
-    <taskdef resource="checkstyletask.properties"
-             classpath="${java-report.basedir}/lib/checkstyle/checkstyle-all-5.0-beta01.jar"/>
-
-    <!-- ***********************************************************************
     * Default values for java-report properties.
     ************************************************************************ -->
     <property name="java-report.report-dir"             location="${common.dist-dir}/reports"/>
@@ -41,8 +35,6 @@
     <property name="java-report.pmd-dir"                location="${java-report.report-dir}/pmd-report"/>
     <property name="java-report.jdepend-data-dir"       location="${common.target-dir}/jdepend-data"/>
     <property name="java-report.jdepend-report-dir"     location="${java-report.report-dir}/jdepend-report"/>
-    <property name="java-report.checkstyle-data-dir"    location="${common.target-dir}/checkstyle-data"/>
-    <property name="java-report.checkstyle-report-dir"  location="${java-report.report-dir}/checkstyle-report"/>
 
     <!-- ***********************************************************************
     * target: report-all
@@ -155,25 +147,5 @@
                style="${ant.home}/etc/jdepend.xsl"/>
     </target>    
     
-    
-    <!-- ***********************************************************************
-    * target: report-checkstyle
-    ************************************************************************ -->
-    <target name="report-checkstyle"
-            description="Creates a Checkstyle report">
-
-        <mkdir dir="${java-report.checkstyle-data-dir}"/>
-        <checkstyle config="${java-report.basedir}/lib/checkstyle/sun_checks.xml"
-                failureProperty="checkstyle.failure"
-                failOnViolation="false">
-            <formatter type="xml" tofile="${java-report.checkstyle-data-dir}/report.xml"/>
-            <fileset dir="${java-build.src-dir}" includes="**/*.java"/>
-        </checkstyle>
-    
-        <mkdir dir="${java-report.checkstyle-report-dir}"/>
-        <xslt in="${java-report.checkstyle-data-dir}/report.xml"
-              out="${java-report.checkstyle-report-dir}/report.html"
-              style="${java-report.basedir}/lib/checkstyle/contrib/checkstyle-noframes.xsl"/>
-    </target>
     
 </project>
