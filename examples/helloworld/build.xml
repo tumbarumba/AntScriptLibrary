@@ -1,0 +1,12 @@
+<project name="afp-renderer" default="dist">
+    <propert name="java-build.src-dir" location="src"/>
+    <import file="../ant-script-library/asl-java.xml"/>
+    
+    <target name="copy-resources"
+            depends="asl-java-build.copy-resources"
+            description="Copies resources">
+        <copy todir="${java-build.classes-dir}">
+            <fileset dir="myresources"/>
+        </copy>
+    </target>
+</project>

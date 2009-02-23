@@ -1,0 +1,277 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <title>Exubero - Ant Script Library - asl-java-test.xml</title>
+    <link rel="stylesheet" type="text/css" href="../exubero.css"/>
+    <link href="../favicon.ico" type="image/x-icon" rel="shortcut icon"/>
+    <style type="text/css">
+        blockquote {
+            font-style: italic;
+        }
+
+        pre {
+            border: 1px dashed black;
+            background-color: #eee;
+            padding: 0.5em;
+        }
+        
+        h4 {
+            font-family: Verdana, Helvetica, Arial, sans-serif;
+            color: black !important;
+            margin-bottom: 0;
+            padding-bottom: 0;
+            font-weight: bold;
+        }
+        
+        #content p {
+            padding-left: 1em;
+        }
+    </style>
+</head>
+<body>
+<div id="wrap">
+<div id="header">
+    <p id="exuberodef">to grow thickly, abound</p>
+    <p id="exubero">exubero</p>
+</div>
+<div id="content">
+    <p class="updated">Last update: $Date: 2009-02-22 00:36:18 +0000 (Sun, 22 Feb 2009) $</p>
+    <h2>Ant Script Library: asl-java-test.xml</h2>
+    <p class="author" style="margin: 0;">by <a href="../about.html#joe">Joe Schmetzer</a></p>
+
+    <p style="font-size: smaller">This document contains reference information
+    for the <a href="index.html">Ant Script Library</a>.</p>
+
+    <h3>Overview</h3>
+
+    <p><code>asl-java-test.xml</code> contains properties and targets that are
+    used for testing Java projects using <a href="http://www.junit.org/">JUnit</a>.</p>
+    
+    <p>This module differentiates between <em>unit tests</em> and <em>integration
+    tests</em>. Although both types of can be written using JUnit, they make
+    different assumptions about the environment in which they are running:</p>
+    
+    <ul>
+        <li><em>Unit tests</em> make minimal assumptions about the environment in which
+        they run - it should be possible to run them anywhere at any time</li>
+        <li><em>Integration tests</em> assume the existence of external dependencies,
+        such at network resources, databases, applications servers, installed
+        libraries or other software. </li>
+    </ul>
+    
+    <p>Because of the different requirements, it can be expected that these
+    tests might need to be run at different times. By default, this module
+    uses naming conventions to differentiate the different types of tests:</p>
+    
+    <ul>
+        <li>If a class in the test folder ends in the word
+        <strong><code>IntegrationTest</code></strong>, it will be run from the
+        <a href="#test-run-integration">test-run-integration</a> target. This
+        default can be overridden in the <a href="#-test-init-fileset-integration">-test-init-fileset-integration</a>
+        target</li> 
+        <li>If a class in the test folder ends in the word
+        <strong><code>Test</code></strong> (but excluding those classes that end
+        in <strong><code>IntegrationTest</code></strong>), it will be run from the
+        <a href="#test-run-unit">test-run-unit</a> target. This
+        default can be overridden in the <a href="#-test-init-fileset-unit">-test-init-fileset-unit</a>
+        target</li> 
+    </ul>
+    
+    <h3>Properties</h3>
+    
+    <table>
+        <tr class="odd">
+            <th>Name</th>
+            <th>Default Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>java-test.src-dir</code></td>
+            <td><code>src/test/java</code></td>
+            <td>The root of the directory tree containing the test code</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-test.classes-dir</code></td>
+            <td><code>${common.target-dir}/test-classes</code></td>
+            <td>The root of the directory tree containing all compiled test
+            classes and resources.</td>
+        </tr>
+        <tr>
+            <td><code>java-test.test-data-dir</code></td>
+            <td><code>${common.target-dir}/test-data</code></td>
+            <td>The directory containing all the generated test result data.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-test.instrumented-classes-dir</code></td>
+            <td><code>${common.target-dir}/instrumented-classes</code></td>
+            <td>The directory containing instrumented system classes (see the
+            <a href="#-test-instrument">-test-instrument</a> target)</td>
+        </tr>
+        <tr>
+            <td><code>java-test.instrumented-datafile</code></td>
+            <td><code>${java-test.instrumented-classes-dir}/cobertura.ser</code></td>
+            <td>The file containing instrumentation results (see the
+            <a href="#-test-instrument">-test-instrument</a> target)</td>
+        </tr>
+    </table>
+
+    <h3>Targets</h3>
+
+    <p style="text-align: center">
+    <img style="border: none;" usemap="#java-test-map" alt="Dependency diagram for asl-java-test.xml" src="asl-java-test.png"/>
+    </p>
+    <map name="java-test-map">
+		<area shape="rect" title="Unit Tests" href="#test-unit" coords="360,337,427,366" />
+		<area shape="rect" title="All Tests" href="#test-all" coords="251,337,308,367" />
+		<area shape="rect" title="Integration Tests" href="#test-integration" coords="87,337,198,366" />
+		<area shape="rect" title="Run Unit Tests" href="#test-run-unit" coords="313,267,406,297" />
+		<area shape="rect" title="Run Integration Tests" href="#test-run-integration" coords="119,267,256,296" />
+		<area shape="rect" title="Initialise Fileset for Unit Tests" href="#-test-init-fileset-unit" coords="348,196,484,226" />
+		<area shape="rect" title="Prepare Tests" href="#-test-prepare" coords="231,197,328,226" />
+		<area shape="rect" title="Initialise Fileset for Initialisation Tests" href="#-test-init-fileset-integration" coords="30,197,211,226" />
+		<area shape="rect" title="Instrument Test Classes" href="#-test-instrument" coords="371,127,486,156" />
+		<area shape="rect" title="Copy Test Resources" href="#-test-copy-resources" coords="208,127,351,157" />
+		<area shape="rect" title="Compile test classes" href="#-test-compile" coords="93,126,188,156" />
+		<area shape="rect" title="Initialise Test Classpath" href="#-test-init-classpath" coords="113,57,243,86" />
+    </map>
+
+    <h4 id="test-all">test-all</h4>
+
+    <p>Runs both unit tests and integration tests through dependencies on the
+    <a href="#test-run-unit">test-run-unit</a> and
+    <a href="#test-run-integration">test-run-integration</a> targets. This
+    target will fail the entire build if any of the tests have failed.</p>
+    
+    <h4 id="test-integration">test-integration</h4>
+    
+    <p>Runs the integration tests only through a dependency on the
+    <a href="#test-run-integration">test-run-integration</a> target. This target
+    will fail the entire build  any of the integration tests have failed.</p>
+    
+    <h4 id="test-unit">test-unit</h4>
+    
+    <p>Runs the unit tests only through a dependency on the
+    <a href="#test-run-unit">test-run-unit</a> target. This target will fail the
+    entire build if any of the unit tests have failed.</p>
+    
+    <h4 id="test-run-integration">test-run-integration</h4>
+    
+    <p>Runs the integration tests only. Test results will be stored in xml
+    format in the <code>${java-test.test-data-dir}</code> folder.
+    Instrumentation statistics will be stored in the file
+    <code>${java-test.instrumented-datafile}</code>.</p>
+    
+    <h4 id="test-run-unit">test-run-unit</h4>
+    
+    <p>Runs the unit tests only. Test results will be stored in xml format in
+    the <code>${java-test.test-data-dir}</code> folder. Instrumentation
+    statistics will be stored in the file <code>${java-test.instrumented-datafile}</code>.</p>
+    
+    <h4 id="-test-init-fileset-integration">-test-init-fileset-integration</h4>
+    
+    <p>Initialises a fileset with id <code>java-test.integration-fileset</code>,
+    which is used to select the classes to run for the integration tests. By
+    default, all classes matching the name pattern
+    <code>&lt;include name="**/*IntegrationTest.class"/&gt;</code> within the folder
+    <code>${java-test.classes-dir}</code> are included</p>
+    
+    <h4 id="-test-init-fileset-unit">-test-init-fileset-unit</h4>
+    
+    <p>Initialises a fileset with id <code>java-test.unit-fileset</code>,
+    which is used to select the classes to run for the integration tests. By
+    default, all classes matching the name pattern
+    <code>&lt;include name="**/*Test.class"/&gt;</code>, but excluding those
+    classes matching the pattern
+    <code>&lt;exclude name="**/*IntegrationTest.class"/&gt;</code> within the folder
+    <code>${java-test.classes-dir}</code> are included</p>
+    
+    <h4 id="-test-prepare">-test-prepare</h4>
+    
+    <p>This is an empty target, it simplifies the dependencies on the targets
+    used to prepare for running the unit tests.</p>
+    
+    <h4 id="-test-instrument">-test-instrument</h4>
+    
+    <p>Processes the compiled code in <code>${java-build.classes-dir}</code> to
+    add instrumentation instructions, allowing a code coverage report to be
+    generated. The instrumented classes are created in the directory
+    <code>${java-test.instrumented-classes-dir}</code>. Instrumentation data
+    is stored in the file <code>${java-test.instrumented-datafile}</code></p>
+    
+    <h4 id="-test-compile">-test-compile</h4>
+    
+    <p>Calls <code>javac</code> on the source code in
+    <code>${java-test.src-dir}</code>, with the generated classes being put into
+    the directory <code>${java-test.classes-dir}</code>. The classpath used in
+    compilation is defined by the <code>path</code> with
+    <code>id="java-test.classpath"</code> (which is defined by the target
+    <a href="#-test-init-classpath"><code>-test-init-classpath</code></a> by
+    default).</p>
+    
+    <h4 id="-test-copy-resources">-test-copy-resources</h4>
+    
+    <p>Copies all files that don't have a <code>.java</code> extension from
+    <code>${java-test.src-dir}</code> to <code>${java-test.classes-dir}</code>.
+    This ensures that all resources required by the Java test classes will be
+    available when running the tests.</p>
+    
+    <h4 id="-test-init-classpath">-test-init-classpath</h4>
+    
+    <p>Defines a <a href="http://ant.apache.org/manual/using.html#path"><code>path</code></a>
+    with id "<code>java-test.classpath</code>". This path is used by the
+    <code>javac</code> task in the <a href="#-test-compile"><code>-test-compile</code></a>
+    target. By default, this path will contain everything within the path with
+    with id "<code>java-build.classpath</code>", as well as the distributable
+    jar</p>
+    
+    <hr/>
+
+    <p>Is there a problem or mistake on this page? Do you want to contribute
+    some changes? Send me an email at
+    &#106;&#111;&#101;&#64;&#101;&#120;&#117;&#98;&#101;&#114;&#111;&#46;&#99;&#111;&#109;.</p>
+
+</div>
+<ul id="nav">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="/joe/">Blog</a></li>
+    <li><a href="../resources.html">Resources</a>
+        <ul>
+            <li><a href="../ccintro/index.html">Introduction to CruiseControl</a></li>
+            <li><a href="../junit/antipatterns.html">JUnit Anti-patterns</a></li>
+            <li><a href="antintro-s5.html">Introduction to Ant</a></li>
+            <li><a href="index.html">Ant Script Library</a>
+                <ul>
+                    <li><a href="usage.html">&raquo; Usage</a></li>
+                    <li><a href="design.html">&raquo; Design Principles</a></li>
+                    <li><a href="targets.html">&raquo; Targets</a></li>
+                    <li><a href="reference.html">&raquo; Reference</a>
+                        <ul>
+                            <li><a href="asl-common.html">asl-common.xml</a></li>
+                            <li><a href="asl-java-build.html">asl-java-build.xml</a></li>
+                            <li><a href="asl-java-war.html">asl-java-war.xml</a></li>
+                            <li class="navselected">asl-java-test.xml</li>
+                            <li><a href="asl-java-report.html">asl-java-report.xml</a></li>
+                            <li><a href="asl-repo-ivy.html">asl-repo-ivy.xml</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><a href="../ant/dependencies.html">Build Dependencies Using Ant</a></li>
+        </ul>
+    </li>
+    <li><a href="../about.html">About Us</a></li>
+    <li><a href="../contact.html">Contact Us</a></li>
+</ul>
+<div id="sidebar">
+    <h3>Other Ant Resources</h3>
+    <ul>
+        <li><a href="http://ant.apache.org/">Apache Ant Home</a></li>
+        <li><a href="http://ant.apache.org/manual/index.html">Apache Ant Manual</a></li>
+    </ul>
+</div>
+<div id="footer">
+    Copyright &copy; 2009 Exubero Ltd
+</div>
+</div>
+</body>
+</html>

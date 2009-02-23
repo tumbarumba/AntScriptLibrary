@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <title>Exubero - Ant Script Library Usage</title>
+    <link rel="stylesheet" type="text/css" href="../exubero.css"/>
+    <link href="../favicon.ico" type="image/x-icon" rel="shortcut icon"/>
+    <style type="text/css">
+        blockquote {
+            font-style: italic;
+        }
+
+        pre {
+            border: 1px dashed black;
+            background-color: #eee;
+            padding: 0.5em;
+        }
+        
+        h4 {
+            font-family: Verdana, Helvetica, Arial, sans-serif;
+            color: black !important;
+            margin-bottom: 0;
+            padding-bottom: 0;
+            padding-left: 1em;
+            font-weight: bold;
+        }
+        
+        dt {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div id="wrap">
+<div id="header">
+    <p id="exuberodef">to grow thickly, abound</p>
+    <p id="exubero">exubero</p>
+</div>
+<div id="content">
+    <p class="updated">Last update: $Date: 2009-02-04 02:24:57 +0000 (Wed, 04 Feb 2009) $</p>
+    <h2>Ant Script Library Usage</h2>
+    <p class="author" style="margin: 0;">by <a href="../about.html#joe">Joe Schmetzer</a></p>
+
+    <p style="font-size: smaller">This document discusses usage idioms and examples of the
+    <a href="index.html">Ant Script Library</a>.</p>
+
+    <h3>Installation</h3>
+    
+    <p>The <acronym title="Ant Script Library">ASL</acronym> needs to be
+    accessible from the client project. You can put the
+    <acronym title="Ant Script Library">ASL</acronym> in a subdirectory, sibling
+    directory of the project, or in a well known location on an internal network.
+    In the examples on this page, the <acronym title="Ant Script Library">ASL</acronym>
+    is assumed to be in a subdirectory. If you have installed the somewhere
+    different, you will need to adjust the file path in the import file attribute.</p>
+    
+    <p>To install the scripts, you can do one of the following:</p>
+    
+    <ul>
+        <li><a href="ant-script-library-1.0.1.zip" title="Ant Script Library v1.0.1">Download</a>
+        and unzip the script files</li>
+        <li>Check out the files directly from the Subversion repository:
+        <pre><code>svn co https://www.exubero.com/asl/svn/trunk/ ant-script-library</code></pre>
+        (note that the SSL certificate on www.exubero.com is currently self-signed,
+        meaning that you will probably be prompted about an invalid certificate.
+        You will have to add an exception)</li>
+    </ul>
+
+    <h3>Simple Example</h3>
+
+    <p>This is the simplest <code>build.xml</code> that makes use of the
+    <acronym title="Ant Script Library">ASL</acronym>:</p>
+    
+<pre>
+<b>&lt;project</b><span style='color: #008000'> name=</span><span style='color: #aa0000'>"hello-world"</span><span style='color: #008000'> default=</span><span style='color: #aa0000'>"dist"</span><b>&gt;</b>
+    <b>&lt;import</b><span style='color: #008000'> file=</span><span style='color: #aa0000'>"ant-script-library/asl-java.xml"</span><b>/&gt;</b>
+<b>&lt;/project&gt;</b>
+</pre>
+
+    <p>This script would be suitable for a Java project that had a directory
+    structure similar to the <a href="http://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html">standard
+    directory layout</a>.</p>
+    
+    <h3>Overriding Properties</h3>
+    
+    <p>Not all projects will exactly match the default configuration of the
+    <acronym title="Ant Script Library">ASL</acronym>. In many cases, simply
+    overriding a property will suffice. For example, if the project source
+    code is found in the directory <code>src</code> (instead of the expected
+    directory <code>src/main/java</code>), then the following
+    <code>build.xml</code> would work:</p>
+
+<pre>
+<b>&lt;project</b><span style='color: #008000'> name=</span><span style='color: #aa0000'>"hello-world"</span><span style='color: #008000'> default=</span><span style='color: #aa0000'>"dist"</span><b>&gt;</b>
+    <b>&lt;property</b><span style='color: #008000'> name=</span><span style='color: #aa0000'>"java-build.src-dir"</span><span style='color: #008000'> location=</span><span style='color: #aa0000'>"src"</span><b>/&gt;</b>
+    <b>&lt;import</b><span style='color: #008000'> file=</span><span style='color: #aa0000'>"../ant-script-library/asl-java.xml"</span><b>/&gt;</b>
+<b>&lt;/project&gt;</b>
+</pre>
+
+    <p>This is a common idiom within <acronym title="Ant Script Library">ASL</acronym>
+    - default values of properties can be overridden by defining them <em>before</em>
+    importing the <acronym title="Ant Script Library">ASL</acronym> scripts. This
+    works because properties in Ant are immutable: whoever sets a property first
+    freezes it for the rest of the build. Refer to the documentation of the
+    <a href="http://ant.apache.org/manual/CoreTasks/property.html">Property
+    Task</a> for more information.</p>
+    
+    <p>For the complete set of properties that can be controlled in this way,
+    look to the <a href="reference.html">reference</a>, or refer to the scripts
+    themselves.</p>
+    
+    <h3>Overriding Targets</h3>
+    
+    <p>TBD</p> 
+
+    <hr/>
+
+    <p>Is there a problem or mistake on this page? Do you want to contribute
+    some changes? Send me an email at
+    &#106;&#111;&#101;&#64;&#101;&#120;&#117;&#98;&#101;&#114;&#111;&#46;&#99;&#111;&#109;.</p>
+
+</div>
+<ul id="nav">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="/joe/">Blog</a></li>
+    <li><a href="../resources.html">Resources</a>
+        <ul>
+            <li><a href="../ccintro/index.html">Introduction to CruiseControl</a></li>
+            <li><a href="../junit/antipatterns.html">JUnit Anti-patterns</a></li>
+            <li><a href="antintro-s5.html">Introduction to Ant</a></li>
+            <li><a href="index.html">Ant Script Library</a>
+                <ul>
+                    <li class="navselected">&raquo; Usage</li>
+                    <li><a href="design.html">&raquo; Design Principles</a></li>
+                    <li><a href="targets.html">&raquo; Targets</a></li>
+                    <li><a href="reference.html">&raquo; Reference</a></li>
+                </ul>
+            </li>
+            <li><a href="../ant/dependencies.html">Build Dependencies Using Ant</a></li>
+        </ul>
+    </li>
+    <li><a href="../about.html">About Us</a></li>
+    <li><a href="../contact.html">Contact Us</a></li>
+</ul>
+<div id="sidebar">
+    <h3>Other Ant Resources</h3>
+    <ul>
+        <li><a href="http://ant.apache.org/">Apache Ant Home</a></li>
+        <li><a href="http://ant.apache.org/manual/index.html">Apache Ant Manual</a></li>
+    </ul>
+</div>
+<div id="footer">
+    Copyright &copy; 2009 Exubero Ltd
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <title>Exubero - Ant Script Library Targets</title>
+    <link rel="stylesheet" type="text/css" href="../exubero.css"/>
+    <link href="../favicon.ico" type="image/x-icon" rel="shortcut icon"/>
+    <style type="text/css">
+        blockquote {
+            font-style: italic;
+        }
+
+        pre {
+            border: 1px dashed black;
+            background-color: #eee;
+            padding: 0.5em;
+        }
+        
+        h4 {
+            font-family: Verdana, Helvetica, Arial, sans-serif;
+            color: black !important;
+            margin-bottom: 0;
+            padding-bottom: 0;
+            padding-left: 1em;
+            font-weight: bold;
+        }
+        
+        dt {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div id="wrap">
+<div id="header">
+    <p id="exuberodef">to grow thickly, abound</p>
+    <p id="exubero">exubero</p>
+</div>
+<div id="content">
+    <p class="updated">Last update: $Date: 2009-02-07 00:13:45 +0000 (Sat, 07 Feb 2009) $</p>
+    <h2>Ant Script Library Targets</h2>
+    <p class="author" style="margin: 0;">by <a href="../about.html#joe">Joe Schmetzer</a></p>
+
+    <p style="font-size: smaller">This document discusses the targets available
+    within the <a href="index.html">Ant Script Library</a>.</p>
+
+    <h3>Overview</h3>
+    
+    <p style="text-align: center">
+    <img usemap="#targetmap" alt="ASL Targets diagram" src="asl-targets.png" style="border: none;"/>
+    <map name="targetmap">
+  <area shape="rect" title="Java Report: PMD" href="asl-java-report.html#report-pmd" coords="362,1400,446,1428" />
+  <area shape="rect" title="Java Report: Tests" href="asl-java-report.html#report-tests" coords="129,1358,217,1386" />
+  <area shape="rect" title="Java Report: All" href="asl-java-report.html#report-all" coords="224,1441,295,1470" />
+  <area shape="rect" title="Java Report: JDepend" href="asl-java-report.html#report-jdepend" coords="288,1357,394,1386" />
+  <area shape="rect" title="Java Report: Cobertura" href="asl-java-report.html#report-cobertura" coords="195,1312,313,1341" />
+  <area shape="rect" title="Java Report: Javadoc" href="asl-java-report.html#report-javadoc" coords="68,1399,172,1427" />
+  <area shape="rect" title="Common: Clean" href="asl-common.html#clean" coords="115,1204,186,1234" />
+  <area shape="rect" title="Common: Initialise Time" href="asl-common.html#-init-time" coords="23,1205,94,1234" />
+  <area shape="rect" title="Java Test: Unit Test" href="asl-java-test.html#test-unit" coords="350,1100,416,1131" />
+  <area shape="rect" title="Java Test: Run Unit Tests" href="asl-java-test.html#test-run-unit" coords="303,1031,395,1060" />
+  <area shape="rect" title="Java Test: Initialise Unit Test Fileset" href="asl-java-test.html#-test-init-fileset-unit" coords="339,961,472,991" />
+  <area shape="rect" title="Java Test: Instrument" href="asl-java-test.html#-test-instrument" coords="360,892,474,921" />
+  <area shape="rect" title="Java Test: Compile" href="asl-java-test.html#-test-compile" coords="83,890,178,919" />
+  <area shape="rect" title="Java Test: Copy Resources" href="asl-java-test.html#-test-copy-resources" coords="198,893,340,922" />
+  <area shape="rect" title="Java Test: Initialise Test Classpath" href="asl-java-test.html#-test-init-classpath" coords="103,822,234,851" />
+  <area shape="rect" title="Java Test: All Tests" href="asl-java-test.html#test-all" coords="242,1101,297,1132" />
+  <area shape="rect" title="Java Test: Integration Tests" href="asl-java-test.html#test-integration" coords="76,1101,189,1131" />
+  <area shape="rect" title="Java Test: Run Integration Tests" href="asl-java-test.html#test-run-integration" coords="109,1032,246,1061" />
+  <area shape="rect" title="Java Test: Prepare" href="asl-java-test.html#-test-prepare" coords="222,962,317,992" />
+  <area shape="rect" title="Java Test: Initialise Integration Test Fileset" href="asl-java-test.html#-test-init-fileset-integration" coords="20,962,201,991" />
+  <area shape="rect" title="Java War: War" href="asl-java-war.html#war" coords="323,705,358,735" />
+  <area shape="rect" title="Java War: Prepare War Libs" href="asl-java-war.html#-war-prepare-libs" coords="283,635,400,664" />
+  <area shape="rect" title="Java Build: Distributable" href="asl-java-build.html#dist" coords="176,518,211,549" />
+  <area shape="rect" title="Java Build: Jar" href="asl-java-build.html#jar" coords="182,449,212,478" />
+  <area shape="rect" title="Java Build: Copy Resources" href="asl-java-build.html#copy-resources" coords="309,381,417,410" />
+  <area shape="rect" title="Java Build: Compile" href="asl-java-build.html#compile" coords="227,381,288,410" />
+  <area shape="rect" title="Java Build: Initialise Jar Classpath" href="asl-java-build.html#-init-jar-classpath" coords="78,378,198,410" />
+  <area shape="rect" title="Java Build: Generate" href="asl-java-build.html#generate" coords="237,311,309,341" />
+  <area shape="rect" title="Java Build: Init Classpath" href="asl-java-build.html#-init-classpath" coords="114,311,214,339" />
+  <area shape="rect" title="Repository: Report" href="asl-repo-ivy.html#repo-report" coords="178,187,262,217" />
+  <area shape="rect" title="Repository: Cache Path" href="asl-repo-ivy.html#-repo-cachepath" coords="41,186,158,216" />
+  <area shape="rect" title="Repository: Clean Cache" href="asl-repo-ivy.html#repo-cleancache" coords="340,118,459,147" />
+  <area shape="rect" title="Repository: Retrieve" href="asl-repo-ivy.html#repo-retrieve" coords="225,116,319,145" />
+  <area shape="rect" title="Repository: Resolve" href="asl-repo-ivy.html#repo-resolve" coords="112,116,205,146" />
+  <area shape="rect" title="Repository: Configure Ivy" href="asl-repo-ivy.html#-repo-configure-ivy" coords="209,46,336,78" />
+</map>
+    </p>
+    
+    <hr/>
+
+    <p>Is there a problem or mistake on this page? Do you want to contribute
+    some changes? Send me an email at
+    &#106;&#111;&#101;&#64;&#101;&#120;&#117;&#98;&#101;&#114;&#111;&#46;&#99;&#111;&#109;.</p>
+
+</div>
+<ul id="nav">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="/joe/">Blog</a></li>
+    <li><a href="../resources.html">Resources</a>
+        <ul>
+            <li><a href="../ccintro/index.html">Introduction to CruiseControl</a></li>
+            <li><a href="../junit/antipatterns.html">JUnit Anti-patterns</a></li>
+            <li><a href="antintro-s5.html">Introduction to Ant</a></li>
+            <li><a href="index.html">Ant Script Library</a>
+                <ul>
+                    <li><a href="usage.html">&raquo; Usage</a></li>
+                    <li><a href="design.html">&raquo; Design Principles</a></li>
+                    <li class="navselected">&raquo; Targets</li>
+                    <li><a href="reference.html">&raquo; Reference</a></li>
+                </ul>
+            </li>
+            <li><a href="../ant/dependencies.html">Build Dependencies Using Ant</a></li>
+        </ul>
+    </li>
+    <li><a href="../about.html">About Us</a></li>
+    <li><a href="../contact.html">Contact Us</a></li>
+</ul>
+<div id="sidebar">
+    <h3>Other Ant Resources</h3>
+    <ul>
+        <li><a href="http://ant.apache.org/">Apache Ant Home</a></li>
+        <li><a href="http://ant.apache.org/manual/index.html">Apache Ant Manual</a></li>
+    </ul>
+</div>
+<div id="footer">
+    Copyright &copy; 2009 Exubero Ltd
+</div>
+</div>
+</body>
+</html>

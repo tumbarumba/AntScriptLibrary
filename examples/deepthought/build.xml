@@ -1,0 +1,3 @@
+<project name="DeepThought" default="dist">
+    <import file="../../asl-java-ivy.xml"/>
+</project>

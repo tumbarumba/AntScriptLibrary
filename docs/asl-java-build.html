@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <title>Exubero - Ant Script Library - asl-java-build.xml</title>
+    <link rel="stylesheet" type="text/css" href="../exubero.css"/>
+    <link href="../favicon.ico" type="image/x-icon" rel="shortcut icon"/>
+    <style type="text/css">
+        blockquote {
+            font-style: italic;
+        }
+
+        pre {
+            border: 1px dashed black;
+            background-color: #eee;
+            padding: 0.5em;
+        }
+        
+        h4 {
+            font-family: Verdana, Helvetica, Arial, sans-serif;
+            color: black !important;
+            margin-bottom: 0;
+            padding-bottom: 0;
+            font-weight: bold;
+        }
+        
+        #content p {
+            padding-left: 1em;
+        }
+    </style>
+</head>
+<body>
+<div id="wrap">
+<div id="header">
+    <p id="exuberodef">to grow thickly, abound</p>
+    <p id="exubero">exubero</p>
+</div>
+<div id="content">
+    <p class="updated">Last update: $Date: 2009-02-17 23:03:22 +0000 (Tue, 17 Feb 2009) $</p>
+    <h2>Ant Script Library: asl-java-build.xml</h2>
+    <p class="author" style="margin: 0;">by <a href="../about.html#joe">Joe Schmetzer</a></p>
+
+    <p style="font-size: smaller">This document contains reference information
+    for the <a href="index.html">Ant Script Library</a>.</p>
+
+    <h3>Overview</h3>
+    
+    <p><code>asl-java-build.xml</code> contains properties and targets that are
+    used for building Java projects.</p>
+    
+    <h3>Properties</h3>
+
+    <p>All properties defined with this module are prefixed with
+    "<code>java-build.</code>".</p>
+    
+    <table>
+        <tr class="odd">
+            <th>Name</th>
+            <th>Default Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>java-build.src-dir</code></td>
+            <td><code>src/main/java</code></td>
+            <td>The root of the directory tree containing the system source
+            code</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-build.lib-dir</code></td>
+            <td><code>lib</code></td>
+            <td>The directory containing all the library jar files. Any jar
+            file contained within this directory (or any subdirectories) will
+            be added the the <code>javac</code> classpath. (see target
+            <code><a href="#-init-classpath">-init-classpath</a></code>).</td>
+        </tr>
+        <tr>
+            <td><code>java-build.classes-dir</code></td>
+            <td><code>${common.target-dir}/classes</code></td>
+            <td>The root of the directory tree containing compiled system
+            classes and resources.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-build.dist-ext</code></td>
+            <td><code>.jar</code></td>
+            <td>The file extension of the the distributable artifact.</td>
+        </tr>
+        <tr>
+            <td><code>java-build.dist-filename</code></td>
+            <td><code>${ant.project.name}${java-build.dist-ext}</code></td>
+            <td>The file name of the distributable artifact.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-build.dist-file</code></td>
+            <td><code>${common.dist-dir}/${java-build.dist-filename}</code></td>
+            <td>The fully qualified path to the distributable artifact.</td>
+        </tr>
+        <tr>
+            <td><code>java-build.source-ver</code></td>
+            <td><code>1.5</code></td>
+            <td>Specifies the level of source code compatability</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-build.target-ver</code></td>
+            <td><code>1.5</code></td>
+            <td>Specifies the target JVM version for which the compiler should
+            generate classes</td>
+        </tr>
+        <tr>
+            <td><code>java-build.debug</code></td>
+            <td><code>on</code></td>
+            <td>Generate debugging info</td>
+        </tr>
+    </table>
+
+    <h3>Targets</h3>
+
+    <p style="text-align: center">
+	<img style="border: none;" usemap="#java-build-map" alt="Dependency diagram for asl-java-build.xml" src="asl-java-build.png"/>
+	</p>
+	<map name="java-build-map">
+	  <area shape="rect" title="Create Distributable Artifact" href="#dist" coords="129,266,166,297" />
+	  <area shape="rect" title="Create Jar" href="#jar" coords="132,196,162,226" />
+	  <area shape="rect" title="Copy Resources" href="#copy-resources" coords="260,126,369,156" />
+	  <area shape="rect" title="Compile" href="#compile" coords="178,127,239,156" />
+	  <area shape="rect" title="Initialise Jar Classpath" href="#-init-jar-classpath" coords="30,126,152,157" />
+	  <area shape="rect" title="Generate Source" href="#generate" coords="188,56,259,86" />
+	  <area shape="rect" title="Initialise Classpath" href="#-init-classpath" coords="66,56,167,86" />
+	</map>
+
+    <h4 id="dist">dist</h4>
+    
+    <p>Creates the distributable artifact for this build. By default, this is an
+    empty target that just has a dependency upon the <a href="#jar"><code>jar</code></a>
+    target. Other types of projects (such as war or ear) will need to override
+    this target and provide a different target dependency.</p>
+    
+    <h4 id="jar">jar</h4>
+    
+    <p>Creates a jar file. This target has dependencies upon the targets
+    <a href="#compile"><code>compile</code></a>,
+    <a href="#copy-resources"><code>copy-resources</code></a>,
+    <a href="asl-common.html#-init-time"><code>-init-time</code></a> and
+    <a href="#-init-jar-classpath"><code>-init-jar-classpath</code></a>.</p>
+    
+    <p>The name and location of the generated jar is controlled by the
+    property <code>java-build.dist-file</code> (which is
+    <code>target/dist/${ant.project.name}.jar</code> by default).</p>
+    
+    <p>The generated jar will contain everything contained the directory
+    specified by the property <code>java-build.classes-dir</code> (which is
+    <code>target/classes</code> by default). The
+    <a href="#compile"><code>compile</code></a> and
+    <a href="#copy-resources"><code>copy-resources</code></a> targets both put
+    all their class files and other resources in that directory, so these will
+    be available in the packaged jar.</p>
+    
+    <p>The generated jar will have a number of manifest attributes set, including
+    the attributes <code>Main-Class</code> and <code>Class-Path</code>, meaning
+    that the jar can be used as an application jar, by invoking java as follows:</p>
+    
+    <pre><code> java -jar my.jar</code></pre>    
+    
+    <p>The manifest attributes take their values from the following properties:</p>
+    
+    <table>
+        <tr class="odd">
+            <th>Property Name</th>
+            <th>Default Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>java-build.jar-title</code></td>
+            <td><code>${ant.project.name}</code></td>
+            <td>Sets the <code>Implementation-Title</code> attribute. This value
+            can be accessed in code by the method
+            <code>java.lang.Package.getImplementationTitle()</code>.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-build.jar-version</code></td>
+            <td><code>dev-${DSTAMP}${TSTAMP}</code></td>
+            <td>Sets the <code>Implementation-Version</code> attribute. This value can be accessed in code by the method
+            <code>java.lang.Package.getImplementationVersion()</code>.</td>
+        </tr>
+        <tr>
+            <td><code>java-build.jar-vendor</code></td>
+            <td><code></code></td>
+            <td>Sets the <code>Implementation-Vendor</code> attribute. This
+            value can be accessed in code by the method
+            <code>java.lang.Package.getImplementationVendor()</code>.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-build.jar-build-id</code></td>
+            <td><code>Built by ${user.name} at ${common.timestamp} running on ${os.name} ${os.version} ${os.arch}</code></td>
+            <td>Sets the <code>Build-Id</code> attribute.</td>
+        </tr>
+        <tr>
+            <td><code>java-build.jar-main-class</code></td>
+            <td><code></code></td>
+            <td>Sets the <code>Main-Class</code> attribute. By setting the value
+            of this attribute to the name of a class contained within the jar,
+            that class can be invoked by using the
+            '<code>java -jar [jarname]</code>' syntax.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-build.jar-classpath</code></td>
+            <td><code></code></td>
+            <td>Sets the <code>Class-Path</code> attribute. This property is
+            initialised by the target
+            <a href="#-init-jar-classpath"><code>-init-jar-classpath</code></a></td>
+        </tr>
+    </table>
+
+    <h4 id="copy-resources">copy-resources</h4>
+    
+    <p>Copies all files that don't have a <code>.java</code> extension from
+    <code>${java-build.src-dir}</code> to <code>${java-build.classes-dir}</code>.
+    This ensures that all resources required by the Java classes will be available
+    when packaged within the jar file.</p>
+    
+    <p>In projects where resources are kept in separate directories to the 
+    source code, this target will need to be overridden. For example:</p>
+    
+<pre><code><b>&lt;target</b><span style='color: #008000'> name=</span><span style='color: #aa0000'>"copy-resources"</span>
+<span style='color: #008000'>        depends=</span><span style='color: #aa0000'>"asl-java-build.copy-resources"</span>
+<span style='color: #008000'>        description=</span><span style='color: #aa0000'>"Copies resources"</span><b>&gt;</b>
+    <b>&lt;copy</b><span style='color: #008000'> todir=</span><span style='color: #aa0000'>"${java-build.classes-dir}"</span><b>&gt;</b>
+        <b>&lt;fileset</b><span style='color: #008000'> dir=</span><span style='color: #aa0000'>"myresources"</span><b>/&gt;</b>
+    <b>&lt;/copy&gt;</b>
+<b>&lt;/target&gt;</b>
+</code></pre>
+
+    <p>Note that in this example, the overriding target still has a dependency
+    on the original overridden target. This means that both targets are processed,
+    and resources in both the source directory and the extra <code>myresources</code>
+    directory will be copied in preparation for the <a href="#jar"><code>jar</code></a>
+    target.</p>
+    
+    <h4 id="compile">compile</h4>
+    
+    <p>Calls <code>javac</code> on the source code in
+    <code>${java-build.src-dir}</code>, with the generated classes being put into
+    the directory <code>${java-build.classes-dir}</code>. The classpath used in
+    compilation is defined by the <code>path</code> with <code>id="java-build.classpath"</code>
+    (which is defined by the target <a href="#-init-classpath"><code>-init-classpath</code></a>
+    by default).</p>
+    
+    <h4 id="-init-classpath">-init-classpath</h4>
+    
+    <p>Defines a <a href="http://ant.apache.org/manual/using.html#path"><code>path</code></a>
+    with <code>id="java-build.classpath"</code>. This path is used by the
+    <code>javac</code> task in the <a href="#compile"><code>compile</code></a>
+    target. By default, this path will contain all files with extension
+    <code>.jar</code> in the <code>${java-build.lib-dir}</code> directory
+    (including sub-directories).</p>
+    
+    <p>This target must be overridden to provide an alternative classpath if
+    you are using an artifact repository.</p>
+    
+    <h4 id="-init-jar-classpath">-init-jar-classpath</h4>
+    
+    <p>Defines a property called '<code>java-build.jar-classpath</code>', which
+    is used as the '<code>Class-Path</code>' attribute of the manifest defined
+    in the <a href="#jar"><code>jar</code></a> target.</p>
+    
+    <p>The jar classpath is different to the compilation classpath, in that the
+    jar classpath expects that all the depandent jars are expected to be in a
+    sub-directory called <code>lib</code>, which is relative to the location of
+    the project jar. This property and the <code>Main-Class</code> mean that
+    it is possible to use the generated jar as an application jar, if required.</p>
+    
+    <h4 id="generate">generate</h4>
+    
+    <p>This target does nothing. It can be overridden in projects that need to
+    generate some source code before the compilation step. (For example, compiling
+    an XML schema definition to java source code for JAXB.)</p>
+    
+    <hr/>
+
+    <p>Is there a problem or mistake on this page? Do you want to contribute
+    some changes? Send me an email at
+    &#106;&#111;&#101;&#64;&#101;&#120;&#117;&#98;&#101;&#114;&#111;&#46;&#99;&#111;&#109;.</p>
+
+</div>
+<ul id="nav">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="/joe/">Blog</a></li>
+    <li><a href="../resources.html">Resources</a>
+        <ul>
+            <li><a href="../ccintro/index.html">Introduction to CruiseControl</a></li>
+            <li><a href="../junit/antipatterns.html">JUnit Anti-patterns</a></li>
+            <li><a href="antintro-s5.html">Introduction to Ant</a></li>
+            <li><a href="index.html">Ant Script Library</a>
+                <ul>
+                    <li><a href="usage.html">&raquo; Usage</a></li>
+                    <li><a href="design.html">&raquo; Design Principles</a></li>
+                    <li><a href="targets.html">&raquo; Targets</a></li>
+                    <li><a href="reference.html">&raquo; Reference</a>
+                        <ul>
+                            <li><a href="asl-common.html">asl-common.xml</a></li>
+                            <li class="navselected">asl-java-build.xml</li>
+                            <li><a href="asl-java-war.html">asl-java-war.xml</a></li>
+                            <li><a href="asl-java-test.html">asl-java-test.xml</a></li>
+                            <li><a href="asl-java-report.html">asl-java-report.xml</a></li>
+                            <li><a href="asl-repo-ivy.html">asl-repo-ivy.xml</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><a href="../ant/dependencies.html">Build Dependencies Using Ant</a></li>
+        </ul>
+    </li>
+    <li><a href="../about.html">About Us</a></li>
+    <li><a href="../contact.html">Contact Us</a></li>
+</ul>
+<div id="sidebar">
+    <h3>Other Ant Resources</h3>
+    <ul>
+        <li><a href="http://ant.apache.org/">Apache Ant Home</a></li>
+        <li><a href="http://ant.apache.org/manual/index.html">Apache Ant Manual</a></li>
+    </ul>
+</div>
+<div id="footer">
+    Copyright &copy; 2009 Exubero Ltd
+</div>
+</div>
+</body>
+</html>
