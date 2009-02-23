@@ -25,16 +25,6 @@
     <import file="${java-test.basedir}/asl-java-build.xml"/>
 
     <!-- ***********************************************************************
-    * Set up Cobertura tasks
-    ************************************************************************ -->
-    <path id="java-test.cobertura-classpath">
-        <fileset dir="${java-test.basedir}/lib/cobertura">
-            <include name="*.jar"/>
-        </fileset>
-    </path>
-    <taskdef resource="tasks.properties" classpathref="java-test.cobertura-classpath"/>
-
-    <!-- ***********************************************************************
     * Default values for java-report properties.
     ************************************************************************ -->
     <property name="java-test.src-dir" location="src/test/java"/>
@@ -160,7 +150,7 @@
     <!-- ***********************************************************************
     * target: -test-instrument
     ************************************************************************ -->
-    <target name="-test-instrument">
+    <target name="-test-instrument" depends="-test-init-cobertura">
         <cobertura-instrument
                 datafile="${java-test.instrumented-datafile}"
                 todir="${java-test.instrumented-classes-dir}">
@@ -168,6 +158,22 @@
                 <include name="**/*.class"/>
             </fileset>
         </cobertura-instrument>
+    </target>
+    
+    <!-- ***********************************************************************
+    * target: -test-init-cobertura
+    ************************************************************************ -->
+    <target name="-test-init-cobertura">
+        <property name="java-test.cobertura-libdir" location="${java-test.basedir}/lib/cobertura"/>
+        <asl-check-libs libname="cobertura" jar="${java-test.cobertura-libdir}/cobertura.jar"/>
+        
+        <taskdef resource="tasks.properties">
+            <classpath id="java-test.cobertura-classpath">
+                <fileset dir="${java-test.cobertura-libdir}">
+                    <include name="*.jar"/>
+                </fileset>
+            </classpath>
+        </taskdef>
     </target>
 
     <!-- ***********************************************************************

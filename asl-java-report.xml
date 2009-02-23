@@ -91,7 +91,7 @@
     <!-- ***********************************************************************
     * target: report-cobertura
     ************************************************************************ -->
-    <target name="report-cobertura"
+    <target name="report-cobertura" depends="-test-init-cobertura"
             description="Generates a test coverage report">
     
         <cobertura-report

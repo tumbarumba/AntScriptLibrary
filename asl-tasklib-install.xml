@@ -25,14 +25,46 @@
     <import file="${tasklib-install.basedir}/asl-repo-ivy.xml"/>
 
     <!-- ***********************************************************************
-    * target: install-pmd   revision="4.2.4"
+    * macrodef: asl-install-jars
+    ************************************************************************ -->
+    <macrodef name="asl-install-jars"
+              description="Installs jars for optional tasks">
+        <attribute name="libdir"/>
+        <attribute name="organisation"/>
+        <attribute name="module"/>
+        <attribute name="revision"/>
+        <sequential>
+            <mkdir dir="@{libdir}"/>
+            <ivy:retrieve pattern="@{libdir}/[artifact].[ext]"
+                organisation="@{organisation}" 
+                module="@{module}"
+                revision="@{revision}"
+                inline="true" />
+        </sequential>
+    </macrodef>
+
+    <!-- ***********************************************************************
+    * target: install-all
+    ************************************************************************ -->
+    <target name="install-all" depends="install-cobertura, install-pmd"
+            description="Installs all the optional libraries"/>
+    
+    <!-- ***********************************************************************
+    * target: install-pmd
     ************************************************************************ -->
     <target name="install-pmd" depends="-repo-configure-ivy"
             description="Installs the libraries required by the pmd task">
-        <property name="tasklib-install.pmd-libdir" location="${tasklib-install.basedir}/lib/pmd"/>
-        <mkdir dir="${tasklib-install.pmd-libdir}"/>
-        <ivy:retrieve organisation="net.sf.pmd" module="pmd" inline="true"
-            pattern="${tasklib-install.pmd-libdir}/[artifact].[ext]" />
+        <asl-install-jars libdir="${tasklib-install.basedir}/lib/pmd"
+            organisation="net.sf.pmd" module="pmd" revision="4.2.4"/>
+    </target>
+    
+    <!-- ***********************************************************************
+    * target: install-cobertura
+    ************************************************************************ -->
+    <target name="install-cobertura" depends="-repo-configure-ivy"
+            description="Installs the libraries required by the cobertura task">
+        <asl-install-jars libdir="${tasklib-install.basedir}/lib/cobertura"
+            organisation="net.sf.cobertura" module="cobertura" revision="1.9"/>
     </target>
     
 </project>
