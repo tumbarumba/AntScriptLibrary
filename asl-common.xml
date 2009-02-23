@@ -20,9 +20,10 @@
 * limitations under the License.
 ********************************************************************************
  -->
- <project name="asl-common">
- 	<!-- User specific property overrides -->
- 	<property file="${user.home}/asl.properties"/>
+<project name="asl-common">
+    <dirname property="asl-common.basedir" file="${ant.file.asl-common}"/>
+	<!-- User specific property overrides -->
+	<property file="${user.home}/asl.properties"/>
  	
  	<!-- Project specific property overrides -->
  	<property file="asl.properties"/>
@@ -52,5 +53,24 @@
         </tstamp>
     </target>
  	
- </project>
+    <!-- ***********************************************************************
+    * macrodef: asl-check-libs
+    ************************************************************************ -->
+    <macrodef name="asl-check-libs"
+              description="Checks to see if the libraries for an optional task are available">
+        <attribute name="libname"/>
+        <attribute name="jar"/>
+        <sequential>
+            <available file="@{jar}" property="asl-common.@{libname}-jar-present"/>
+            <fail unless="asl-common.@{libname}-jar-present">Unable to intialise @{libname} task.
+                 
+The jar file "@{jar}"
+is missing. To install this jar, run the following command:
+
+    ant -f ${java-report.basedir}/asl-tasklib-install.xml install-@{libname}
+            </fail>
+        </sequential>
+    </macrodef>
+     
+</project>
  

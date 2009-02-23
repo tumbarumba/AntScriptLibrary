@@ -26,17 +26,6 @@
     <import file="${java-report.basedir}/asl-java-test.xml"/>
 
     <!-- ***********************************************************************
-    * Set up the PMD task
-    ************************************************************************ -->
-    <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask">
-        <classpath>
-            <fileset dir="${java-report.basedir}/lib/pmd">
-                <include name="*.jar"/>
-            </fileset>
-        </classpath>
-    </taskdef>
-
-    <!-- ***********************************************************************
     * Set up the checkstyle task
     ************************************************************************ -->
     <taskdef resource="checkstyletask.properties"
@@ -115,7 +104,7 @@
     <!-- ***********************************************************************
     * target: report-pmd
     ************************************************************************ -->
-    <target name="report-pmd"
+    <target name="report-pmd" depends="-report-init-pmd"
             description="Generates the code quality report from PMD">
         <mkdir dir="${java-report.pmd-dir}"/>
         <pmd shortFilenames="true">
@@ -127,6 +116,22 @@
                 <include name="**/*.java"/>
             </fileset>
         </pmd>
+    </target>
+    
+    <!-- ***********************************************************************
+    * target: -report-init-pmd
+    ************************************************************************ -->
+    <target name="-report-init-pmd">
+        <property name="java-report.pmd-libdir" location="${java-report.basedir}/lib/pmd"/>
+        <asl-check-libs libname="pmd" jar="${java-report.pmd-libdir}/pmd.jar"/>
+        
+        <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask">
+            <classpath>
+                <fileset dir="${java-report.pmd-libdir}">
+                    <include name="*.jar"/>
+                </fileset>
+            </classpath>
+        </taskdef>
     </target>
     
     <!-- ***********************************************************************
