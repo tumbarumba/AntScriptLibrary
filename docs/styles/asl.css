@@ -33,7 +33,7 @@ a img {
     float: left;
     padding: 0.1em;
     margin: 0;
-	vertical-align: text-bottom;
+    vertical-align: text-bottom;
 }
 
 #header h1 {
@@ -183,8 +183,7 @@ table {
     width: 95%;
     margin: 1em auto;
     border-collapse: collapse;
-    border-top:1px solid #ccc;
-    border-right:1px solid #ccc;
+    border: none;
     font-size: smaller;
 }
 
@@ -193,22 +192,45 @@ table caption {
     font-weight: bold;
 }
 
-table th {
-    border-bottom: 1px solid #ccc;
-    border-left: 1px solid #ccc;
-    font-weight: bold;
+table thead {
+    font-size: larger;
 }
 
-table td {
-    color: #444;
-    border-bottom: 1px solid #ccc;
-    border-left: 1px solid #ccc;
-    vertical-align: top;
+table tr {
+    border:1px solid #ccc;
 }
 
 table tr.odd {
     background-color: #ddd;
 }
+
+table th {
+    font-weight: bold;
+}
+
+table td {
+    color: #444;
+}
+
+table td, table th {
+    padding: 0.25em;
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    vertical-align: top;
+}
+
+table td.module {
+    white-space: nowrap;
+}
+
+table tr.spacer {
+    border: none;
+}
+
+table tr.spacer td {
+    border: none;
+}
+
 
 blockquote {
     font-style: italic;
@@ -231,3 +253,9 @@ h4 {
 #content p {
     padding-left: 1em;
 }
+
+/*
+#content code {
+    white-space: pre;
+}
+*/

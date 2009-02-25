@@ -20,74 +20,86 @@
 
     <table>
         <tr class="odd">
-            <th>Module</th>
-            <th>Description</th>
+            <th colspan="2">Common module</th>
         </tr>
         <tr>
             <td><a href="asl-common.html">asl-common.xml</a></td>
             <td>Common properties, targets and macros</td>
         </tr>
-    </table>
-    <table>
+        <tr class="spacer">
+            <td colspan="2">&nbsp;</td>
+        </tr>
         <tr class="odd">
             <th colspan="2">Java related modules</th>
         </tr>
         <tr>
-            <td>asl-java.xml</td>
+            <td class="module">asl-java.xml</td>
             <td>Imports <code>asl-java-build</code>, <code>asl-java-test</code>,
             <code>asl-java-report</code> and <code>asl-java-install</code>.</td>
         </tr>
         <tr class="odd">
-            <td>asl-java-ivy.xml</td>
+            <td class="module">asl-java-ivy.xml</td>
             <td>Imports <code>asl-java</code> and <code>asl-repo-ivy</code>;
             overrides the java classpath to use Ivy.</td>
         </tr>
         <tr>
-            <td><a href="asl-java-build.html">asl-java-build.xml</a></td>
+            <td class="module"><a href="asl-java-build.html">asl-java-build.xml</a></td>
             <td>Build targets for Java</td>
         </tr>
         <tr class="odd">
-            <td><a href="asl-java-war.html">asl-java-war.xml</a></td>
+            <td class="module"><a href="asl-java-war.html">asl-java-war.xml</a></td>
             <td>Targets to create and deploy a War</td>
         </tr>
         <tr>
-            <td><a href="asl-java-test.html">asl-java-test.xml</a></td>
+            <td class="module"><a href="asl-java-test.html">asl-java-test.xml</a></td>
             <td>Test targets for Java</td>
         </tr>
         <tr class="odd">
-            <td><a href="asl-java-report.html">asl-java-report.xml</a></td>
+            <td class="module"><a href="asl-java-report.html">asl-java-report.xml</a></td>
             <td>Targets to generate test, coverage and quality reports</td>
         </tr>
         <tr>
-            <td>asl-java-install.xml</td>
+            <td class="module">asl-java-install.xml</td>
             <td>Targets to create install directory</td>
         </tr>
-    </table>
-    <table>
+        <tr class="spacer">
+            <td colspan="2">&nbsp;</td>
+        </tr>
         <tr class="odd">
             <th colspan="2">Repository related modules</th>
         </tr>
         <tr>
-            <td><a href="asl-repo-ivy.html">asl-repo-ivy.xml</a></td>
+            <td class="module"><a href="asl-repo-ivy.html">asl-repo-ivy.xml</a></td>
             <td>Repository targets for <a href="http://ant.apache.org/ivy/">Ivy</a></td>
         </tr>
         <tr class="odd">
-            <td>asl-repo-maven.xml</td>
-            <td>Not yet implemented: repository targets for the 
+            <td class="module">asl-repo-maven.xml</td>
+            <td>Not yet implemented: repository targets for the
             <a href="http://maven.apache.org/ant-tasks/index.html">Maven Ant Tasks</a></td>
         </tr>
-    </table>
-    <table>
+        <tr class="spacer">
+            <td colspan="2">&nbsp;</td>
+        </tr>
         <tr class="odd">
             <th colspan="2"><acronym title="Software Configuration Management">SCM</acronym> related modules</th>
         </tr>
         <tr>
-            <td>asl-scm-cvs.xml</td>
+            <td class="module">asl-scm-cvs.xml</td>
             <td>Not yet implemented: CVS targets for <acronym title="Software Configuration Management">SCM</acronym></td>
         </tr>
         <tr class="odd">
-            <td>asl-scm-svn.xml</td>
+            <td class="module">asl-scm-svn.xml</td>
             <td>Not yet implemented: Subversion targets for <acronym title="Software Configuration Management">SCM</acronym></td>
+        </tr>
+        <tr class="spacer">
+            <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr class="odd">
+            <th colspan="2">Release module</th>
+        </tr>
+        <tr>
+            <td class="module">asl-release.xml</td>
+            <td>Not yet implemented: targets to create a new release</td>
         </tr>
     </table>
 
