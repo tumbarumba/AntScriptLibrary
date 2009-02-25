@@ -177,7 +177,7 @@
     </target>
 
     <!-- ***********************************************************************
-    * target: -init-test-fileset-unit
+    * target: -test-init-fileset-unit
     ************************************************************************ -->
     <target name="-test-init-fileset-unit">
         <fileset id="java-test.unit-fileset" dir="${java-test.classes-dir}">

@@ -33,4 +33,10 @@
     ************************************************************************ -->
     <target name="smoketest" depends="clean, dist, test-run-unit, report-all, test-unit"
             description="Runs smoketests on a clean compile"/>
+
+    <!-- ***********************************************************************
+    * target: fulltest
+    ************************************************************************ -->
+    <target name="fulltest" depends="clean, dist, test-run-unit, test-run-integration, report-all, test-all"
+            description="Runs full tests on a clean compile"/>
 </project>
