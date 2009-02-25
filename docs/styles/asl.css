@@ -92,18 +92,32 @@ a img {
 }
 
 #footer {
-    padding: 0.25em;
-    clear: both;
-    font-weight: bold;
     font-size: smaller;
-    color: white;
+	padding: 0.25em;
+    clear: both;
+    background-color: #ddd;
+}
+
+#footer p.copyright {
+    font-weight: bold;
+    color: #3c3e5f;
     font-style: italic;
-    background-color: #666;
-    text-align: center;
+    margin-bottom: 0;
+}
+
+#footer p.license {
+    margin-top: 0;
+}
+
+#footer p.updated {
+	display: block;
+	float: right;
+	font-weight: normal;
+	color: #888;
 }
 
 #footer a {
-    color: #ddd;
+    color: #3c3e5f;
 }
 
 ul#nav {
