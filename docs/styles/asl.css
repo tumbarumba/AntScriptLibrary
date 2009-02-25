@@ -204,6 +204,10 @@ table tr.odd {
     background-color: #ddd;
 }
 
+table tr.header {
+    background-color: #bbd;
+}
+
 table th {
     font-weight: bold;
 }
