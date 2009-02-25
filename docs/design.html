@@ -18,9 +18,122 @@
 
     <h3>Overview</h3>
     
-    <p>See the
-    <a href="http://www.exubero.com/joe/2009/01/design-principles-for-the-ant-script-library/">Design
-    Principles of the Ant Script Library</a>.</p>
+    <p>The design of the Ant Script Library (ASL) is based on a number of
+    principles. It helps to understand what these are, as it makes it easier
+    to follow what they do, and how to use these principles in other scripts.</p>
+
+    <h3>Orthogonal Modules</h3>
+
+    <p>The <acronym title="Ant Script Library">ASL</acronym> is composed of a
+    number of files, each containing a relatively small number of targets. The
+    targets are named in relatively generic terms. The purpose is to allow
+    alternate scripts to be imported if a different implementation is required.
+    For example, if you like to use Apache Ivy to manage your dependencies in a
+    repository, you can import the Ivy targets as follows:</p>
+
+    <pre><code><b>&lt;import</b><span style='color: #008000'> file=</span><span style='color: #aa0000'>"ant-script-library/asl-repo-ivy.xml"</span><b>/&gt;</b></code></pre>
+
+    <p>This import will then make the following targets available in your script:
+    <code>repo-cleancache</code>, <code>repo-report</code>, <code>repo-resolve</code>,
+    <code>repo-retrieve</code>.</p>
+
+    <p>If you later decided that you didn’t want to use Ivy, but rather the
+    Maven Ant Tasks instead, you could replace the previous import with the
+    following:</p>
+
+    <pre><code><b>&lt;import</b><span style='color: #008000'> file=</span><span style='color: #aa0000'>"ant-script-library/asl-repo-maven.xml"</span><b>/&gt;</b></code></pre>
+
+    <p>With this one change, your build script then changes to use a completely
+    different repository management tool. Because this different module provides
+    targets with the same names, no other changes would be required in the
+    script (though in this case, you would have to replace the ivy.xml file with
+    an equivalent pom.xml).</p>
+
+    <h3>Small Targets</h3>
+
+    <p>Each <acronym title="Ant Script Library">ASL</acronym> module is composed
+    a number of top level targets public targets (these have descriptions, and
+    so are described when you type `<code>ant -p</code>`), as well as a number
+    of private targets (these are prefixed with a '<code>-</code>' to ensure
+    that they can’t accidentally be invoked from the command line). Looking over
+    the scripts, you will not that no target is more than 5 - 10 lines long, and
+    does at most one or two tasks. The are a number of reasons for this:</p>
+
+    <ul>
+        <li>It becomes much easier to understand and maintain the scripts,
+        because there is nothing really complex in any one target</li>
+        <li>It becomes very easy to override specific targets to give different
+        functionality. This is especially important when you are writing library
+        scripts - it is almost certain that some targets will need to be
+        overridden in the main script (by some users, at least).</li>
+    </ul>
+
+    <h3>Convention Over Configuration</h3>
+
+    <p>The <acronym title="Ant Script Library">ASL</acronym> has a number of
+    built in configuration defaults, such as the location of the source
+    directory, the location of the test source directory, and so on.  If your
+    application conforms to these expected default, your build script can become
+    incredibly simple. The simplest possible script might be:</p>
+
+<pre><code><b>&lt;project</b><span style='color: #008000'> name=</span><span style='color: #aa0000'>"my-project"</span><span style='color: #008000'> default=</span><span style='color: #aa0000'>"dist"</span><b>&gt;</b>
+  <b>&lt;import</b><span style='color: #008000'> file=</span><span style='color: #aa0000'>"ant-script-library/asl-java.xml"</span><b>/&gt;</b>
+<b>&lt;/project&gt;</b>
+</code></pre>
+
+    <p>In general, the <acronym title="Ant Script Library">ASL</acronym> scripts
+    tend to expect your project conforms to the Maven
+    <a href="http://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html">standard
+    directory layout</a>.</p>
+    
+    <h3>Configuration Over Overriding</h3>
+
+    <p>Not everyone has their project laid out in exactly the way, and it’s not
+    always easy to change this. In these cases, it’s usually just a matter of
+    defining specific properties with the actual values for your project before
+    importing the <acronym title="Ant Script Library">ASL</acronym> scripts. For
+    example:</p>
+
+<pre><code><b>&lt;project</b><span style='color: #008000'> name=</span><span style='color: #aa0000'>"my-project"</span><span style='color: #008000'> default=</span><span style='color: #aa0000'>"dist"</span><b>&gt;</b>
+  <b>&lt;property</b><span style='color: #008000'> name=</span><span style='color: #aa0000'>"java-build.src-dir"</span><span style='color: #008000'> location=</span><span style='color: #aa0000'>"src"</span><b>/&gt;</b>
+  <b>&lt;property</b><span style='color: #008000'> name=</span><span style='color: #aa0000'>"java-test.src-dir"</span><span style='color: #008000'> location=</span><span style='color: #aa0000'>"test"</span><b>/&gt;</b>
+  <b>&lt;import</b><span style='color: #008000'> file=</span><span style='color: #aa0000'>"ant-script-library/asl-java.xml"</span><b>/&gt;</b>
+<b>&lt;/project&gt;</b></code></pre>
+
+    <p>The properties that can be set to control the behaviour are documented
+    on the <a href="reference.html">reference</a> pages (or just look inside
+    the library scripts themselves).</p>
+
+    <h3>Overriding Over Reimplementation</h3>
+
+    <p>In cases where you need to do something complete different to what the
+    <acronym title="Ant Script Library">ASL</acronym> scripts are doing, you can
+    override specific targets in the top level build script. Just those targets
+    will be overridden, and everything will work without change. For example:</p>
+
+<pre><code><b>&lt;project</b><span style='color: #008000'> name=</span><span style='color: #aa0000'>"my-project"</span><span style='color: #008000'> default=</span><span style='color: #aa0000'>"dist"</span><b>&gt;</b>
+  <b>&lt;import</b><span style='color: #008000'> file=</span><span style='color: #aa0000'>"ant-script-library/asl-java.xml"</span><b>/&gt;</b>
+
+  <span style='color: #808080'><i>&lt;!-- *******************************************</i></span>
+<span style='color: #808080'><i>  * target override: copy-resources</i></span>
+<span style='color: #808080'><i>  ******************************************** --&gt;</i></span>
+  <b>&lt;target</b><span style='color: #008000'> name=</span><span style='color: #aa0000'>"copy-resources"</span>
+<span style='color: #008000'>      depends=</span><span style='color: #aa0000'>"asl-java-build.copy-resources"</span>
+<span style='color: #008000'>      description=</span><span style='color: #aa0000'>"Copies resources in preparation to be packaged"</span><b>&gt;</b>
+    <b>&lt;copy</b><span style='color: #008000'> todir=</span><span style='color: #aa0000'>"${java-build.classes-dir}"</span><b>&gt;</b>
+      <b>&lt;fileset</b><span style='color: #008000'> dir=</span><span style='color: #aa0000'>"resources"</span><b>/&gt;</b>
+    <b>&lt;/copy&gt;</b>
+  <b>&lt;/target&gt;</b>
+<b>&lt;/project&gt;</b></code></pre>
+
+    <p>In this case, the <code>copy-resources</code> target from the module
+    <code>asl-java-build</code> is being overridden. Note that the new target
+    still has a dependency to the original target of that name, meaning that
+    both the original and this new target will be called. Using this
+    technique, any target can become an extension point. The alternative is to
+    not declare a dependency on the original target, in which case the new
+    <code>copy-resources</code> target completely replaces the original.</p>
+
     
     <hr/>
 
@@ -32,7 +145,7 @@
 <ul id="nav">
     <li><a href="index.html">Overview</a></li>
     <li><a href="usage.html">Usage</a></li>
-    <li class="navselected">Design Priciples</li>
+    <li class="navselected">Design Principles</li>
     <li><a href="targets.html">Targets</a></li>
     <li><a href="reference.html">Reference</a></li>
 </ul>
