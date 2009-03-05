@@ -14,54 +14,29 @@
 <div id="content">
     <h2>Introduction to the Ant Script Library</h2>
 
-    <h3>Overview</h3>
+    <p>This article is about learning to build your software using
+    <a href="http://ant.apache.org/">Ant</a>. Writing a new
+    <code>build.xml</code> file from scratch can be difficult, especially
+    if you are not very familiar with Ant. To make this easier, I have written
+    some reuseable libraries that I will show in my examples below. The
+    libraries are free and you can find documentation and a downloadable zip from
+    the website at <a href="http://www.exubero.com/asl/">http://www.exubero.com/asl/</a>.</p>
+
+    <h3>Example Project: Deep Thought</h3>
     
-    <h4>The Problem</h4>
-    
-    <p>Build scripts are often added to a project as an afterthought. Sometimes
-    they are written from scratch, or more often they are copied from another
-    similar project, and adapted for the new project, leading to similar but
-    inconsistent builds across projects. There is duplication and unneeded
-    complexity. The build scripts are not maintained with same engineering
-    rigour as production code.</p>
-    
-    <p>Developers who are new to Ant don't have the skills or knowledge to be
-    able to create a robust and maintainable build.</p>
-    
-    <h4>The Solution</h4>
-    
-    <p>The solution is reuse. When Ant 1.6.0 was released in 2003, it introduced
-    a new task: <code>&lt;import&gt;</code>, which was specifically designed to
-    allow reusing external script definitions. These bring consistency and robustness
-    for project builds, and allows experts in Ant scripts to share their expertise
-    widely</p>
-    
-    <p>The Ant Script Library is a collection of reusable build targets that
-    can be imported into project builds. These scripts provide:</p>
-    
-    <ul>
-        <li>ready to use builds for standard build types, such as building jars,
-        web applications, and so on</li>
-        <li>a well designed set of robust and consistent targets</li>
-        <li>conventions and guidelines, without limiting the ability to adapt the
-        build to each project, group or organisation</li>
-    </ul>
-    
-    <h3>Example Project</h3>
-    
-    <p>For the purposes of this example, suppose you are developing an incredible
+    <p>For the purposes of this example, suppose you are developing code for an
     <acronym title="Aritficial Intelligence">AI</acronym> project called Deep
     Thought. You've been developing the code in an
     <acronym title="Integrated Development Environment">IDE</acronym>, but are
-    now looking to automate the build. Enter the Ant Script Library.</p>
+    now looking build the code using Ant.</p>
     
     <p>The project structure currently looks like this:</p>
     
-    <pre>
-DeepThought/
- +-src/
-   +-example/
-     +-DeepThough.java</pre>
+    <pre>%<strong>tree</strong>
+.
+`-- src
+    `-- example
+        `-- DeepThought.java</pre>
     
     <h4>Install the Ant Script Library</h4>
     
@@ -82,12 +57,26 @@ DeepThought/
     <p>Because the directory containing the source code is not exactly as
     expected by the Ant Script Library, we have to override the
     default location by setting the property <code>java-build.src-dir</code>
-    before importing the Java build module from the Ant Script Library.</p>
+    before importing the Java build module from the Ant Script Library. The
+    line <code>&lt;import file="ant-script-library/asl-java-build.xml"/&gt;</code>
+    does the work of making all the build targets available to your script.</p>
+    
+    <p>The project structure now looks like this:</p>
+    
+    <pre>%<strong>tree</strong>
+.
+|-- build.xml
+|-- ant-script-library
+|   |-- asl-java-build.xml
+|   `-- asl-java-test.xml
+`-- src
+    `-- example
+        `-- DeepThought.java</pre>     
     
     <p>With only four lines of Ant build, what can our script do? Looking at
     the project help is a good first place to look:</p>
     
-    <pre>%ant -p
+    <pre>%<strong>ant -p</strong>
 Buildfile: build.xml
 
 Main targets:
@@ -103,7 +92,7 @@ Default target: dist</pre>
     <p>Not bad! We can compile the code, and package the compiled code into a
     jar file. The default <code>dist</code> target does all this:</p>
     
-    <pre>%ant dist
+    <pre>%<strong>ant dist</strong>
 Buildfile: build.xml
 
 generate:
@@ -128,14 +117,133 @@ dist:
 
 BUILD SUCCESSFUL
 Total time: 1 second</pre>
+
+    <p>From the <code>BUILD SUCCESSFUL</code> message, we can see that the build
+    worked. All files created by the build are put into a subdirectory called
+    <code>target</code>. This includes generated class files, and any other
+    artifact from the build. The file we can distribute to users of our application
+    has been created in <code>target/dist/DeepThought.jar</code>.</p>
     
     <h4>Test the Code</h4>
     
-    <p>TBD: extend the build by importing asl-java-test.xml</p>
+    <p>Now that the distributable <code>jar</code> file has been created, we can
+    run some unit tests against it. In this case we'll be using
+    <a href="http://www.junit.org">JUnit</a>. It's good practice to put unit
+    tests in a parallel directory structure to the source code. With this in mind,
+    we can create a test case in the file <code>test/example/DeepThoughtTest.java</code>.
+    We will also need a copy of the <code>junit.jar</code> library. If we put this
+    in a directory called "<code>lib</code>", it will be automatically picked
+    up by the build. This gives us a directory layout like this:</p>
     
-    <h4>Create Reports</h4>
+    <pre>%<strong>tree</strong>
+.
+|-- build.xml
+|-- ant-script-library
+|   |-- asl-java-build.xml
+|   `-- asl-java-test.xml
+|-- lib
+|   `-- junit.jar
+|-- src
+|   `-- example
+|       `-- DeepThought.java
+`-- test
+    `-- example
+        `-- DeepThoughtTest.java</pre>
+        
+    <p>There's one final change: we need to tell our <code>build.xml</code> that
+    it needs to import the testing targets from the library file
+    <code>asl-java-test.xml</code>. Edit <code>build.xml</code> so that it
+    looks like this:</p>
+    
+    <pre><code><b>&lt;project</b><span style='color: #008000'> name=</span><span style='color: #aa0000'>"DeepThought"</span><span style='color: #008000'> default=</span><span style='color: #aa0000'>"dist"</span><b>&gt;</b>
+    <b>&lt;property</b><span style='color: #008000'> name=</span><span style='color: #aa0000'>"java-build.src-dir"</span><span style='color: #008000'> location=</span><span style='color: #aa0000'>"src"</span><b>/&gt;</b>
+    <b>&lt;property</b><span style='color: #008000'> name=</span><span style='color: #aa0000'>"java-test.src-dir"</span><span style='color: #008000'> location=</span><span style='color: #aa0000'>"test"</span><b>/&gt;</b>
+    <b>&lt;import</b><span style='color: #008000'> file=</span><span style='color: #aa0000'>"ant-script-library/asl-java-build.xml"</span><b>/&gt;</b>
+    <b>&lt;import</b><span style='color: #008000'> file=</span><span style='color: #aa0000'>"ant-script-library/asl-java-test.xml"</span><b>/&gt;</b>
+<b>&lt;/project&gt;</b></code></pre>
 
-    <p>TBD: extend the build by importing asl-java-report.xml</p>
+    <p>With this change, there are now a number of new test related targets
+    available from our build:</p>
+    
+    <pre>%<strong>ant -p</strong>
+Buildfile: build.xml
+
+Main targets:
+
+ clean                 Deletes files generated by the build
+ compile               Compiles the java source
+ copy-resources        Copies resources in preparation to be packaged in jar
+ dist                  Create a distributable for this java project
+ generate              Generates source code
+ jar                   Create a jar for this java project
+ test-all              Runs all tests
+ test-integration      Runs integration tests
+ test-run-integration  Runs the integration tests
+ test-run-unit         Runs the unit tests
+ test-unit             Runs unit tests
+Default target: dist</pre>
+
+    <p>The <code>test-all</code> target looks like a good candidate. Here's how
+    to run that target from the command line:</p>
+    
+    <pre>%<strong>ant test-all</strong>
+(output truncated)
+
+-test-init-classpath:
+
+-test-compile:
+    [mkdir] Created dir: /workspace/deepthought/deepthought/target/test-classes
+    [javac] Compiling 1 source file to /workspace/deepthought/deepthought/target/test-classes
+
+-test-copy-resources:
+
+-test-init-cobertura:
+
+-test-instrument:
+[cobertura-instrument] Cobertura 1.9 - GNU GPL License (NO WARRANTY) - See COPYRIGHT file
+[cobertura-instrument] Instrumenting 1 file to /workspace/deepthought/deepthought/target/instrumented-classes
+[cobertura-instrument] Cobertura: Saved information on 1 classes.
+[cobertura-instrument] Instrument time: 149ms
+
+-test-prepare:
+
+-test-init-fileset-unit:
+
+test-run-unit:
+    [mkdir] Created dir: /workspace/deepthought/deepthought/target/test-data
+    [junit] Testsuite: example.DeepThoughtTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 0.157 sec
+    [junit] 
+    [junit] Cobertura: Loaded information on 1 classes.
+    [junit] Cobertura: Saved information on 1 classes.
+
+-test-init-fileset-integration:
+
+test-run-integration:
+
+test-all:
+
+BUILD SUCCESSFUL
+Total time: 5 seconds</pre>
+
+    <p>There's a lot more output this time. However, the final message from
+    Ant is <code>BUILD SUCCESSFUL</code>, and we can see earlier in the output
+    that our tests were run successfully:</p>
+
+    <pre>[junit] Testsuite: example.DeepThoughtTest
+[junit] Tests run: 1, <strong>Failures: 0, Errors: 0</strong>, Time elapsed: 0.157 sec</pre>
+
+    <p>That's it! We have a complete compile, package and test build up and
+    running, with only a relatively small <code>build.xml</code> and the Ant
+    Script Library. The <code>build.xml</code> could have been smaller again
+    if we had followed the expected directory layout, and so we would not have
+    to explicitly define the <code>src</code> and <code>test</code> directories.</p>
+
+    <p>The Ant Script Library has many more features than shown here, including
+    reporting on code metrics, dependency management, <acronym title="Source Code Management">SCM</acronym>
+    integration and software release targets. Refer to the documentation at
+    <a href="http://www.exubero.com/asl/">http://www.exubero.com/asl/</a> for
+    more details.</p>
 
     <hr/>
 
