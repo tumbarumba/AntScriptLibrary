@@ -61,6 +61,9 @@
                 windowtitle="${ant.project.name}"
                 doctitle="${ant.project.name} - ${common.timestamp-long}">
             <classpath refid="java-build.classpath"/>
+            <link href="http://java.sun.com/javase/6/docs/api/"
+                    offline="true"
+                    packagelistLoc="${java-report.basedir}/lib/javadoc/jre-1.6"/>
         </javadoc>
     </target>
 
