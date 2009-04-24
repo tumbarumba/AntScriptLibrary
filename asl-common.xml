@@ -49,6 +49,7 @@
         <tstamp>
             <format property="common.timestamp" pattern="yyyy-MM-dd HH:mm"/>
             <format property="common.timestamp-long" pattern="d-MMMM-yyyy HH:mm"/>
+            <format property="common.date-iso" pattern="yyyyMMdd"/>
             <format property="common.year" pattern="yyyy"/>
         </tstamp>
     </target>
