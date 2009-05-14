@@ -38,6 +38,12 @@
     <target name="-install-appdir-init" depends="-install-appdir-init-userdir, -install-appdir-init-nouserdir">
         <property name="java-install.appdir-lib-dir"    location="${java-install.appdir}/lib"/>
         <property name="java-install.appdir-config-dir" location="${java-install.appdir}/config"/>
+        <property name="java-install.run-sh-name"       value="run.sh"/>
+        <property name="java-install.run-sh-file"       value="${java-install.appdir}/${java-install.run-sh-name}"/>
+        <property name="java-install.run-cmd-name"      value="run.cmd"/>
+        <property name="java-install.run-cmd-file"      value="${java-install.appdir}/${java-install.run-cmd-name}"/>
+        <property name="java-install.jvm-options"       value=""/>
+
     </target>
         
     <!-- ***********************************************************************
@@ -106,12 +112,10 @@
     * target: -install-appdir-scripts-cmd
     ************************************************************************ -->
     <target name="-install-appdir-scripts-cmd">
-        <property name="java-install.run-cmd-name" value="run.cmd"/>
-        
-        <echo file="${java-install.appdir}/${java-install.run-cmd-name}">@echo off
+        <echo file="${java-install.run-cmd-file}">@echo off
 REM %~dp0 is name of current script under NT
 set JARDIR=%~dp0
-java -jar %JARDIR%${java-build.dist-filename} %*        
+java ${install-appdir.jvm-options} -jar %JARDIR%${java-build.dist-filename} %*        
         </echo>
     </target>
     
@@ -119,12 +123,9 @@ java -jar %JARDIR%${java-build.dist-filename} %*
     * target: -install-appdir-scripts-sh
     ************************************************************************ -->
     <target name="-install-appdir-scripts-sh">
-        <property name="java-install.run-sh-name" value="run.sh"/>
-        <property name="java-install.run-sh-file" value="${java-install.appdir}/${java-install.run-sh-name}"/>
-        
         <echo file="${java-install.run-sh-file}">#!/bin/sh
 JARDIR=`dirname "$0"`
-java -jar %JARDIR%/${java-build.dist-filename} $@
+java ${install-appdir.jvm-options} -jar %JARDIR%/${java-build.dist-filename} $@
         </echo>
         <chmod file="${java-install.run-sh-file}" perm="ugo+rx"/>
     </target>
