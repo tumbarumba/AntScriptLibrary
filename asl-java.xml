@@ -26,7 +26,7 @@
     <import file="${asl-java.basedir}/asl-java-build.xml"/>
     <import file="${asl-java.basedir}/asl-java-test.xml"/>
     <import file="${asl-java.basedir}/asl-java-report.xml"/>
-    <import file="${asl-java.basedir}/asl-java-install.xml"/>
+    <import file="${asl-java.basedir}/asl-java-package.xml"/>
 
     <!-- ***********************************************************************
     * target: smoketest

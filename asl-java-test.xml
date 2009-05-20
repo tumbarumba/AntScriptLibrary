@@ -68,9 +68,11 @@
         <sequential>
             <mkdir dir="${java-test.test-data-dir}"/>
 
+        	<!-- Run tests, timeout after 25 mintues -->
             <junit errorProperty="java-test.failed"
                     failureProperty="java-test.failed"
                     fork="true" forkmode="once"
+            	    timeout="1500000"
                     printsummary="false">
                 <sysproperty key="net.sourceforge.cobertura.datafile" file="${java-test.instrumented-datafile}" />
                 <classpath>
@@ -131,7 +133,7 @@
     <target name="-test-init-classpath">
         <path id="java-test.classpath">
             <path refid="java-build.classpath"/>
-            <pathelement location="${java-build.dist-file}"/>
+            <pathelement location="${java-build.jar-file}"/>
         </path>
     </target>
     

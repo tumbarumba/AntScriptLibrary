@@ -27,55 +27,65 @@
     <!-- ***********************************************************************
     * target: release
     ************************************************************************ -->
-    <target name="release" depends="release-version, release-tag, release-checkout, release-compile, release-package"
+    <target name="release"
+    	    depends="release-tag, release-export, release-compile, release-package"
             description="Creates a new release version, tagging, checkout, build and package"/>
 
     <!-- ***********************************************************************
     * target: release-version
     ************************************************************************ -->
-    <target name="release-version" depends="-init-time"
-            description="Define the version of the release">
+    <target name="-release-init-properties" depends="-init-time">
         <property name="release.version" value="dev-${common.date-iso}"/>
+    	<echo message="Release version is ${release.version}"/>
+    	
         <property name="release.tag" value="${ant.project.name}-${release.version}"/>
+        <echo message="Release tag is ${release.tag}"/>
+    
+        <property name="release.workspace" location="${common.target-dir}/release/${release.version}"/>
+        <property name="release.buildfile-name" value="build.xml"/>
+        <property name="release.buildfile-path" location="${release.workspace}/${release.buildfile-name}"/>
     </target>
 
     <!-- ***********************************************************************
     * target: release-tag
     ************************************************************************ -->
-    <target name="release-tag" depends="release-version"
+    <target name="release-tag" depends="-release-init-properties,-release-check-dir"
             description="Tags the code in scm using the release version">
-        
-        <property name="release.tag-dir" location="${basedir}"/>
-        
-        <scm-tag dir="${release.tag-dir}" tag="${release.tag}"/>
-        
+    	
+        <echo message="Tagging '${release.server-path}' with tag '${release.tag}'"/>
+        <scm-tag dir="${release.server-path}" tag="${release.tag}"/>
+    	
     </target>
 
     <!-- ***********************************************************************
-    * target: release-checkout
+    * target: -release-check-dir
     ************************************************************************ -->
-    <target name="release-checkout" depends="release-version"
+    <target name="-release-check-dir" unless="release.server-path">
+    	<fail message="The property 'release.server-path' must be defined"/>
+    </target>
+	
+    <!-- ***********************************************************************
+    * target: release-export
+    ************************************************************************ -->
+    <target name="release-export" depends="-release-init-properties"
             description="Checks out the code for the specified release tag">
         
-        <property name="release.workspace" location="${common.target-dir}/release/${release.version}"/>
-        <mkdir dir="${release.workspace"/>
-        <scm-checkout serverpath="${scm.server-project-dir}" localpath="${release.workspace}"/>
+        <mkdir dir="${release.workspace}"/>
+        <scm-export serverpath="${release.server-path}" version="${release.tag}" localpath="${release.workspace}"/>
     </target>
 
     <!-- ***********************************************************************
     * target: release-build
     ************************************************************************ -->
-    <target name="release-compile" depends="release-version"
+    <target name="release-compile" depends="-release-init-properties"
             description="Compiles the release">
-        <property name="release.buildfile-name" value="build.xml"/>
-        <property name="release.buildfile-path" location="${release.workspace}/${release.buildfile-name}"/>
         <ant antfile="${release.buildfile-path}" inheritall="false"/>
     </target>
 
     <!-- ***********************************************************************
     * target: release-package
     ************************************************************************ -->
-    <target name="release-package" depends="release-version"
+    <target name="release-package" depends="-release-init-properties"
             description="Packages the release">
     </target>
 </project>

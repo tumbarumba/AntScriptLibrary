@@ -33,6 +33,8 @@
     <property name="java-build.dist-ext" 		value=".jar"/>
     <property name="java-build.dist-filename" 	value="${ant.project.name}${java-build.dist-ext}"/>
     <property name="java-build.dist-file" 		location="${common.dist-dir}/${java-build.dist-filename}"/>
+    <property name="java-build.jar-dir"         location="${common.dist-dir}"/>
+	<property name="java-build.jar-file"        location="${java-build.dist-file}"/>
     <property name="java-build.source-ver" 		value="1.5"/>
     <property name="java-build.target-ver" 		value="1.5"/>
     <property name="java-build.debug" 			value="on"/>
@@ -46,19 +48,18 @@
     <!-- ***********************************************************************
     * target: jar
     ************************************************************************ -->
-    <target name="jar" depends="compile, copy-resources, -init-time, -init-jar-classpath"
+    <target name="jar" depends="compile, copy-resources, -init-time, -init-jar-classpath, -init-jar-version-release, -init-jar-version-dev"
     		description="Create a jar for this java project">
     		
-        <mkdir dir="${common.dist-dir}"/>
+        <mkdir dir="${java-build.jar-dir}"/>
         
         <property name="java-build.jar-title"       value="${ant.project.name}"/>
-        <property name="java-build.jar-version"     value="dev-${DSTAMP}${TSTAMP}"/>
         <property name="java-build.jar-compress"    value="true"/>
         <property name="java-build.jar-vendor"      value=""/>
-        <property name="java-build.jar-build-id"    value="Built by ${user.name} at ${common.timestamp} running on ${os.name} ${os.version} ${os.arch}"/>
+        <property name="java-build.jar-build-id"    value="${user.name} @ ${common.timestamp}"/>
         <property name="java-build.jar-main-class"  value=""/>
         
-        <jar destfile="${java-build.dist-file}" compress="${java-build.jar-compress}">
+        <jar destfile="${java-build.jar-file}" compress="${java-build.jar-compress}">
             <fileset dir="${java-build.classes-dir}" />
             <manifest>
                 <attribute name="Implementation-Title"   value="${java-build.jar-title}"/>
@@ -116,6 +117,20 @@
             </chainedmapper>
         </pathconvert>
         <property name="java-build.jar-classpath" value="config/ ${java-build.jar-lib-classpath}"/>
+    </target>
+	
+    <!-- ***********************************************************************
+    * target: -init-jar-version-release
+    ************************************************************************ -->
+    <target name="-init-jar-version-release" if="release.version">
+        <property name="java-build.jar-version" value="${release.version}" />
+	</target>
+    
+    <!-- ***********************************************************************
+    * target: -init-jar-version-dev
+    ************************************************************************ -->
+    <target name="-init-jar-version-dev" unless="release.version">
+        <property name="java-build.jar-version"  value="dev-${DSTAMP}${TSTAMP}"/>
     </target>
     
     <!-- ***********************************************************************
