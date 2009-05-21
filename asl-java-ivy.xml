@@ -20,7 +20,7 @@
 * limitations under the License.
 ********************************************************************************
  -->
-<project name="asl-java-ivy">
+<project name="asl-java-ivy" xmlns:ivy="antlib:org.apache.ivy.ant">
     <dirname property="asl-java-ivy.basedir" file="${ant.file.asl-java-ivy}"/>
 
     <import file="${asl-java-ivy.basedir}/asl-java.xml"/>
@@ -31,5 +31,26 @@
     * overrides the default -init-classpath target to initialise the classpath
     * from Ivy
     ************************************************************************ -->
-    <target name="-init-classpath" depends="-repo-cachepath"/>
+    <target name="-init-classpath" depends="repo-resolve">
+        <ivy:cachepath pathid="java-build.classpath" conf="compile"/>
+    </target>
+
+    <!-- ***********************************************************************
+    * target overide: -test-init-classpath
+    * overrides the default -test-init-classpath target to initialise the test
+    * classpath from Ivy
+    ************************************************************************ -->
+    <target name="-test-init-classpath" depends="repo-resolve">
+        <ivy:cachepath pathid="java-test.classpath" conf="test,master"/>
+    </target>
+
+    <!-- ***********************************************************************
+    * target overide: -init-version
+    * overrides the default -init-version target to initialise the release
+    * version from ivy.xml
+    ************************************************************************ -->
+    <target name="-init-version">
+        <ivy:info/>
+    	<property name="release.version" value="${ivy.revision}"/>
+	</target>
 </project>

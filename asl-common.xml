@@ -55,6 +55,13 @@
     </target>
  	
     <!-- ***********************************************************************
+    * target: -init-version
+    * This is an empty target that allows users to override how the property
+    * ${release.version} is set.
+    ************************************************************************ -->
+    <target name="-init-version"/>
+
+    <!-- ***********************************************************************
     * macrodef: asl-check-libs
     ************************************************************************ -->
     <macrodef name="asl-check-libs"

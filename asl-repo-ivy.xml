@@ -43,14 +43,6 @@
     </target>
 
     <!-- ***********************************************************************
-    * target: -repo-cachepath
-    ************************************************************************ -->
-    <target name="-repo-cachepath" depends="repo-resolve">
-        <property name="repo-ivy.cache-pathid" value="java-build.classpath"/>
-        <ivy:cachepath pathid="${repo-ivy.cache-pathid}"/>
-    </target>
-
-    <!-- ***********************************************************************
     * target: repo-resolve
     ************************************************************************ -->
     <target name="repo-resolve" depends="-repo-configure-ivy"
@@ -63,7 +55,9 @@
     ************************************************************************ -->
     <target name="repo-retrieve" depends="-repo-configure-ivy"  
             description="Retrieve dependencies with ivy">
-        <ivy:retrieve />
+        <property name="repo-ivy.lib-dir" location="lib"/>
+        <property name="repo-ivy.retrieve-pattern" value="${repo-ivy.lib-dir}/[conf]/[artifact]-[revision].[ext]"/>
+        <ivy:retrieve pattern="${repo-ivy.retrieve-pattern}" sync="true" />
     </target>
 
     <!-- ***********************************************************************

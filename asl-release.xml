@@ -34,8 +34,7 @@
     <!-- ***********************************************************************
     * target: release-version
     ************************************************************************ -->
-    <target name="-release-init-properties" depends="-init-time">
-        <property name="release.version" value="dev-${common.date-iso}"/>
+    <target name="-release-init-properties" depends="-init-time, -init-version">
     	<echo message="Release version is ${release.version}"/>
     	
         <property name="release.tag" value="${ant.project.name}-${release.version}"/>
