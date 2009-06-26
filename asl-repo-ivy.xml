@@ -22,6 +22,11 @@
  -->
 <project name="asl-repo-ivy" xmlns:ivy="antlib:org.apache.ivy.ant">
     <dirname property="repo-ivy.basedir" file="${ant.file.asl-repo-ivy}"/>
+    <property name="repo-ivy.settings-file"     location="${repo-ivy.basedir}/ivysettings.xml" />
+    <property name="repo-ivy.lib-dir"           location="lib"/>
+    <property name="repo-ivy.report-dir"        location="target/dist/reports/ivy-report"/>
+    <property name="repo-ivy.retrieve-pattern"  value="${repo-ivy.lib-dir}/[artifact]-[revision].[ext]"/>
+    <property name="repo-ivy.publish-pattern"   value="${common.dist-dir}/[artifact].[ext]"/>
 
     <!-- ***********************************************************************
     * Set up the Ivy tasks
@@ -38,7 +43,6 @@
     * target: -repo-configure-ivy
     ************************************************************************ -->
     <target name="-repo-configure-ivy" >
-        <property name="repo-ivy.settings-file" location="${repo-ivy.basedir}/ivysettings.xml" />
         <ivy:configure file="${repo-ivy.settings-file}" />
     </target>
 
@@ -54,10 +58,36 @@
     * target: repo-retrieve
     ************************************************************************ -->
     <target name="repo-retrieve" depends="-repo-configure-ivy"  
-            description="Retrieve dependencies with ivy">
-        <property name="repo-ivy.lib-dir" location="lib"/>
-        <property name="repo-ivy.retrieve-pattern" value="${repo-ivy.lib-dir}/[conf]/[artifact]-[revision].[ext]"/>
+            description="Retrieve dependencies with Ivy">
         <ivy:retrieve pattern="${repo-ivy.retrieve-pattern}" sync="true" />
+    </target>
+
+    <!-- ***********************************************************************
+    * target: repo-publish
+    ************************************************************************ -->
+    <target name="repo-publish" depends="-repo-configure-ivy"  
+            description="Publish artifacts to Ivy shared repository">
+        <ivy:info />
+        <ivy:publish
+            artifactspattern="${repo-ivy.publish-pattern}"
+            status="integration"
+            resolver="shared"
+            overwrite="true"
+            pubrevision="${ivy.revision}"/>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: repo-publish
+    ************************************************************************ -->
+    <target name="repo-publish-local" depends="-repo-configure-ivy"  
+            description="Publish artifacts to Ivy local repository">
+        <ivy:info />
+        <ivy:publish
+            artifactspattern="${repo-ivy.publish-pattern}"
+            status="integration"
+            resolver="local"
+            overwrite="true"
+            pubrevision="${ivy.revision}"/>
     </target>
 
     <!-- ***********************************************************************
@@ -65,15 +95,23 @@
     ************************************************************************ -->
     <target name="repo-report" depends="repo-resolve"
             description="Generate an Ivy dependencies report">
-        <property name="repo-ivy.report-dir" location="target/dist/reports/ivy-report"/>
         <ivy:report todir="${repo-ivy.report-dir}" />
     </target>
 
     <!-- ***********************************************************************
-    * target: repo-clearcache
+    * target: repo-clean-cache
     ************************************************************************ -->
-    <target name="repo-cleancache" depends="-repo-configure-ivy"
-            description="Clean ivy repository cache">
+    <target name="repo-clean-cache" depends="-repo-configure-ivy"
+            description="Clean Ivy repository cache">
         <ivy:cleancache />
+    </target>
+
+    <!-- ***********************************************************************
+    * target: repo-clean-local
+    ************************************************************************ -->
+    <target name="repo-clean-local" depends="-repo-configure-ivy"
+            description="Clean Ivy local repository">
+        <ivy:info />
+        <delete dir="${ivy.local.default.root}/${ivy.organisation}/${ivy.module}"/>
     </target>
 </project>

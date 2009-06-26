@@ -111,7 +111,7 @@ java ${java-package.jvm-options} -jar %JARDIR%${java-build.dist-filename} %*
     <target name="-package-scripts-sh">
         <echo file="${java-package.run-sh-file}">#!/bin/sh
 JARDIR=`dirname "$0"`
-java ${java-package.jvm-options} -jar %JARDIR%/${java-build.dist-filename} $@
+java ${java-package.jvm-options} -jar $JARDIR/${java-build.dist-filename} $@
         </echo>
         <chmod file="${java-package.run-sh-file}" perm="ugo+rx"/>
     </target>
