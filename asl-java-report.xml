@@ -46,7 +46,7 @@
     <!-- ***********************************************************************
     * target: report-javadoc
     ************************************************************************ -->
-    <target name="report-javadoc" depends="-init-time"
+    <target name="report-javadoc" depends="-init-time, -init-classpath"
             description="Creates javadoc for the source code">
         <mkdir dir="${java-report.javadoc-dir}"/>
         <javadoc
