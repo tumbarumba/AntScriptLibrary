@@ -114,4 +114,47 @@
         <ivy:info />
         <delete dir="${ivy.local.default.root}/${ivy.organisation}/${ivy.module}"/>
     </target>
+
+    <!-- ***********************************************************************
+    * target: repo-install-local
+    ************************************************************************ -->
+    <target name="repo-install-local" depends="-repo-configure-ivy,-repo-install-init"
+            description="Install jars from central m2 repoisotry to Ivy local repository">
+        <ivy:install
+            from="maven2" to="local"
+            organisation="${repo-ivy.install-organisation}"
+            module="${repo-ivy.install-module}"
+            revision="${repo-ivy.install-revision}"
+            transitive="true"
+            haltonfailure="false"
+            overwrite="true"
+            />
+    </target>
+
+    <!-- ***********************************************************************
+    * target: -repo-install-init
+    ************************************************************************ -->
+    <target name="-repo-install-init"
+            depends="-repo-install-init-org,-repo-install-init-module,-repo-install-init-revision"/>
+    
+    <!-- ***********************************************************************
+    * target: -repo-install-init
+    ************************************************************************ -->
+    <target name="-repo-install-init-org" unless="repo-ivy.install-organisation">
+        <input addproperty="repo-ivy.install-organisation" message="Install organisation:"/>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: -repo-install-init
+    ************************************************************************ -->
+    <target name="-repo-install-init-module" unless="repo-ivy.install-module">
+        <input addproperty="repo-ivy.install-module" message="Install module:"/>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: -repo-install-init
+    ************************************************************************ -->
+    <target name="-repo-install-init-revision" unless="repo-ivy.install-revision">
+        <input addproperty="repo-ivy.install-revision" message="Install revision:"/>
+    </target>
 </project>
