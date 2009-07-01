@@ -124,6 +124,7 @@
         <javac  srcdir="${java-test.src-dir}"                
                 destdir="${java-test.classes-dir}"
                 debug="on"
+                includeantruntime="false"
                 classpathref="java-test.classpath"/>
     </target>
     

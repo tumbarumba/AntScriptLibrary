@@ -84,7 +84,8 @@
                 classpathref="java-build.classpath"
                 source="${java-build.source-ver}"
                 target="${java-build.target-ver}"
-               	debug="${java-build.debug}">
+               	debug="${java-build.debug}"
+                includeAntRuntime="false">
         </javac>
     </target>
 
