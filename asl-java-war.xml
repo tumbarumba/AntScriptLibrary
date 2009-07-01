@@ -54,7 +54,6 @@
                 <attribute name="Build-Id" value="${java-war.build-id}"/>
             </manifest>
             <lib dir="${java-war.libs-dir}"/>
-            <classes dir="${java-build.classes-dir}"/>
         </war>
     </target>
 
@@ -67,6 +66,7 @@
             <path refid="java-build.classpath"/>
             <mapper type="flatten"/>
         </copy>
+        <copy todir="${java-war.libs-dir}" file="${java-build.jar-file}"/>
     </target>
 
     <!-- ***********************************************************************
