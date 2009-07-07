@@ -36,6 +36,15 @@
     </target>
 
     <!-- ***********************************************************************
+    * target overide: -init-runtime-classpath
+    * overrides the default -init-runtime-classpath target to initialise the classpath
+    * from Ivy
+    ************************************************************************ -->
+    <target name="-init-runtime-classpath" depends="repo-resolve">
+        <ivy:cachepath pathid="java-build.runtime-classpath" conf="runtime"/>
+    </target>
+
+    <!-- ***********************************************************************
     * target overide: -test-init-classpath
     * overrides the default -test-init-classpath target to initialise the test
     * classpath from Ivy

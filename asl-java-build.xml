@@ -107,11 +107,20 @@
     </target>
 
     <!-- ***********************************************************************
+    * target: -init-runtime-classpath
+    ************************************************************************ -->
+    <target name="-init-runtime-classpath" depends="-init-classpath" unless="java-build.jar-classpath">
+        <path id="java-build.runtime-classpath">
+            <path refid="java-build.classpath"/>
+        </path>
+    </target>
+    
+    <!-- ***********************************************************************
     * target: -init-jar-classpath
     ************************************************************************ -->
-    <target name="-init-jar-classpath" depends="-init-classpath" unless="java-build.jar-classpath">
+    <target name="-init-jar-classpath" depends="-init-runtime-classpath" unless="java-build.jar-classpath">
         <pathconvert property="java-build.jar-lib-classpath"  
-                refid="java-build.classpath" pathsep=" ">
+                refid="java-build.runtime-classpath" pathsep=" ">
             <chainedmapper>
     			<flattenmapper/>
 	       		<globmapper from="*.jar" to="lib/*.jar"/>

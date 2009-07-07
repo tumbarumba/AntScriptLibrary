@@ -71,10 +71,10 @@
     <!-- ***********************************************************************
     * target: -package-libs
     ************************************************************************ -->
-    <target name="-package-libs" depends="-init-classpath">
+    <target name="-package-libs" depends="-init-runtime-classpath">
         <mkdir dir="${java-package.pkg-lib-dir}"/>
         <copy todir="${java-package.pkg-lib-dir}" flatten="true">
-            <path refid="java-build.classpath"/>
+            <path refid="java-build.runtime-classpath"/>
         </copy>
     </target>
 
