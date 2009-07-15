@@ -46,7 +46,7 @@
     <!-- ***********************************************************************
     * target: install-all
     ************************************************************************ -->
-    <target name="install-all" depends="install-cobertura, install-pmd"
+    <target name="install-all" depends="install-cobertura, install-pmd, install-checkstyle"
             description="Installs all the optional libraries"/>
     
     <!-- ***********************************************************************
@@ -65,6 +65,15 @@
             description="Installs the libraries required by the cobertura task">
         <asl-install-jars libdir="${tasklib-install.basedir}/lib/cobertura"
             organisation="net.sf.cobertura" module="cobertura" revision="1.9"/>
+    </target>
+    
+    <!-- ***********************************************************************
+    * target: install-checkstyle
+    ************************************************************************ -->
+    <target name="install-checkstyle" depends="-repo-configure-ivy"
+            description="Installs the libraries required by the checkstyle task">
+        <asl-install-jars libdir="${tasklib-install.basedir}/lib/checkstyle"
+            organisation="net.sf.checkstyle" module="checkstyle" revision="5.0"/>
     </target>
     
 </project>
