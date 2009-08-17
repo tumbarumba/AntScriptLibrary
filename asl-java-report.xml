@@ -40,7 +40,7 @@
     <property name="java-report.checkstyle-data-file"   location="${java-report.checkstyle-data-dir}/checkstyle-data.xml"/>
     <property name="java-report.checkstyle-stylesheet"  location="${java-report.checkstyle-libdir}/xsl/checkstyle-noframes.xsl"/>
     <property name="java-report.jdepend-data-dir"       location="${common.target-dir}/jdepend-data"/>
-    <property name="java-report.jdepend-report-dir"     location="${java-report.report-dir}/jdepend"/>
+    <property name="java-report.jdepend-dir"     location="${java-report.report-dir}/jdepend"/>
     <property name="java-report.findbugs-dir"           location="${java-report.report-dir}/findbugs"/>
 
     <!-- ***********************************************************************
@@ -225,9 +225,9 @@
             </classespath>
         </jdepend>
     
-        <mkdir dir="${java-report.jdepend-report-dir}"/>
+        <mkdir dir="${java-report.jdepend-dir}"/>
         <xslt basedir="${java-report.jdepend-data-dir}"
-               destdir="${java-report.jdepend-report-dir}"
+               destdir="${java-report.jdepend-dir}"
                includes="jdepend.xml"
                style="${ant.home}/etc/jdepend.xsl"/>
     </target>    
