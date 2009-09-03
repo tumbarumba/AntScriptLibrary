@@ -33,6 +33,12 @@
     <property name="java-report.test-dir"               location="${java-report.report-dir}/test"/>
     <property name="java-report.coverage-dir"           location="${java-report.report-dir}/coverage"/>
     <property name="java-report.pmd-dir"                location="${java-report.report-dir}/pmd"/>
+    <property name="java-report.pmd-libdir"             location="${java-report.basedir}/lib/pmd"/>
+    <property name="java-report.cpd-dir"                location="${java-report.report-dir}/cpd"/>
+    <property name="java-report.cpd-data-dir"           location="${common.target-dir}/cpd-data"/>
+    <property name="java-report.cpd-data-file"          location="${java-report.cpd-data-dir}/cpd-data.xml"/>
+    <property name="java-report.cpd-minimum-token-count" value="75"/>
+    <property name="java-report.cpd-stylesheet"         location="${java-report.pmd-libdir}/etc/xslt/cpdhtml.xslt"/>
     <property name="java-report.checkstyle-dir"         location="${java-report.report-dir}/checkstyle"/>
     <property name="java-report.checkstyle-libdir"      location="${java-report.basedir}/lib/checkstyle"/>
     <property name="java-report.checkstyle-config-file" location="${java-report.checkstyle-libdir}/config/sun_checks.xml"/>
@@ -41,13 +47,23 @@
     <property name="java-report.checkstyle-stylesheet"  location="${java-report.checkstyle-libdir}/xsl/checkstyle-noframes.xsl"/>
     <property name="java-report.jdepend-data-dir"       location="${common.target-dir}/jdepend-data"/>
     <property name="java-report.jdepend-dir"     location="${java-report.report-dir}/jdepend"/>
+    <property name="java-report.findbugs-home"          location="${java-report.basedir}/lib/findbugs"/>
+    <!--
+    <property name="java-report.findbugs-failbuild"     value="true"/>
+    -->
+    <property name="java-report.findbugs-libdir"        location="${java-report.findbugs-home}/lib"/>
+    <property name="java-report.findbugs-data-dir"      location="${common.target-dir}/findbugs-data"/>
+    <property name="java-report.findbugs-data-file"     location="${java-report.findbugs-data-dir}/findbugs.xml"/>
+    <property name="java-report.findbugs-stylesheet"    location="${java-report.findbugs-home}/src/xsl/default.xsl"/>
     <property name="java-report.findbugs-dir"           location="${java-report.report-dir}/findbugs"/>
+    <property name="java-report.findbugs-report-file"   location="${java-report.findbugs-dir}/index.html"/>
+    <property name="java-report.findbugs-jvmargs"       value="-Xmx512m"/>
 
     <!-- ***********************************************************************
     * target: report-all
     ************************************************************************ -->
     <target name="report-all"
-            depends="report-javadoc, report-tests, report-cobertura, report-jdepend, report-pmd, report-checkstyle" 
+            depends="report-javadoc, report-tests, report-cobertura, report-jdepend, report-pmd, report-cpd, report-checkstyle, report-findbugs" 
             description="Runs all reports"/>
 
     <!-- ***********************************************************************
@@ -125,7 +141,6 @@
     * target: -report-init-pmd
     ************************************************************************ -->
     <target name="-report-init-pmd">
-        <property name="java-report.pmd-libdir" location="${java-report.basedir}/lib/pmd"/>
         <asl-check-libs libname="pmd" jar="${java-report.pmd-libdir}/pmd.jar"/>
         
         <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask">
@@ -138,28 +153,73 @@
     </target>
     
     <!-- ***********************************************************************
-    * target: report-findbugs
-    ************************************************************************
-    <target name="report-findbugs" depends="-report-init-findbugs"
-            description="Generates the code quality report from FindBugs">
-        <mkdir dir="${java-report.findbugs-dir}"/>
-        <pmd shortFilenames="true">
-            <ruleset>rulesets/favorites.xml</ruleset>
-            <ruleset>basic</ruleset>
-            <formatter type="html"
-                       toFile="${java-report.pmd-dir}/index.html"/>
+    * target: report-cpd
+    ************************************************************************ -->
+    <target name="report-cpd" depends="-report-cpd-run, -report-cpd-xslt"
+            description="Generates the copy-paste detection report from PMD"/>
+    
+    
+    <!-- ***********************************************************************
+    * target: -report-cpd-run
+    ************************************************************************ -->
+    <target name="-report-cpd-run" depends="-report-init-cpd">
+        <mkdir dir="${java-report.cpd-data-dir}"/>
+        <cpd   minimumTokenCount="${java-report.cpd-minimum-token-count}"
+               outputFile="${java-report.cpd-data-file}"
+               format="xml"
+               encoding="UTF-8">
             <fileset dir="${java-build.src-dir}">
                 <include name="**/*.java"/>
             </fileset>
-        </pmd>
+        </cpd>
     </target>
     
-    ***********************************************************************
-    * target: -report-init-findbugs
-    ************************************************************************
-    <target name="-report-init-findbugs">
-        <property name="java-report.findbugs-libdir" location="${java-report.basedir}/lib/findbugs"/>
+    <!-- ***********************************************************************
+    * target: -report-cpd-xslt
+    ************************************************************************ -->
+    <target name="-report-cpd-xslt">
+        <mkdir dir="${java-report.cpd-dir}"/>
+        <xslt
+            in="${java-report.cpd-data-file}"
+            out="${java-report.cpd-dir}/index.html"
+            style="${java-report.cpd-stylesheet}"/>
+    </target>
+    
+    <!-- ***********************************************************************
+    * target: -report-init-cpd
+    ************************************************************************ -->
+    <target name="-report-init-cpd">
+        <asl-check-libs libname="pmd" jar="${java-report.pmd-libdir}/pmd.jar"/>
         
+        <taskdef name="cpd" classname="net.sourceforge.pmd.cpd.CPDTask">
+            <classpath>
+                <fileset dir="${java-report.pmd-libdir}">
+                    <include name="*.jar"/>
+                </fileset>
+            </classpath>
+        </taskdef>
+    </target>
+    
+    <!-- ***********************************************************************
+    * target: report-findbugs
+    ************************************************************************ -->
+    <target name="report-findbugs"
+            depends="-report-findbugs-run, -report-findbugs-xslt, -report-findbugs-checkfailure"
+            description="Generates the code quality report from FindBugs"/>
+
+    <!-- ***********************************************************************
+    * target: report-findbugs
+    ************************************************************************ -->
+    <target name="-report-findbugs-checkfailure" if="java-report.findbugs-failbuild">
+        <fail if="java-report.findbugs-warnings"
+            message="FindBugs warnings - please review the FindBugs report"/>
+    </target>
+    
+    
+    <!-- ***********************************************************************
+    * target: -report-init-findbugs
+    ************************************************************************ -->
+    <target name="-report-init-findbugs">
         <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask">
             <classpath>
                 <fileset dir="${java-report.findbugs-libdir}">
@@ -168,7 +228,34 @@
             </classpath>
         </taskdef>
     </target>  
-    -->
+    
+    <!-- ***********************************************************************
+    * target: -report-findbugs-run
+    ************************************************************************ -->
+    <target name="-report-findbugs-run" depends="-report-init-findbugs, jar">
+        <mkdir dir="${java-report.findbugs-data-dir}"/>
+        <findbugs home="${java-report.findbugs-home}"
+                  projectName="${ant.project.name}"
+                  warningsProperty="java-report.findbugs-warnings"
+                  output="xml:withMessages"
+                  outputFile="${java-report.findbugs-data-file}"
+                  jvmargs="${java-report.findbugs-jvmargs}">
+            <class location="${java-build.jar-file}"/>
+            <auxClasspath refid="java-build.runtime-classpath"/>
+            <sourcePath path="${java-build.src-dir}"/>
+        </findbugs>
+    </target>
+    
+    <!-- ***********************************************************************
+    * target: -report-findbugs-xslt
+    ************************************************************************ -->
+    <target name="-report-findbugs-xslt">
+        <mkdir dir="${java-report.findbugs-dir}"/>
+        <xslt
+            in="${java-report.findbugs-data-file}"
+            out="${java-report.findbugs-report-file}"
+            style="${java-report.findbugs-stylesheet}"/>
+    </target>
     
     <!-- ***********************************************************************
     * target: report-checkstyle

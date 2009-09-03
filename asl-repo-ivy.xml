@@ -121,7 +121,7 @@
     <target name="repo-install-local" depends="-repo-configure-ivy,-repo-install-init"
             description="Install jars from central m2 repoisotry to Ivy local repository">
         <ivy:install
-            from="maven2" to="local"
+            from="default" to="local"
             organisation="${repo-ivy.install-organisation}"
             module="${repo-ivy.install-module}"
             revision="${repo-ivy.install-revision}"

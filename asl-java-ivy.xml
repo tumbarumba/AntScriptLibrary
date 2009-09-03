@@ -50,9 +50,13 @@
     * classpath from Ivy
     ************************************************************************ -->
     <target name="-test-init-classpath" depends="repo-resolve">
-        <ivy:cachepath pathid="java-test.classpath" conf="test,master"/>
+        <ivy:cachepath pathid="java-test.classpath-ivy" conf="test,master"/>
+        <path id="java-test.classpath">
+            <path refid="java-test.classpath-ivy"/>
+            <pathelement location="${java-build.jar-file}"/>
+        </path>
     </target>
-
+    
     <!-- ***********************************************************************
     * target overide: -init-version
     * overrides the default -init-version target to initialise the release
