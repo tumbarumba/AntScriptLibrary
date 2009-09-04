@@ -17,12 +17,26 @@
     <h3>Overview</h3>
 
     <p><code>asl-java-report.xml</code> contains properties and targets for various
-    generated reports about Java code.</p>
+    generated reports about Java code. Available reports are:</p>
+
+    <p><a href="#report-all">report-all</a> .
+    <a href="#report-checkstyle">report-checkstyle</a> .
+    <a href="#report-cobertura">report-cobertura</a> .
+    <a href="#report-cpd">report-cpd</a> .
+    <a href="#report-findbugs">report-findbugs</a> .
+    <a href="#report-javadoc">report-javadoc</a> .
+    <a href="#report-jdepend">report-jdepend</a> .
+    <a href="#report-pmd">report-pmd</a> .
+    <a href="#report-tests">report-tests</a></p>    
     
     <h3>Properties</h3>
     
     <p>All properties defined with this module are prefixed with
     "<code>java-report.</code>".</p>
+    
+    <p>The following property affects the default location of all reports in this
+    module. Other report specific properties are documented with the report
+    target below.</p>
     
     <table>
         <tr class="odd">
@@ -35,51 +49,9 @@
             <td><code>${common.dist-dir}/reports</code></td>
             <td>The top level directory under which all generated reports will be placed.</td>
         </tr>
-        <tr class="odd">
-            <td><code>java-report.coverage-dir</code></td>
-            <td><code>${java-report.report-dir}/coverage</code></td>
-            <td>The directory where the <a href="#report-cobertura">Cobertura test coverage report</a> will be generated.</td>
-        </tr>
-        <tr class="odd">
-            <td><code>java-report.javadoc-dir</code></td>
-            <td><code>${java-report.report-dir}/javadoc</code></td>
-            <td>The directory where the <a href="#report-javadoc">Javadoc report</a> will be generated.</td>
-        </tr>
-        <tr class="odd">
-            <td><code>java-report.jdepend-data-dir</code></td>
-            <td><code>${common.target-dir}/jdepend-data</code></td>
-            <td>There directory where the JDepend analysis data will be stored.</td>
-        </tr>
-        <tr>
-            <td><code>java-report.jdepend-dir</code></td>
-            <td><code>${java-report.report-dir}/jdepend</code></td>
-            <td>The directory where the <a href="#report-jdepend">JDepend report</a> will be generated.</td>
-        </tr>
-        <tr>
-            <td><code>java-report.pmd-dir</code></td>
-            <td><code>${java-report.report-dir}/pmd</code></td>
-            <td>The directory where the <a href="#report-pmd">PMD code quality report</a> will be generated.</td>
-        </tr>
-        <tr>
-            <td><code>java-report.test-dir</code></td>
-            <td><code>${java-report.report-dir}/test</code></td>
-            <td>The directory where the <a href="#report-test">JUnit test report</a> will be generated.</td>
-        </tr>
     </table>
 
     <h3>Targets</h3>
-    <p style="text-align: center">
-	    <img style="border: none;" usemap="#java-report-map" alt="Dependency diagram for asl-java-report.xml" src="asl-java-report.png"/>
-	</p>
-	<map name="java-report-map">
-	  <area shape="rect" title="Create Distributable Artifact" href="#dist" coords="129,266,166,297" />
-	  <area shape="rect" title="Create Jar" href="#jar" coords="132,196,162,226" />
-	  <area shape="rect" title="Copy Resources" href="#copy-resources" coords="260,126,369,156" />
-	  <area shape="rect" title="Compile" href="#compile" coords="178,127,239,156" />
-	  <area shape="rect" title="Initialise Jar Classpath" href="#-init-jar-classpath" coords="30,126,152,157" />
-	  <area shape="rect" title="Generate Source" href="#generate" coords="188,56,259,86" />
-	  <area shape="rect" title="Initialise Classpath" href="#-init-classpath" coords="66,56,167,86" />
-	</map>
 
     <h4 id="report-all">report-all</h4>
 
@@ -88,57 +60,238 @@
     <h4 id="report-checkstyle">report-checkstyle</h4>
 
     <p>Generates a <a href="http://checkstyle.sourceforge.net">Checkstyle</a>
-    report.</p>
+    report. The follow properites control the behaviour of this report:</p>
     
-    <p>The location of this report is controlled by the property
-    <code>java-report.checkstyle-dir</code>.</p>
-    
+    <table>
+        <tr class="odd">
+            <th>Name</th>
+            <th>Default Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>java-report.checkstyle-dir</code></td>
+            <td><code>${java-report.report-dir}/checkstyle</code></td>
+            <td>The directory where the Checkstyle report will be generated.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-report.checkstyle-libdir</code></td>
+            <td><code>${java-report.basedir}/lib/checkstyle</code></td>
+            <td>There directory containing the Checkstyle jar file.</td>
+        </tr>
+        <tr>
+            <td><code>java-report.checkstyle-config-file</code></td>
+            <td><code>${java-report.checkstyle-libdir}/config/sun_checks.xml</code></td>
+            <td>The configuration file for Checkstyle, which can be used to 
+            control what checks are performed.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-report.checkstyle-data-dir</code></td>
+            <td><code>${common.target-dir}/checkstyle-data</code></td>
+            <td>The directory where the Checkstyle data will be stored.</td>
+        </tr>
+        <tr>
+            <td><code>java-report.checkstyle-data-file</code></td>
+            <td><code>${java-report.checkstyle-data-dir}/checkstyle-data.xml</code></td>
+            <td>The file where the Checkstyle data will be stored.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-report.checkstyle-stylesheet</code></td>
+            <td><code>${java-report.checkstyle-libdir}/xsl/checkstyle-noframes.xsl</code></td>
+            <td>The XSLT stylesheet used to generate the HTML report</td>
+        </tr>
+    </table>
+
     <h4 id="report-cobertura">report-cobertura</h4>
 
     <p>Generates a <a href="http://cobertura.sourceforge.net">Cobertura</a>
     test coverage report.</p>
     
     <p>The location of this report is controlled by the property
-    <code>java-report.coverage-dir</code>.</p>
+    <code>java-report.coverage-dir</code>:</p>
+
+    <table>
+        <tr class="odd">
+            <th>Name</th>
+            <th>Default Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>java-report.coverage-dir</code></td>
+            <td><code>${java-report.report-dir}/coverage</code></td>
+            <td>The directory where the test coverage report will be generated.</td>
+        </tr>
+    </table>
 
     <h4 id="report-cpd">report-cpd</h4>
 
-    <p>Generates a <a href="http://pmd.sourceforge.net/cpd/">Copy-Paste Duplication (TODO: check link)</a>
-    report.</p>
-
-    <p>The location of this report is controlled by the property
-    <code>java-report.cpd-dir</code>.</p>
+    <p>Generates a <a href="http://pmd.sourceforge.net/cpd.html">Copy-Paste Detection</a>
+    report. The follow properties control the behaviour of this report:</p>
+    
+    <table>
+        <tr class="odd">
+            <th>Name</th>
+            <th>Default Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>java-report.cpd-dir</code></td>
+            <td><code>${java-report.report-dir}/cpd</code></td>
+            <td>The directory where the copy-paste detection report will be generated.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-report.cpd-data-dir</code></td>
+            <td><code>${common.target-dir}/cpd-data</code></td>
+            <td>The directory where the CPD data will be stored.</td>
+        </tr>
+        <tr>
+            <td><code>java-report.cpd-data-file</code></td>
+            <td><code>${java-report.cpd-data-dir}/cpd-data.xml</code></td>
+            <td>The file where the CPD data will be stored</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-report.cpd-minimum-token-count</code></td>
+            <td><code>75</code></td>
+            <td>The minimum number duplicated tokens that will trigger a warning.</td>
+        </tr>
+        <tr>
+            <td><code>java-report.cpd-stylesheet</code></td>
+            <td><code>${java-report.pmd-libdir}/etc/xslt/cpdhtml.xslt</code></td>
+            <td>The XSLT stylesheet used to generate the HTML report</td>
+        </tr>
+    </table>
 
     <h4 id="report-findbugs">report-findbugs</h4>
 
     <p>Generates a <a href="http://findbugs.sourceforge.net">FindBugs</a>
     report.</p>
     
-    <p>The location of this report is controlled by the property
-    <code>java-report.findbugs-dir</code>.</p>
+    <table>
+        <tr class="odd">
+            <th>Name</th>
+            <th>Default Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>java-report.findbugs-failbuild</code></td>
+            <td><code>(unset)</code></td>
+            <td>If this property is set, any FindBugs warnings will cause the
+            build to fail.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-report.findbugs-home</code></td>
+            <td><code>${java-report.basedir}/lib/findbugs</code></td>
+            <td>The directory containing the FindBugs installation.</td>
+        </tr>
+        <tr>
+            <td><code>java-report.findbugs-dir</code></td>
+            <td><code>${java-report.report-dir}/findbugs</code></td>
+            <td>The directory where the FindBugs report will be generated.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-report.findbugs-libdir</code></td>
+            <td><code>${java-report.findbugs-home}/lib</code></td>
+            <td>The directory containing the FindBugs jar files.</td>
+        </tr>
+        <tr>
+            <td><code>java-report.findbugs-data-dir</code></td>
+            <td><code>${common.target-dir}/findbugs-data</code></td>
+            <td>The directory where the FindBugs data will be stored.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-report.findbugs-data-file</code></td>
+            <td><code>${java-report.findbugs-data-dir}/findbugs.xml</code></td>
+            <td>The file where the FindBugs data will be stored.</td>
+        </tr>
+        <tr>
+            <td><code>java-report.findbugs-stylesheet</code></td>
+            <td><code>${java-report.findbugs-home}/src/xsl/default.xsl</code></td>
+            <td>The XSLT stylesheet used to generate the HTML report</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-report.findbugs-report-file</code></td>
+            <td><code>${java-report.findbugs-dir}/index.html</code></td>
+            <td>The name of the HTML report file.</td>
+        </tr>
+        <tr>
+            <td><code>java-report.findbugs-jvmargs</code></td>
+            <td><code>-Xmx512m</code></td>
+            <td>Extra arguments that will be passed to the JVM running FindBugs.</td>
+        </tr>
+    </table>
 
     <h4 id="report-javadoc">report-javadoc</h4>
 
-    <p>Generates <a href="http://java.sun.com/javadoc">JavaDoc (TODO: check link)</a>
+    <p>Generates <a href="http://java.sun.com/j2se/javadoc/">JavaDoc</a>
     for all the source code underneath the directory specified by the property
     <code>java-build.src-dir</code>.</p>
     
-    <p>The location of this report is controlled by the property
-    <code>java-report.javadoc-dir</code>.</p>
-    
+    <table>
+        <tr class="odd">
+            <th>Name</th>
+            <th>Default Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>java-report.javadoc-dir</code></td>
+            <td><code>${java-report.report-dir}/javadoc</code></td>
+            <td>The directory where the JavaDoc documentation will be generated.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-report.javadoc-window-title</code></td>
+            <td><code>${ant.project.name}</code></td>
+            <td>The title that will appear on the JavaDoc.</td>
+        </tr>
+        <tr>
+            <td><code>java-report.javadoc-doc-title</code></td>
+            <td><code>${java-report.javadoc-window-title} - ${common.timestamp-long}</code></td>
+            <td>The title that will appear at the top of the JavaDoc pages.</td>
+        </tr>
+    </table>
+
     <h4 id="report-jdepend">report-jdepend</h4>
 
-    <p>Generates a <a href="http://www.jdepend.org">JDepend (TODO: check link)</a> report.</p>
+    <p>Generates a <a href="http://clarkware.com/software/JDepend.html">JDepend</a>
+    report.</p>
     
-    <p>The location of this report is controlled by the property
-    <code>java-report.jdepend-dir</code>.</p>
-    
+    <table>
+        <tr class="odd">
+            <th>Name</th>
+            <th>Default Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>java-report.jdepend-dir</code></td>
+            <td><code>${java-report.report-dir}/jdepend</code></td>
+            <td>The directory where the JDepend report will be generated.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-report.jdepend-data-dir</code></td>
+            <td><code>${common.target-dir}/jdepend-data</code></td>
+            <td>The directory where the JDepend data will be stored.</td>
+        </tr>
+    </table>
+
     <h4 id="report-pmd">report-pmd</h4>
 
     <p>Generates a <a href="http://pmd.sourceforge.net">PMD</a> code quality report.</p>
 
-    <p>The location of this report is controlled by the property
-    <code>java-report.pmd-dir</code>.</p>
+    <table>
+        <tr class="odd">
+            <th>Name</th>
+            <th>Default Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>java-report.pmd-dir</code></td>
+            <td><code>${java-report.report-dir}/pmd</code></td>
+            <td></td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-report.pmd-libdir</code></td>
+            <td><code>${java-report.basedir}/lib/pmd</code></td>
+            <td></td>
+        </tr>
+    </table>
     
     <h4 id="report-tests">report-tests</h4>
 
@@ -148,9 +301,24 @@
     target and the <a href="asl-java-test.html#test-integration"><code>test-integration</code></a>
     target will place their data files in that directory.</p>
     
-    <p>The location of this report is controlled by the property
-    <code>java-report.test-dir</code>.</p>
-    
+    <table>
+        <tr class="odd">
+            <th>Name</th>
+            <th>Default Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>java-report.test-dir</code></td>
+            <td><code>${java-report.report-dir}/test</code></td>
+            <td>The directory where the test report will be generated.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-test.test-data-dir</code></td>
+            <td><code>${common.target-dir}/test-data</code></td>
+            <td>The directory containing all the generated test result data.</td>
+        </tr>
+    </table>
+
     <hr/>
 
     <p>Is there a problem or mistake on this page? Do you want to contribute

@@ -30,6 +30,7 @@
     ************************************************************************ -->
     <property name="java-report.report-dir"             location="${common.dist-dir}/reports"/>
     <property name="java-report.javadoc-dir"            location="${java-report.report-dir}/javadoc"/>
+    <property name="java-report.javadoc-window-title"   value="${ant.project.name}"/>
     <property name="java-report.test-dir"               location="${java-report.report-dir}/test"/>
     <property name="java-report.coverage-dir"           location="${java-report.report-dir}/coverage"/>
     <property name="java-report.pmd-dir"                location="${java-report.report-dir}/pmd"/>
@@ -46,7 +47,7 @@
     <property name="java-report.checkstyle-data-file"   location="${java-report.checkstyle-data-dir}/checkstyle-data.xml"/>
     <property name="java-report.checkstyle-stylesheet"  location="${java-report.checkstyle-libdir}/xsl/checkstyle-noframes.xsl"/>
     <property name="java-report.jdepend-data-dir"       location="${common.target-dir}/jdepend-data"/>
-    <property name="java-report.jdepend-dir"     location="${java-report.report-dir}/jdepend"/>
+    <property name="java-report.jdepend-dir"            location="${java-report.report-dir}/jdepend"/>
     <property name="java-report.findbugs-home"          location="${java-report.basedir}/lib/findbugs"/>
     <!--
     <property name="java-report.findbugs-failbuild"     value="true"/>
@@ -71,6 +72,8 @@
     ************************************************************************ -->
     <target name="report-javadoc" depends="-init-time, -init-classpath"
             description="Creates javadoc for the source code">
+        <property name="java-report.javadoc-doc-title"   value="${java-report.javadoc-window-title} - ${common.timestamp-long}"/>
+
         <mkdir dir="${java-report.javadoc-dir}"/>
         <javadoc
                 sourcepath="${java-build.src-dir}"
@@ -82,8 +85,8 @@
                 verbose="false"
                 linksource="true"
                 source="${java-build.source-ver}"
-                windowtitle="${ant.project.name}"
-                doctitle="${ant.project.name} - ${common.timestamp-long}">
+                windowtitle="${java-report.javadoc-window-title}"
+                doctitle="${java-report.javadoc-doc-title}">
             <classpath refid="java-build.classpath"/>
             <link href="http://java.sun.com/javase/6/docs/api/"
                     offline="true"
@@ -301,8 +304,13 @@
     <!-- ***********************************************************************
     * target: report-jdepend
     ************************************************************************ -->
-    <target name="report-jdepend" depends="compile"
-            description="Creates a package dependency report">
+    <target name="report-jdepend" depends="-report-jdepend-run, -report-jdepend-xslt"
+            description="Creates a package dependency report"/>
+	
+    <!-- ***********************************************************************
+    * target: -report-jdepend-run
+    ************************************************************************ -->
+	<target name="-report-jdepend-run" depends="compile">
         <mkdir dir="${java-report.jdepend-data-dir}"/>
         <jdepend outputfile="${java-report.jdepend-data-dir}/jdepend.xml" format="xml">
             <exclude name="java.*"/>
@@ -311,13 +319,17 @@
                 <pathelement location="${java-build.classes-dir}"/>
             </classespath>
         </jdepend>
+	</target>
     
-        <mkdir dir="${java-report.jdepend-dir}"/>
+    <!-- ***********************************************************************
+    * target: -report-jdepend-xslt
+    ************************************************************************ -->
+	<target name="-report-jdepend-xslt">
+	    <mkdir dir="${java-report.jdepend-dir}"/>
         <xslt basedir="${java-report.jdepend-data-dir}"
                destdir="${java-report.jdepend-dir}"
                includes="jdepend.xml"
                style="${ant.home}/etc/jdepend.xsl"/>
     </target>    
-    
     
 </project>
