@@ -1,6 +1,6 @@
 <project name="afp-renderer" default="dist">
     <propert name="java-build.src-dir" location="src"/>
-    <import file="../ant-script-library/asl-java.xml"/>
+    <import file="../../asl-java.xml"/>
     
     <target name="copy-resources"
             depends="asl-java-build.copy-resources"
