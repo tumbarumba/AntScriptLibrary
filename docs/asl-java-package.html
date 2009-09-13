@@ -16,6 +16,29 @@
 
     <h3>Overview</h3>
     
+    <p><code>asl-java-package.xml</code> contains properties and targets that
+    are used to create an application package. That is, a zip file containing
+    an executable jar, wrapper scripts for the operating system, library jars
+    and configuration.</p>
+    
+    <p>The default directory layout of the zip file will be as follows:</p>
+    
+    <pre>/
+ + ${ant.project}.jar
+ + run.cmd
+ + run.sh
+ +--config/
+ |  + (configuration files in this directory)
+ |  ...
+ +--lib/
+    + (library jars in this directory)
+    ...</pre>
+    
+    <p>There is a prerequisite that is required for an application
+    package to work, namely the property <code>java-build.jar-main-class</code>
+    must be set (see the documentation of the <a href="asl-java-build.html#jar">jar
+    target</a> for details.</p>
+    
     <h3>Properties</h3>
     
     <table>
@@ -25,14 +48,68 @@
             <th>Description</th>
         </tr>
         <tr>
-            <td><code></code></td>
-            <td><code></code></td>
-            <td></td>
+            <td><code>java-package.pkg-dir</code></td>
+            <td><code>${common.target-dir}/package</code></td>
+            <td>The directory where the package structure will be set up in
+            preparation for creating the zip file.</td>
         </tr>
         <tr class="odd">
-            <td><code></code></td>
-            <td><code></code></td>
-            <td></td>
+            <td><code>java-package.pkg-lib-dir</code></td>
+            <td><code>${java-package.pkg-dir}/lib</code></td>
+            <td>The directory where all the library jars in the runtime classpath
+            will be copied.</td>
+        </tr>
+        <tr>
+            <td><code>java-package.src-config-dir</code></td>
+            <td><code>config</code></td>
+            <td>The location of the directory containing configuration files
+            for the application (this is optional)</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-package.pkg-config-dir</code></td>
+            <td><code>${java-package.pkg-dir}/config</code></td>
+            <td>The directory where all the configuration files will be copied</td>
+        </tr>
+        <tr>
+            <td><code>java-package.run-sh-name</code></td>
+            <td><code>run.sh</code></td>
+            <td>The name of the script file that will run on Unix compatible systems.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-package.run-sh-file</code></td>
+            <td><code>${java-package.pkg-dir}/${java-package.run-sh-name}</code></td>
+            <td>The location of the script file that will run on Unix compatible systems.</td>
+        </tr>
+        <tr>
+            <td><code>java-package.run-cmd-name</code></td>
+            <td><code>run.cmd</code></td>
+            <td>The name of the script file that will run on Windows.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-package.run-cmd-file</code></td>
+            <td><code>${java-package.pkg-dir}/${java-package.run-cmd-name}</code></td>
+            <td>The location of the script file that will run on Windows.</td>
+        </tr>
+        <tr>
+            <td><code>java-package.jvm-options</code></td>
+            <td><code>(not set)</code></td>
+            <td>Optional command line options that will be passed to the JRE inside
+            the application scripts.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-package.package-version</code></td>
+            <td><code>release-version</code> if it is set, otherwise <code>dev-${common.date-iso}</code></td>
+            <td>The version of the package.</td>
+        </tr>
+        <tr>
+            <td><code>java-package.zip-dir</code></td>
+            <td><code>${common.dist-dir}</code></td>
+            <td>The directory where the zip file will be created.</td>
+        </tr>
+        <tr class="odd">
+            <td><code>java-package.zip-file</code></td>
+            <td><code>${java-package.zip-dir}/${ant.project.name}-${release.version}.zip</code></td>
+            <td>The location of the zip file that will be created.</td>
         </tr>
     </table>
 
@@ -40,11 +117,15 @@
 
     <h4 id="package">package</h4>
     
-    <p>TBD</p>
+    <p>Creates an application package. That is, a zip file containing an
+    executable jar, wrapper scripts for the operating system, library jars
+    and configuration.</p>
     
     <h4 id="install">install</h4>
 
-    <p>TBD</p>
+    <p>Installs the application package to a directory specified by the property
+    "<code>install-dir</code>". If this property is undefined, the user will
+    be prompted.</p>
     
     <hr/>
 
