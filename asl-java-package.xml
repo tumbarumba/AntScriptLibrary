@@ -50,7 +50,7 @@
     <!-- ***********************************************************************
     * target: -package-init
     ************************************************************************ -->
-    <target name="-package-init">
+    <target name="-package-init" depends="-package-init-version">
         <property name="java-package.pkg-dir"           location="${common.target-dir}/package"/>
         <property name="java-package.pkg-lib-dir"       location="${java-package.pkg-dir}/lib"/>
         <property name="java-package.pkg-config-dir"    location="${java-package.pkg-dir}/config"/>
@@ -59,10 +59,18 @@
         <property name="java-package.run-cmd-name"      value="run.cmd"/>
         <property name="java-package.run-cmd-file"      value="${java-package.pkg-dir}/${java-package.run-cmd-name}"/>
         <property name="java-package.jvm-options"       value=""/>
+        <property name="java-package.package-version"   value="${release.version}"/>
         <property name="java-package.zip-dir"           location="${common.dist-dir}"/>
-        <property name="java-package.zip-file"          location="${java-package.zip-dir}/${ant.project.name}-${release.version}.zip"/>
+        <property name="java-package.zip-file"          location="${java-package.zip-dir}/${ant.project.name}-${java-package.package-version}.zip"/>
     </target>
-        
+
+    <!-- ***********************************************************************
+    * target: -package-init
+    ************************************************************************ -->
+    <target name="-package-init-version" depends="-init-time" unless="release.version">
+        <property name="java-package.package-version" value="dev-${common.date-iso}"/>
+    </target>
+    
     <!-- ***********************************************************************
     * target: -package-jar
     ************************************************************************ -->
@@ -84,14 +92,25 @@
     <!-- ***********************************************************************
     * target: -package-config
     ************************************************************************ -->
-    <target name="-package-config">
+    <target name="-package-config"
+            depends="-package-config-check"
+            if="java-package.config-exists">
         <property name="java-package.src-config-dir" location="config"/>
         <mkdir dir="${java-package.pkg-config-dir}"/>
         <copy todir="${java-package.pkg-config-dir}">
             <fileset dir="${java-package.src-config-dir}"/>
         </copy>
     </target>
-    
+
+    <!-- ***********************************************************************
+    * target: -package-config-check
+    ************************************************************************ -->
+    <target name="-package-config-check">
+        <available file="${java-package.src-config-dir}"
+                   type="dir"
+                   property="java-package.config-exists"/>
+    </target>
+
     <!-- ***********************************************************************
     * target: -package-scripts
     ************************************************************************ -->

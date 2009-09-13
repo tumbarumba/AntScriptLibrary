@@ -18,6 +18,7 @@
             <resolver ref="local"/>
             <resolver ref="shared"/>
             <resolver ref="exubero"/>
+            <resolver ref="maven2"/>
         </chain>
     </resolvers>
 

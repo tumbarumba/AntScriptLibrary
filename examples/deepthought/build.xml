@@ -3,4 +3,5 @@
     <import file="../../asl-java-build.xml"/>
     <import file="../../asl-java-test.xml"/>
     <import file="../../asl-java-report.xml"/>
+    <import file="../../asl-java-package.xml"/>
 </project>

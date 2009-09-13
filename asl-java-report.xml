@@ -34,12 +34,13 @@
     <property name="java-report.test-dir"               location="${java-report.report-dir}/test"/>
     <property name="java-report.coverage-dir"           location="${java-report.report-dir}/coverage"/>
     <property name="java-report.pmd-dir"                location="${java-report.report-dir}/pmd"/>
-    <property name="java-report.pmd-libdir"             location="${java-report.basedir}/lib/pmd"/>
+    <property name="java-report.pmd-homedir"            location="${java-report.basedir}/lib/pmd"/>
+    <property name="java-report.pmd-libdir"             location="${java-report.pmd-homedir}/lib"/>
     <property name="java-report.cpd-dir"                location="${java-report.report-dir}/cpd"/>
     <property name="java-report.cpd-data-dir"           location="${common.target-dir}/cpd-data"/>
     <property name="java-report.cpd-data-file"          location="${java-report.cpd-data-dir}/cpd-data.xml"/>
     <property name="java-report.cpd-minimum-token-count" value="75"/>
-    <property name="java-report.cpd-stylesheet"         location="${java-report.pmd-libdir}/etc/xslt/cpdhtml.xslt"/>
+    <property name="java-report.cpd-stylesheet"         location="${java-report.pmd-homedir}/etc/xslt/cpdhtml.xslt"/>
     <property name="java-report.checkstyle-dir"         location="${java-report.report-dir}/checkstyle"/>
     <property name="java-report.checkstyle-libdir"      location="${java-report.basedir}/lib/checkstyle"/>
     <property name="java-report.checkstyle-config-file" location="${java-report.checkstyle-libdir}/config/sun_checks.xml"/>
@@ -223,6 +224,8 @@
     * target: -report-init-findbugs
     ************************************************************************ -->
     <target name="-report-init-findbugs">
+        <asl-check-libs libname="findbugs" jar="${java-report.findbugs-libdir}/findbugs.jar"/>
+        
         <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask">
             <classpath>
                 <fileset dir="${java-report.findbugs-libdir}">

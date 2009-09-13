@@ -25,9 +25,9 @@
     <import file="${tasklib-install.basedir}/asl-repo-ivy.xml"/>
 
     <!-- ***********************************************************************
-    * macrodef: asl-install-jars
+    * macrodef: asl-install-tool-ivy
     ************************************************************************ -->
-    <macrodef name="asl-install-jars"
+    <macrodef name="asl-install-tool-ivy"
               description="Installs jars for optional tasks">
         <attribute name="libdir"/>
         <attribute name="organisation"/>
@@ -46,16 +46,28 @@
     <!-- ***********************************************************************
     * target: install-all
     ************************************************************************ -->
-    <target name="install-all" depends="install-cobertura, install-pmd, install-checkstyle"
+    <target name="install-all" depends="install-cobertura, install-pmd, install-checkstyle, install-findbugs"
             description="Installs all the optional libraries"/>
     
     <!-- ***********************************************************************
     * target: install-pmd
     ************************************************************************ -->
-    <target name="install-pmd" depends="-repo-configure-ivy"
+    <target name="install-pmd"
             description="Installs the libraries required by the pmd task">
-        <asl-install-jars libdir="${tasklib-install.basedir}/lib/pmd"
-            organisation="net.sf.pmd" module="pmd" revision="4.2.4"/>
+        <property name="pmd-install-dir" location="${tasklib-install.basedir}/lib/pmd"/>
+        <property name="pmd-version" value="4.2.5"/>
+        <property name="pmd-src-url" value="http://sourceforge.net/projects/pmd/files/pmd/${pmd-version}/pmd-bin-${pmd-version}.zip/download"/>
+        <property name="pmd-tmp-dir" location="${java.io.tmpdir}/pmd" />
+        <property name="pmd-tmp-file" location="${pmd-tmp-dir}/pmd-${pmd-version}.zip" />
+        <mkdir dir="${pmd-tmp-dir}"/>
+        <get dest="${pmd-tmp-file}" src="${pmd-src-url}" verbose="true"/>
+        <unzip dest="${pmd-tmp-dir}" src="${pmd-tmp-file}"/>
+        <move todir="${pmd-install-dir}">
+            <fileset dir="${pmd-tmp-dir}/pmd-${pmd-version}"/>
+        </move>
+        <move file="${pmd-install-dir}/lib/pmd-${pmd-version}.jar"
+              tofile="${pmd-install-dir}/lib/pmd.jar"/>
+        <delete dir="${pmd-tmp-dir}" failonerror="false"/>
     </target>
     
     <!-- ***********************************************************************
@@ -63,7 +75,7 @@
     ************************************************************************ -->
     <target name="install-cobertura" depends="-repo-configure-ivy"
             description="Installs the libraries required by the cobertura task">
-        <asl-install-jars libdir="${tasklib-install.basedir}/lib/cobertura"
+        <asl-install-tool-ivy libdir="${tasklib-install.basedir}/lib/cobertura"
             organisation="net.sf.cobertura" module="cobertura" revision="1.9"/>
     </target>
     
@@ -72,8 +84,27 @@
     ************************************************************************ -->
     <target name="install-checkstyle" depends="-repo-configure-ivy"
             description="Installs the libraries required by the checkstyle task">
-        <asl-install-jars libdir="${tasklib-install.basedir}/lib/checkstyle"
+        <asl-install-tool-ivy libdir="${tasklib-install.basedir}/lib/checkstyle"
             organisation="net.sf.checkstyle" module="checkstyle" revision="5.0"/>
+    </target>
+    
+    <!-- ***********************************************************************
+    * target: install-findbugs
+    ************************************************************************ -->
+    <target name="install-findbugs"
+            description="Installs the libraries required by the pmd task">
+        <property name="findbugs-install-dir" location="${tasklib-install.basedir}/lib/findbugs"/>
+        <property name="findbugs-version" value="1.3.9"/>
+        <property name="findbugs-src-url" value="http://prdownloads.sourceforge.net/findbugs/findbugs-${findbugs-version}.zip?download"/>
+        <property name="findbugs-tmp-dir" location="${java.io.tmpdir}/findbugs" />
+        <property name="findbugs-tmp-file" location="${findbugs-tmp-dir}/findbugs-${findbugs-version}.zip" />
+        <mkdir dir="${findbugs-tmp-dir}"/>
+        <get dest="${findbugs-tmp-file}" src="${findbugs-src-url}" verbose="true"/>
+        <unzip dest="${findbugs-tmp-dir}" src="${findbugs-tmp-file}"/>
+        <move todir="${findbugs-install-dir}">
+            <fileset dir="${findbugs-tmp-dir}/findbugs-${findbugs-version}"/>
+        </move>
+        <delete dir="${findbugs-tmp-dir}" failonerror="false"/>
     </target>
     
 </project>
