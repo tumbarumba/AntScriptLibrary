@@ -1,6 +1,6 @@
 This file documents the changes for the Ant Script Library.
 
-Version 1.1.0 (released ?)
+Version 1.1.0 (released September 13, 2009)
 ==========================
 
 Changes:
