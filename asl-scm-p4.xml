@@ -43,19 +43,19 @@
     version: @{version}
     localpath: @{localpath}
     workspace: ${scm.p4-workspace-name}</echo>
-            <antcall target="p4-create-workspace">
+            <antcall target="-p4-create-workspace">
                 <param name="scm.p4-ws-server-path" value="@{serverpath}"/>
                 <param name="scm.p4-ws-version"     value="@{version}"/>
             	<param name="scm.p4-ws-local-path"  value="@{localpath}"/>
                 <param name="scm.p4-workspace-name" value="${scm.p4-workspace-name}"/>
             </antcall>
-            <antcall target="p4-sync-workspace">
+            <antcall target="-p4-sync-workspace">
                 <param name="scm.p4-ws-server-path" value="@{serverpath}"/>
                 <param name="scm.p4-ws-version"     value="@{version}"/>
                 <param name="scm.p4-ws-local-path"  value="@{localpath}"/>
                 <param name="scm.p4-workspace-name" value="${scm.p4-workspace-name}"/>
             </antcall>
-            <antcall target="p4-delete-workspace">
+            <antcall target="-p4-delete-workspace">
                 <param name="scm.p4-workspace-name" value="${scm.p4-workspace-name}"/>
             </antcall>
         </sequential>
@@ -83,11 +83,11 @@
         <attribute name="dir"/>
     	<attribute name="tag"/>
         <sequential>
-        	<antcall target="p4-create-label">
+        	<antcall target="-p4-create-label">
                 <param name="scm.p4-label-path" value="@{dir}"/>
         	    <param name="scm.p4-label-name" value="@{tag}"/>
         	</antcall>
-        	<antcall target="p4-apply-tag">
+        	<antcall target="-p4-apply-tag">
                 <param name="scm.p4-label-path" value="@{dir}"/>
                 <param name="scm.p4-label-name" value="@{tag}"/>
             </antcall>
@@ -95,9 +95,9 @@
     </macrodef>
 
     <!-- ***********************************************************************
-    * target: p4-create-label
+    * target: -p4-create-label
     ************************************************************************ -->
-	<target name="p4-create-label"
+	<target name="-p4-create-label"
 		 depends="-p4-create-label-spec, -p4-apply-label-spec, -p4-delete-label-spec"/>
 
     <!-- ***********************************************************************
@@ -132,9 +132,9 @@ View:
     </target>
     
     <!-- ***********************************************************************
-    * target: p4-apply-tag
+    * target: -p4-apply-tag
     ************************************************************************ -->
-	<target name="p4-apply-tag">
+	<target name="-p4-apply-tag">
         <exec executable="${scm.p4-executable}" failonerror="true">
             <arg value="tag"/>
         	<arg value="-l"/>
@@ -144,9 +144,9 @@ View:
 	</target>
 	
     <!-- ***********************************************************************
-    * target: p4-create-workspace
+    * target: -p4-create-workspace
     ************************************************************************ -->
-	<target name="p4-create-workspace"
+	<target name="-p4-create-workspace"
 		    depends="-p4-create-workspace-spec, -p4-apply-workspace-spec, -p4-delete-workspace-spec"/>
 	
     <!-- ***********************************************************************
@@ -184,9 +184,9 @@ View:
 	</target>
 	
     <!-- ***********************************************************************
-    * target: p4-sync-workspace
+    * target: -p4-sync-workspace
     ************************************************************************ -->
-	<target name="p4-sync-workspace">
+	<target name="-p4-sync-workspace">
 		<mkdir dir="${scm.p4-ws-local-path}"/>
 		
         <exec executable="${scm.p4-executable}"
@@ -200,9 +200,9 @@ View:
 	</target>
 	
     <!-- ***********************************************************************
-    * target: p4-delete-workspace
+    * target: -p4-delete-workspace
     ************************************************************************ -->
-    <target name="p4-delete-workspace">
+    <target name="-p4-delete-workspace">
         <exec executable="${scm.p4-executable}"
               failonerror="true">
             <arg value="client"/>

@@ -60,7 +60,7 @@
     <h4 id="report-checkstyle">report-checkstyle</h4>
 
     <p>Generates a <a href="http://checkstyle.sourceforge.net">Checkstyle</a>
-    report. The follow properites control the behaviour of this report:</p>
+    report. The follow properties control the behaviour of this report:</p>
     
     <table>
         <tr class="odd">
@@ -163,7 +163,7 @@
     <h4 id="report-findbugs">report-findbugs</h4>
 
     <p>Generates a <a href="http://findbugs.sourceforge.net">FindBugs</a>
-    report.</p>
+    report. The follow properties control the behaviour of this report:</p>
     
     <table>
         <tr class="odd">
@@ -251,7 +251,7 @@
     <h4 id="report-jdepend">report-jdepend</h4>
 
     <p>Generates a <a href="http://clarkware.com/software/JDepend.html">JDepend</a>
-    report.</p>
+    report. The follow properties control the behaviour of this report:</p>
     
     <table>
         <tr class="odd">
@@ -273,7 +273,8 @@
 
     <h4 id="report-pmd">report-pmd</h4>
 
-    <p>Generates a <a href="http://pmd.sourceforge.net">PMD</a> code quality report.</p>
+    <p>Generates a <a href="http://pmd.sourceforge.net">PMD</a> code quality report.
+    The follow properties control the behaviour of this report:</p>
 
     <table>
         <tr class="odd">
@@ -284,12 +285,12 @@
         <tr>
             <td><code>java-report.pmd-dir</code></td>
             <td><code>${java-report.report-dir}/pmd</code></td>
-            <td></td>
+            <td>The directory where the PMD report will be generated.</td>
         </tr>
         <tr class="odd">
             <td><code>java-report.pmd-libdir</code></td>
             <td><code>${java-report.basedir}/lib/pmd</code></td>
-            <td></td>
+            <td>The directory containing the PMD jar files.</td>
         </tr>
     </table>
     
@@ -336,10 +337,14 @@
         <ul>
             <li><a href="asl-common.html">asl-common.xml</a></li>
             <li><a href="asl-java-build.html">asl-java-build.xml</a></li>
-            <li><a href="asl-java-war.html">asl-java-war.xml</a></li>
-            <li><a href="asl-java-test.html">asl-java-test.xml</a></li>
+            <li><a href="asl-java-package.html">asl-java-package.xml</a></li>
             <li class="navselected">asl-java-report.xml</li>
+            <li><a href="asl-java-test.html">asl-java-test.xml</a></li>
+            <li><a href="asl-java-war.html">asl-java-war.xml</a></li>
+            <li><a href="asl-release.html">asl-release.xml</a></li>
             <li><a href="asl-repo-ivy.html">asl-repo-ivy.xml</a></li>
+            <li><a href="asl-scm-p4.html">asl-scm-p4.xml</a></li>
+            <li><a href="asl-scm-svn.html">asl-scm-svn.xml</a></li>
         </ul>
     </li>
 </ul>

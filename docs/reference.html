@@ -57,8 +57,8 @@
             <td>Targets to generate test, coverage and quality reports</td>
         </tr>
         <tr>
-            <td class="module">asl-java-install.xml</td>
-            <td>Targets to create install directory</td>
+            <td class="module"><a href="asl-java-package.html">asl-java-package.xml</a></td>
+            <td>Targets to package an application into a zip package</td>
         </tr>
         <tr class="spacer">
             <td colspan="2">&nbsp;</td>
@@ -72,8 +72,8 @@
         </tr>
         <tr class="odd">
             <td class="module">asl-repo-maven.xml</td>
-            <td>Not yet implemented: repository targets for the
-            <a href="http://maven.apache.org/ant-tasks/index.html">Maven Ant Tasks</a></td>
+            <td>Repository targets for the
+            <a href="http://maven.apache.org/ant-tasks/index.html">Maven Ant Tasks</a> (not yet implemented)</td>
         </tr>
         <tr class="spacer">
             <td colspan="2">&nbsp;</td>
@@ -83,11 +83,15 @@
         </tr>
         <tr>
             <td class="module">asl-scm-cvs.xml</td>
-            <td>Not yet implemented: CVS targets for <acronym title="Software Configuration Management">SCM</acronym></td>
+            <td>CVS targets for <acronym title="Software Configuration Management">SCM</acronym> (not yet implemented)</td>
         </tr>
         <tr class="odd">
-            <td class="module">asl-scm-svn.xml</td>
-            <td>Not yet implemented: Subversion targets for <acronym title="Software Configuration Management">SCM</acronym></td>
+            <td class="module"><a href="asl-scm-p4.html">asl-scm-p4.xml</a></td>
+            <td>Perforce macros for <acronym title="Software Configuration Management">SCM</acronym></td>
+        </tr>
+        <tr>
+            <td class="module"><a href="asl-scm-svn.html">asl-scm-svn.xml</a></td>
+            <td>Subversion macros for <acronym title="Software Configuration Management">SCM</acronym></td>
         </tr>
         <tr class="spacer">
             <td colspan="2">&nbsp;</td>
@@ -96,8 +100,8 @@
             <th colspan="2">Release module</th>
         </tr>
         <tr>
-            <td class="module">asl-release.xml</td>
-            <td>Not yet implemented: targets to create a new release</td>
+            <td class="module"><a href="asl-release.html">asl-release.xml</a></td>
+            <td>Targets to create a new release</td>
         </tr>
     </table>
 
@@ -118,10 +122,14 @@
 		<ul>
 		    <li><a href="asl-common.html">asl-common.xml</a></li>
 		    <li><a href="asl-java-build.html">asl-java-build.xml</a></li>
+            <li><a href="asl-java-package.html">asl-java-package.xml</a></li>
+            <li><a href="asl-java-report.html">asl-java-report.xml</a></li>
+            <li><a href="asl-java-test.html">asl-java-test.xml</a></li>
 		    <li><a href="asl-java-war.html">asl-java-war.xml</a></li>
-		    <li><a href="asl-java-test.html">asl-java-test.xml</a></li>
-		    <li><a href="asl-java-report.html">asl-java-report.xml</a></li>
-		    <li><a href="asl-repo-ivy.html">asl-repo-ivy.xml</a></li>
+            <li><a href="asl-release.html">asl-release.xml</a></li>
+            <li><a href="asl-repo-ivy.html">asl-repo-ivy.xml</a></li>
+		    <li><a href="asl-scm-p4.html">asl-scm-p4.xml</a></li>
+            <li><a href="asl-scm-svn.html">asl-scm-svn.xml</a></li>
 		</ul>
     </li>
 </ul>

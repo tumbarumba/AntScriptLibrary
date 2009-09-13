@@ -39,6 +39,9 @@
         <unzip src="${java-package.zip-file}" dest="${install-dir}"/>
     </target>
     
+    <!-- ***********************************************************************
+    * target: -init-install-dir
+    ************************************************************************ -->
     <target name="-init-install-dir" unless="install-dir">
         <echo message="Property 'install-dir' has not been defined, prompting..."/>
         <input addproperty="install-dir">Enter the installation directory: </input>    
