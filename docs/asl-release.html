@@ -16,6 +16,28 @@
 
     <h3>Overview</h3>
     
+    <p><code>asl-release.xml</code> contains properties and targets that can be
+    used as a procedure to create a versioned releasable artifact from a software
+    configuration management (SCM) system.</p>
+    
+    <p>This is a generic release module, and it doesn't explicitly import any
+    <acronym title="Software Configuration Management">SCM</acronym> modules.
+    All it requires is that one of the existing
+    <acronym title="Software Configuration Management">SCM</acronym> modules (or
+    a new module that supports a specific set of macros).</p>
+    
+    <p>In this module, running the <code>release</code> target performs the
+    following steps:</p>
+    
+    <ul>
+        <li>Tags the code in the <acronym title="Software Configuration Management">SCM</acronym>
+        system</li>
+        <li>Exports the code from the <acronym title="Software Configuration Management">SCM</acronym>
+        system into a clean workspace</li>
+        <li>Compiles the code in the clean workspace</li>
+        <li>Creates a package for release</li>
+    </ul>
+    
     <h3>Properties</h3>
     
     <table>
@@ -25,14 +47,33 @@
             <th>Description</th>
         </tr>
         <tr>
-            <td><code></code></td>
-            <td><code></code></td>
-            <td></td>
+            <td><code>release.version</code></td>
+            <td><code>(not set)</code></td>
+            <td>The version of this release. The value of this property affects
+            the default tag that will be used, as well as the generated file
+            names</td>
         </tr>
         <tr class="odd">
-            <td><code></code></td>
-            <td><code></code></td>
-            <td></td>
+            <td><code>release.tag</code></td>
+            <td><code>${ant.project.name}-${release.version}</code></td>
+            <td>The name that will be used to tag the code in the
+            <acronym title="Software Configuration Management">SCM</acronym>
+            system</td>
+        </tr>
+        <tr>
+            <td><code>release.workspace</code></td>
+            <td><code>${common.target-dir}/release/${release.version}</code></td>
+            <td>The directory where the tagged code will be exported and packaged</td>
+        </tr>
+        <tr class="odd">
+            <td><code>release.buildfile-name</code></td>
+            <td><code>build.xml</code></td>
+            <td>The name of the build script to invoke in the release workspace</td>
+        </tr>
+        <tr>
+            <td><code>release.buildfile-path</code></td>
+            <td><code>${release.workspace}/${release.buildfile-name}</code></td>
+            <td>The path of the build script to invoke in the release workspace</td>
         </tr>
     </table>
 
@@ -40,23 +81,29 @@
 
     <h4 id="release">release</h4>
     
-    <p>TBD</p>
+    <p>This is an empty target, that contains dependencies upon the other
+    targets in the following order:
+    <a href="#release-tag">release-tag</a>, <a href="#release-export>release-export</a>,
+    <a href="#release-compile">release-compile</a>,
+    <a href="#release-package">release-package</a>.</p>
     
     <h4 id="release-tag">release-tag</h4>
 
-    <p>TBD</p>
+    <p>Tags the code in the <acronym title="Software Configuration Management">SCM</acronym>
+    system.</p>
     
     <h4 id="release-export">release-export</h4>
     
-    <p>TBD</p>
+    <p>Exports the code from the <acronym title="Software Configuration Management">SCM</acronym>
+    system to a clean release workspace</p>
     
     <h4 id="release-compile">release-compile</h4>
     
-    <p>TBD</p>
+    <p>Compiles the code in the release workspace</p>
     
     <h4 id="release-package">release-package</h4>
     
-    <p>TBD</p>
+    <p>Packages the code in the release workspace.</p>
     
     <hr/>
 
