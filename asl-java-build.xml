@@ -98,12 +98,37 @@
     <!-- ***********************************************************************
     * target: -init-classpath
     ************************************************************************ -->
-    <target name="-init-classpath">
+    <target name="-init-classpath"
+            depends="-init-classpath-check-lib-dir, -init-classpath-with-lib-dir, -init-classpath-no-lib-dir"/>
+    
+    <!-- ***********************************************************************
+    * target: -init-classpath-check-lib-dir
+    ************************************************************************ -->
+    <target name="-init-classpath-check-lib-dir">
+        <available file="${java-build.lib-dir}" type="dir"
+            property="java-build.lib-dir-exists"/>
+    </target>
+    
+    <!-- ***********************************************************************
+    * target: -init-classpath-with-lib-dir
+    ************************************************************************ -->
+    <target name="-init-classpath-with-lib-dir" if="java-build.lib-dir-exists">
     	<path id="java-build.classpath">
     		<fileset dir="${java-build.lib-dir}">
     			<include name="**/*.jar"/>
     		</fileset>
     	</path>
+    </target>
+    
+    <!-- ***********************************************************************
+    * target: -init-classpath-no-lib-dir
+    ************************************************************************ -->
+    <target name="-init-classpath-no-lib-dir" unless="java-build.lib-dir-exists">
+        <echo level="warning">****
+Library directory '${java-build.lib-dir}' does not exist, using empty classpath.
+****</echo>
+        <path id="java-build.classpath">
+        </path>
     </target>
 
     <!-- ***********************************************************************
