@@ -42,7 +42,8 @@
     <!-- ***********************************************************************
     * target: -repo-configure-ivy
     ************************************************************************ -->
-    <target name="-repo-configure-ivy" >
+    <target name="-repo-configure-ivy" unless="repo-ivy.already-configured">
+        <property name="repo-ivy.already-configured" value="true" />
         <ivy:configure file="${repo-ivy.settings-file}" />
     </target>
 
