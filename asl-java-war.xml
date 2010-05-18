@@ -31,7 +31,7 @@
     <property name="java-war.libs-dir"          location="${common.target-dir}/war-libs"/>
     <property name="java-war.web-content-dir"   location="src/main/webapp"/>
     <property name="java-war.web-xml"           location="web.xml"/>
-    <property name="java-war.webapp-name"       location="${ant.project.name}"/>
+    <property name="java-war.webapp-name"       value="${ant.project.name}"/>
     <property name="java-war.deploy-base"       location="${tomcat.home}/webapps"/>
     <property name="java-war.deploy-dir"        location="${java-war.deploy-base}/${java-war.webapp-name}"/>
 
