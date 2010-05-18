@@ -63,7 +63,7 @@
     <target name="-war-prepare-libs">
         <mkdir dir="${java-war.libs-dir}"/>
         <copy todir="${java-war.libs-dir}">
-            <path refid="java-build.classpath"/>
+            <path refid="java-build.runtime-classpath"/>
             <mapper type="flatten"/>
         </copy>
         <copy todir="${java-war.libs-dir}" file="${java-build.jar-file}"/>
