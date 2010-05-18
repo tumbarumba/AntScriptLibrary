@@ -32,7 +32,7 @@
     * from Ivy
     ************************************************************************ -->
     <target name="-init-classpath" depends="repo-resolve">
-        <ivy:cachepath pathid="java-build.classpath" conf="compile"/>
+        <ivy:cachepath pathid="java-build.classpath" conf="compile,provided"/>
     </target>
 
     <!-- ***********************************************************************
@@ -50,7 +50,7 @@
     * classpath from Ivy
     ************************************************************************ -->
     <target name="-test-init-classpath" depends="repo-resolve">
-        <ivy:cachepath pathid="java-test.classpath-ivy" conf="test,master"/>
+        <ivy:cachepath pathid="java-test.classpath-ivy" conf="test,provided,master"/>
         <path id="java-test.classpath">
             <path refid="java-test.classpath-ivy"/>
             <pathelement location="${java-build.jar-file}"/>
