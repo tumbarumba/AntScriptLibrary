@@ -58,6 +58,7 @@
         <property name="java-package.run-sh-file"       value="${java-package.pkg-dir}/${java-package.run-sh-name}"/>
         <property name="java-package.run-cmd-name"      value="run.cmd"/>
         <property name="java-package.run-cmd-file"      value="${java-package.pkg-dir}/${java-package.run-cmd-name}"/>
+        <property name="java-package.src-config-dir"    location="config"/>
         <property name="java-package.jvm-options"       value=""/>
         <property name="java-package.package-version"   value="${release.version}"/>
         <property name="java-package.zip-dir"           location="${common.dist-dir}"/>
@@ -95,7 +96,6 @@
     <target name="-package-config"
             depends="-package-config-check"
             if="java-package.config-exists">
-        <property name="java-package.src-config-dir" location="config"/>
         <mkdir dir="${java-package.pkg-config-dir}"/>
         <copy todir="${java-package.pkg-config-dir}">
             <fileset dir="${java-package.src-config-dir}"/>

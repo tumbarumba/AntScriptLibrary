@@ -32,6 +32,10 @@
     <property name="java-test.test-data-dir" location="${common.target-dir}/test-data"/>
     <property name="java-test.instrumented-classes-dir" location="${common.target-dir}/instrumented-classes"/>
     <property name="java-test.instrumented-datafile" location="${java-test.instrumented-classes-dir}/cobertura.ser"/>
+    <property name="java-test.maxmem" value="128m"/>
+    <property environment="env"/>
+    <property name="java-test.tools-jar-file" location="${env.JAVA_HOME}/lib/tools.jar"/>
+    
     
     <!-- ***********************************************************************
     * target: test-all
@@ -73,17 +77,24 @@
                     failureProperty="java-test.failed"
                     fork="true" forkmode="once"
             	    timeout="1500000"
-                    printsummary="false">
+                    printsummary="false"
+                    dir="${basedir}"
+                    maxmemory="${java-test.maxmem}">
                 <sysproperty key="net.sourceforge.cobertura.datafile" file="${java-test.instrumented-datafile}" />
                 <classpath>
                     <pathelement location="${java-test.instrumented-classes-dir}"/>
                     <pathelement location="${java-test.classes-dir}"/>
+                    <pathelement location="${java-package.src-config-dir}"/>
                     <path refid="java-test.classpath"/>
                     <path refid="java-test.cobertura-classpath"/>
+                    <pathelement location="${java-test.tools-jar-file}"/>
                 </classpath>
                 <formatter type="brief" usefile="false"/>
                 <formatter type="xml"/>
-                <batchtest todir="${java-test.test-data-dir}">
+                <test if="java-test.test-class"
+                      name="${java-test.test-class}"/>
+                <batchtest unless="java-test.test-class"
+                      todir="${java-test.test-data-dir}">
                     <fileset refid="@{test-fileset-refid}"/>
                 </batchtest>
             </junit>
@@ -162,7 +173,7 @@
             </fileset>
         </cobertura-instrument>
     </target>
-    
+ 
     <!-- ***********************************************************************
     * target: -test-init-cobertura
     ************************************************************************ -->
