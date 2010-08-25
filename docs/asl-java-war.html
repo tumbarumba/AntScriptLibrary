@@ -16,10 +16,23 @@
 
     <h3>Overview</h3>
     
-    <p>Sorry, this module hasn't been fully documented yet. Please view the
-    source code to see what properties and targets are used.</p>
+    <p><code>asl-java-war.xml</code> contains properties and targets for
+    creating and deploying war files.</p>
+    
+    <p>For projects that produce a war file as the only output distributable,
+    it is usual to override the "<code>dist</code>" target to depend upon the
+    "<code>war</code>" target instead of the default "<code>jar</code>"
+    target. The following example demonstrates this technique:</p>
+    
+<pre><code>&lt;project&gt;
+    TODO
+&lt;/project&gt;
+</code></pre>
     
     <h3>Properties</h3>
+    
+    <p>All properties defined within this module are prefixed with
+    "<code>java-war.</code>"</p>.
     
     <table>
         <tr class="odd">
