@@ -1,0 +1,8 @@
+<project name="newproject" default="dist">
+    <!--
+    <property name="java-build.src-dir" location="src"/>    
+    <property name="java-test.src-dir" location="test"/>    
+    -->
+    <import file="../../asl-java.xml"/>
+    <import file="../../asl-java-project.xml"/>
+</project>

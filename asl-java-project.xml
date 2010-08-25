@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!--
+********************************************************************************
+* Ant Script Library - Java project module 
+* Contains ant targets related project information and setup
+* Module property prefix: "java-project"
+********************************************************************************
+* Copyright 2009 Joe Schmetzer
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+********************************************************************************
+ -->
+<project name="asl-java-project">
+    <dirname property="java-project.basedir" file="${ant.file.asl-java-project}"/>
+    <import file="${java-project.basedir}/asl-common.xml"/>
+    <import file="${java-project.basedir}/asl-java-build.xml"/>
+    <import file="${java-project.basedir}/asl-java-test.xml"/>
+    <import file="${java-project.basedir}/asl-java-report.xml"/>
+    
+    <!-- ***********************************************************************
+    * Default values for java-project properties.
+    ************************************************************************ -->
+    
+    <!-- ***********************************************************************
+    * target: project-show-dirs
+    ************************************************************************ -->
+    <target name="project-show-dirs"
+    		description="Shows the directories configured for this project">
+        
+        <echo>Directories for Java Project ${ant.project.name}</echo>
+        <echo>=========================================================================</echo>
+        <echo>Main source (java-build.src-dir): ${java-build.src-dir}</echo>
+        <echo>Test source (java-test.src-dir):  ${java-test.src-dir}</echo>
+        <echo>Libraries (java-build.lib-dir):   ${java-build.lib-dir}</echo>
+        <echo>Build output (common.target-dir): ${common.target-dir}</echo>
+        <echo>Distributable (common.dist-dir):  ${common.dist-dir}</echo>
+        <echo>Reports (java-report.report-dir): ${java-report.report-dir}</echo>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: project-show-dirs
+    ************************************************************************ -->
+    <target name="project-mkdirs"
+            description="Creates the directories configured for this project">
+        <mkdir dir="${java-build.src-dir}"/>
+        <mkdir dir="${java-test.src-dir}"/>
+        <mkdir dir="${java-build.lib-dir}"/>
+    </target>
+</project>
