@@ -23,6 +23,7 @@
 <project name="asl-java-test">
     <dirname property="java-test.basedir" file="${ant.file.asl-java-test}"/>
     <import file="${java-test.basedir}/asl-java-build.xml"/>
+    <import file="${java-test.basedir}/asl-java-coverage.xml"/>
 
     <!-- ***********************************************************************
     * Default values for java-report properties.
@@ -30,8 +31,6 @@
     <property name="java-test.src-dir" location="src/test/java"/>
     <property name="java-test.classes-dir" location="${common.target-dir}/test-classes"/>
     <property name="java-test.test-data-dir" location="${common.target-dir}/test-data"/>
-    <property name="java-test.instrumented-classes-dir" location="${common.target-dir}/instrumented-classes"/>
-    <property name="java-test.instrumented-datafile" location="${java-test.instrumented-classes-dir}/cobertura.ser"/>
     <property name="java-test.maxmem" value="128m"/>
     <property environment="env"/>
     <property name="java-test.tools-jar-file" location="${env.JAVA_HOME}/lib/tools.jar"/>
@@ -69,26 +68,20 @@
     ************************************************************************ -->
     <macrodef name="junit-asl">
         <attribute name="test-fileset-refid"/>
+        <!-- Default to timeout after 25 minutes -->
+        <attribute name="timeout" default="1500000"/>
         <sequential>
             <mkdir dir="${java-test.test-data-dir}"/>
 
-        	<!-- Run tests, timeout after 25 mintues -->
             <junit errorProperty="java-test.failed"
                     failureProperty="java-test.failed"
                     fork="true" forkmode="once"
-            	    timeout="1500000"
+                    timeout="@{timeout}"
                     printsummary="false"
                     dir="${basedir}"
                     maxmemory="${java-test.maxmem}">
-                <sysproperty key="net.sourceforge.cobertura.datafile" file="${java-test.instrumented-datafile}" />
-                <classpath>
-                    <pathelement location="${java-test.instrumented-classes-dir}"/>
-                    <pathelement location="${java-test.classes-dir}"/>
-                    <pathelement location="${java-package.src-config-dir}"/>
-                    <path refid="java-test.classpath"/>
-                    <path refid="java-test.cobertura-classpath"/>
-                    <pathelement location="${java-test.tools-jar-file}"/>
-                </classpath>
+                <sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.datafile}" />
+                <classpath refid="java-test.junit-classpath"/>
                 <formatter type="brief" usefile="false"/>
                 <formatter type="xml"/>
                 <test if="java-test.test-class"
@@ -123,13 +116,13 @@
     * target: -test-prepare
     ************************************************************************ -->
     <target name="-test-prepare"
-            depends="-test-compile, -test-copy-resources, -test-instrument"/>
+            depends="-test-compile, -test-copy-resources, coverage-prepare, -test-init-junit-classpath, -test-show-junit-classpath"/>
     
 
     <!-- ***********************************************************************
     * target: -test-compile
     ************************************************************************ -->
-    <target name="-test-compile" depends="dist, -test-init-classpath">
+    <target name="-test-compile" depends="dist, -test-init-classpath, -test-show-classpath">
         <mkdir dir="${java-test.classes-dir}"/>
         
         <javac  srcdir="${java-test.src-dir}"                
@@ -149,7 +142,34 @@
         </path>
     </target>
     
-    
+    <!-- ***********************************************************************
+    * target: -test-show-classpath
+    ************************************************************************ -->
+    <target name="-test-show-classpath" if="show-classpath">
+        <asl-show-path refid="java-test.classpath"/>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: -test-init-junit-classpath
+    ************************************************************************ -->
+    <target name="-test-init-junit-classpath">
+        <path id="java-test.junit-classpath">
+             <pathelement location="${java-coverage.instrumented-classes-dir}"/>
+             <pathelement location="${java-test.classes-dir}"/>
+             <pathelement location="${java-package.src-config-dir}"/>
+             <path refid="java-test.classpath"/>
+             <path refid="java-test.coverage-classpath"/>
+             <pathelement location="${java-test.tools-jar-file}"/>
+        </path>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: -test-show-junit-classpath
+    ************************************************************************ -->
+    <target name="-test-show-junit-classpath" if="show-classpath">
+        <asl-show-path refid="java-test.junit-classpath"/>
+    </target>
+
     <!-- ***********************************************************************
     * target: -test-copy-resources
     ************************************************************************ -->
@@ -161,35 +181,6 @@
         </copy>
     </target>
     
-    <!-- ***********************************************************************
-    * target: -test-instrument
-    ************************************************************************ -->
-    <target name="-test-instrument" depends="-test-init-cobertura">
-        <cobertura-instrument
-                datafile="${java-test.instrumented-datafile}"
-                todir="${java-test.instrumented-classes-dir}">
-            <fileset dir="${java-build.classes-dir}">
-                <include name="**/*.class"/>
-            </fileset>
-        </cobertura-instrument>
-    </target>
- 
-    <!-- ***********************************************************************
-    * target: -test-init-cobertura
-    ************************************************************************ -->
-    <target name="-test-init-cobertura">
-        <property name="java-test.cobertura-libdir" location="${java-test.basedir}/lib/cobertura"/>
-        <asl-check-libs libname="cobertura" jar="${java-test.cobertura-libdir}/cobertura.jar"/>
-        
-        <taskdef resource="tasks.properties">
-            <classpath id="java-test.cobertura-classpath">
-                <fileset dir="${java-test.cobertura-libdir}">
-                    <include name="*.jar"/>
-                </fileset>
-            </classpath>
-        </taskdef>
-    </target>
-
     <!-- ***********************************************************************
     * target: -test-init-fileset-unit
     ************************************************************************ -->

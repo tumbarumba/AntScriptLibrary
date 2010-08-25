@@ -65,7 +65,7 @@
     * target: report-all
     ************************************************************************ -->
     <target name="report-all"
-            depends="report-javadoc, report-tests, report-cobertura, report-jdepend, report-pmd, report-cpd, report-checkstyle, report-findbugs" 
+            depends="report-javadoc, report-tests, coverage-report, report-jdepend, report-pmd, report-cpd, report-checkstyle, report-findbugs" 
             description="Runs all reports"/>
 
     <!-- ***********************************************************************
@@ -110,19 +110,6 @@
         </junitreport>
     </target>
     
-
-    <!-- ***********************************************************************
-    * target: report-cobertura
-    ************************************************************************ -->
-    <target name="report-cobertura" depends="-test-init-cobertura"
-            description="Generates a test coverage report">
-    
-        <cobertura-report
-            datafile="${java-test.instrumented-datafile}"
-            srcdir="${java-build.src-dir}"
-            destdir="${java-report.coverage-dir}"/>
-    
-    </target>
 
     <!-- ***********************************************************************
     * target: report-pmd

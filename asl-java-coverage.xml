@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!--
+********************************************************************************
+* Ant Script Library - Java coverage module 
+* Contains ant targets related to creating a coverage report
+* Module property prefix: "java-coverage"
+********************************************************************************
+* Copyright 2009 Joe Schmetzer
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+********************************************************************************
+ -->
+<project name="asl-java-coverage">
+    <dirname property="java-coverage.basedir" file="${ant.file.asl-java-coverage}"/>
+
+    <property name="java-coverage.instrumented-classes-dir" location="${common.target-dir}/instrumented-classes"/>
+    
+    <!-- ***********************************************************************
+    * Default coverage tool. This can be overridden to select a different
+    * coverage tool. Valid values are:
+    * - cobertura
+    * - emma
+    * - clover
+    ************************************************************************ -->
+    <property name="java-coverage.tool" value="cobertura"/>
+
+    <!-- ***********************************************************************
+    * Import the targets for the coverage tool, as specified by the property
+    * ${java-coverage.tool}.
+    ************************************************************************ -->
+    <import file="${java-coverage.basedir}/asl-coverage-${java-coverage.tool}.xml"/>
+    <import file="${java-coverage.basedir}/asl-java-report.xml"/>
+
+    <property name="java-coverage.report-dir" location="${java-report.report-dir}/coverage"/>
+
+    <!-- ***********************************************************************
+    * Target:  coverage-prepare
+    * Prepares the source code for the coverage tool (usually by instrumenting
+    * the class files).
+    ************************************************************************ -->
+    <target name="coverage-prepare" depends="-coverage-init">
+        <asl-coverage-prepare/>
+    </target>
+    
+    <target name="coverage-report" depends="-coverage-init" description="Create a test coverage report">
+        <asl-coverage-report/>
+    </target>
+        
+</project>

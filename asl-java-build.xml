@@ -127,8 +127,7 @@
         <echo level="warning">****
 Library directory '${java-build.lib-dir}' does not exist, using empty classpath.
 ****</echo>
-        <path id="java-build.classpath">
-        </path>
+        <path id="java-build.classpath"/>
     </target>
 
     <!-- ***********************************************************************

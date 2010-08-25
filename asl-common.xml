@@ -80,5 +80,18 @@ is missing. To install this jar, run the following command:
         </sequential>
     </macrodef>
      
+    <!-- ***********************************************************************
+    * macrodef: asl-show-path
+    ************************************************************************ -->
+    <macrodef name="asl-show-path"
+              description="Displays the elements of a path">
+        <attribute name="refid"/>
+        <sequential>
+            <pathconvert property="show-path-@{refid}" refid="@{refid}" pathsep="${line.separator}  "/>
+            <echo>@{refid}:
+  ${show-path-@{refid}}
+            </echo>
+        </sequential>
+    </macrodef>
 </project>
- 
+
