@@ -27,10 +27,9 @@
 
     <property name="java-war.dist-filename"     value="${ant.project.name}.war"/>
     <property name="java-war.dist-file"         location="${common.dist-dir}/${java-war.dist-filename}"/>
-    <property name="java-war.web-xml-file"      location="src/metadata/myapp.xml"/>
     <property name="java-war.libs-dir"          location="${common.target-dir}/war-libs"/>
     <property name="java-war.web-content-dir"   location="src/main/webapp"/>
-    <property name="java-war.web-xml"           location="web.xml"/>
+    <property name="java-war.web-xml-file"      location="${java-war.web-content-dir}/WEB-INF/web.xml"/>
     <property name="java-war.webapp-name"       value="${ant.project.name}"/>
     <property name="java-war.deploy-base"       location="${tomcat.home}/webapps"/>
     <property name="java-war.deploy-dir"        location="${java-war.deploy-base}/${java-war.webapp-name}"/>
@@ -60,15 +59,24 @@
     <!-- ***********************************************************************
     * target: -war-prepare-libs
     ************************************************************************ -->
-    <target name="-war-prepare-libs">
+    <target name="-war-prepare-libs" depends="-init-war-libs">
         <mkdir dir="${java-war.libs-dir}"/>
         <copy todir="${java-war.libs-dir}">
-            <path refid="java-build.runtime-classpath"/>
+            <path refid="java-war.libs-path"/>
             <mapper type="flatten"/>
         </copy>
         <copy todir="${java-war.libs-dir}" file="${java-build.jar-file}"/>
     </target>
 
+    <!-- ***********************************************************************
+    * target: -init-war-libs
+    ************************************************************************ -->
+    <target name="-init-war-libs">
+        <path id="java-war.libs-path">
+            <path refid="java-build.runtime-classpath"/>
+        </path>
+	</target>
+	
     <!-- ***********************************************************************
     * target: war-deploy
     ************************************************************************ -->

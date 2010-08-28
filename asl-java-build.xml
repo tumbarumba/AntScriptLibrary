@@ -28,6 +28,7 @@
     * Default values for java-build properties.
     ************************************************************************ -->
     <property name="java-build.src-dir" 		location="src/main/java"/>
+    <property name="java-build.resources-dir"   location="src/main/resources"/>
     <property name="java-build.lib-dir" 		location="lib"/>
     <property name="java-build.classes-dir" 	location="${common.target-dir}/classes"/>
     <property name="java-build.dist-ext" 		value=".jar"/>
@@ -55,8 +56,8 @@
         
         <property name="java-build.jar-title"       value="${ant.project.name}"/>
         <property name="java-build.jar-compress"    value="true"/>
-        <property name="java-build.jar-vendor"      value=""/>
-        <property name="java-build.jar-build-id"    value="${user.name} @ ${common.timestamp}"/>
+        <property name="java-build.jar-vendor"      value="Please override the property 'java-build.jar-vendor'"/>
+        <property name="java-build.jar-build-id"    value="Built by ${user.name} at ${common.timestamp} running on ${os.name} ${os.version} ${os.arch}"/>
         <property name="java-build.jar-main-class"  value=""/>
         
         <jar destfile="${java-build.jar-file}" compress="${java-build.jar-compress}">
@@ -171,7 +172,31 @@ Library directory '${java-build.lib-dir}' does not exist, using empty classpath.
     * target: copy-resources
     ************************************************************************ -->
     <target name="copy-resources"
-            description="Copies resources in preparation to be packaged in jar">
+    	    depends="-check-resources-exist,-copy-resources-dir,-copy-source-resources"
+            description="Copies resources in preparation to be packaged in jar"/>
+	
+    <!-- ***********************************************************************
+    * target: -check-resources-exist
+    ************************************************************************ -->
+    <target name="-check-resources-exist">
+    	<available property="java-build.resources-dir-exists"
+                   file="${java-build.resources-dir}"
+    	           type="dir"/>
+    </target>
+	
+    <!-- ***********************************************************************
+    * target: -copy-resources-dir
+    ************************************************************************ -->
+	<target name="-copy-resources-dir" if="java-build.resources-dir-exists">
+        <copy todir="${java-build.classes-dir}">
+            <fileset dir="${java-build.resources-dir}"/>
+        </copy>
+	</target>
+	
+    <!-- ***********************************************************************
+    * target: -copy-source-resources
+    ************************************************************************ -->
+	<target name="-copy-source-resources">
         <copy todir="${java-build.classes-dir}">
             <fileset dir="${java-build.src-dir}">
                 <exclude name="**/*.java"/>
