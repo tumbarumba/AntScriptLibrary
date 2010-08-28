@@ -36,8 +36,8 @@
     ************************************************************************ -->
     <target name="-release-init-properties" depends="-init-time, -init-version">
     	<echo message="Release version is ${release.version}"/>
-    	
-        <property name="release.tag" value="${ant.project.name}-${release.version}"/>
+        <property name="release.tag.prefix" value="${ant.project.name}-"/>
+        <property name="release.tag" value="${release.tag.prefix}${release.version}"/>
         <echo message="Release tag is ${release.tag}"/>
     
         <property name="release.workspace" location="${common.target-dir}/release/${release.version}"/>

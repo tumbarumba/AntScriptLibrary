@@ -83,11 +83,21 @@
         <attribute name="dir"/>
     	<attribute name="tag"/>
         <sequential>
+            <antcall target="-p4-fail-if-label-exists">
+                <param name="scm.p4-label-path" value="@{dir}"/>
+                <param name="scm.p4-label-name" value="@{tag}"/>
+                <param name="enabled" value="@{fail-if-exists}"/>
+            </antcall>
         	<antcall target="-p4-create-label">
                 <param name="scm.p4-label-path" value="@{dir}"/>
         	    <param name="scm.p4-label-name" value="@{tag}"/>
         	</antcall>
         	<antcall target="-p4-apply-tag">
+                <param name="scm.p4-label-path" value="@{dir}"/>
+                <param name="scm.p4-label-name" value="@{tag}"/>
+            </antcall>
+            </antcall>
+            <antcall target="-p4-lock-label">
                 <param name="scm.p4-label-path" value="@{dir}"/>
                 <param name="scm.p4-label-name" value="@{tag}"/>
             </antcall>
@@ -210,4 +220,46 @@ View:
             <arg value="${scm.p4-workspace-name}"/>
         </exec>
     </target>
+
+    <!-- ***********************************************************************
+    * target: -p4-fail-if-label-exists
+    ************************************************************************ -->
+    <target name="-p4-fail-if-label-exists">
+        <exec executable="${scm.p4-executable}"
+              failonerror="true"
+              outputproperty="p4-got-label" >
+            <arg value="labels"/>
+            <arg value="-e"/>
+            <arg value="${scm.p4-label-name}"/>
+        </exec>
+        <echo message="-p4-get-label found: ${p4-got-label}"/>
+        <fail message="The label ${scm.p4-label-name} already exists. Please use a different label, or else delete the existing label first.">
+            <condition>
+                <and>
+                    <istrue value="${enabled}"/>
+                    <matches string="${p4-got-label}" pattern=".*Label[.\n]*" casesensitive="false" singleline="true"/>
+                </and>
+            </condition>
+        </fail>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: -p4-lock-label
+    ************************************************************************ -->
+    <target name="-p4-lock-label"
+            depends="-p4-create-lock-label-spec, -p4-apply-label-spec, -p4-delete-label-spec"/>
+               
+    <!-- ***********************************************************************
+    * target: -p4-lock-label-spec
+    ************************************************************************ -->
+    <target name="-p4-create-lock-label-spec">
+        <property name="p4-label-spec-file" location="${java.io.tmpdir}/${ant.project.name}-p4-label-spec.txt"/>
+        <echo message="Using p4 label spec file ${p4-label-spec-file}"/>
+        <echo file="${p4-label-spec-file}">
+Label:  ${scm.p4-label-name}
+Options: locked
+View:
+     ${scm.p4-label-path}/...</echo>
+    </target>
+
 </project>
