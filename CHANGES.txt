@@ -1,7 +1,35 @@
 This file documents the changes for the Ant Script Library.
 
+Version 1.2.0 (released April ?, 2011)
+======================================
+
+Enhancements:
+
+- Moved to Github private Subversion repository
+- Java build can now copy resources from separate directory
+- War libs directory parameterised so it can be overridden
+- Modularised the code coverage targets, allowing different
+  code coverage tools to be plugged in.
+- New Java project module which allows directory structure
+  for a new project to be created and displayed
+- Test case improvements:
+  - Add ability to run single test case
+  - Include configuration dir in test classpath
+  - Allow setting of memory available to tests
+- Added a "provided" configuration for Ivy
+- Upgraded to Ivy 2.1.0
+- Ensure that Ivy configuration is only called once
+- Updated documentation
+
+Bug fixes:
+
+- java-war.webapp-name property definition incorrect
+- Libraries included in war should only be from the *runtime*
+  classpath 
+- Still build even when lib dir doesn't exist
+
 Version 1.1.0 (released September 13, 2009)
-==========================
+===========================================
 
 Changes:
 
