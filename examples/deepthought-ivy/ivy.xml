@@ -1,0 +1,9 @@
+<ivy-module version="2.0">
+    <info organisation="com.example" module="deep-thought"/>
+    <configurations>
+        <include file="../../ivy-configurations.xml"/>
+    </configurations>
+    <dependencies>
+            <dependency org="org.junit" name="junit" rev="4.5" conf="test->default"/>
+    </dependencies>
+</ivy-module>

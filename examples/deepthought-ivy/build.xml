@@ -1,5 +1,6 @@
 <project name="DeepThought" default="dist">
-    <import file="../../asl-java-build.xml"/>
+<!--    <property name="java-build.src-dir" location="src"/> -->
+    <import file="../../asl-java-ivy.xml"/>
     <import file="../../asl-java-test.xml"/>
     <import file="../../asl-java-report.xml"/>
     <import file="../../asl-java-package.xml"/>
