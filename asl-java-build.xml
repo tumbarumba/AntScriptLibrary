@@ -74,20 +74,36 @@
     </target>
 
     <!-- ***********************************************************************
+    * macrodef: asl-compile-sourceset
+    ************************************************************************ -->
+    <macrodef name="asl-compile">
+        <attribute name="name"/>
+        <attribute name="src-dir" default="@{name}"/>
+        <attribute name="classes-dir" default="${common.target-dir}/@{name}-classes"/>
+        <attribute name="classpath-ref"/> 
+        <sequential>
+            <mkdir dir="@{classes-dir}"/>
+            <javac  srcdir="@{src-dir}"
+                    destdir="@{classes-dir}"
+                    classpathref="@{classpath-ref}"
+                    source="${java-build.source-ver}"
+                    target="${java-build.target-ver}"
+                    debug="${java-build.debug}"
+                    includeantruntime="false"/>
+        </sequential>
+    </macrodef>
+	
+    <!-- ***********************************************************************
     * target: compile
     ************************************************************************ -->
     <target name="compile" depends="generate,-init-classpath"
             description="Compiles the java source">
-            
-        <mkdir dir="${java-build.classes-dir}"/>
-        <javac srcdir="${java-build.src-dir}"                
-         		destdir="${java-build.classes-dir}"
-                classpathref="java-build.classpath"
-                source="${java-build.source-ver}"
-                target="${java-build.target-ver}"
-               	debug="${java-build.debug}"
-                includeAntRuntime="false">
-        </javac>
+    	
+    	<asl-compile name="main"
+    		src-dir="${java-build.src-dir}"
+    		classes-dir="${java-build.classes-dir}"
+    		classpath-ref="java-build.classpath"/>
+    	
     </target>
 
     <!-- ***********************************************************************

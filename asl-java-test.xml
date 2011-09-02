@@ -80,6 +80,7 @@
                     printsummary="false"
                     dir="${basedir}"
                     maxmemory="${java-test.maxmem}">
+                <jvmarg value="-XX:MaxPermSize=256m"/>
                 <sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.datafile}" />
                 <classpath refid="java-test.junit-classpath"/>
                 <formatter type="brief" usefile="false"/>
@@ -123,13 +124,12 @@
     * target: -test-compile
     ************************************************************************ -->
     <target name="-test-compile" depends="dist, -test-init-classpath, -test-show-classpath">
-        <mkdir dir="${java-test.classes-dir}"/>
-        
-        <javac  srcdir="${java-test.src-dir}"                
-                destdir="${java-test.classes-dir}"
-                debug="on"
-                includeantruntime="false"
-                classpathref="java-test.classpath"/>
+
+        <asl-compile name="test"
+            src-dir="${java-test.src-dir}"
+            classes-dir="${java-test.classes-dir}"
+            classpath-ref="java-test.classpath"/>
+    	
     </target>
     
     <!-- ***********************************************************************

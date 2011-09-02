@@ -1,5 +1,5 @@
 <project name="afp-renderer" default="dist">
-    <propert name="java-build.src-dir" location="src"/>
+    <property name="java-build.src-dir" location="src"/>
     <import file="../../asl-java.xml"/>
     
     <target name="copy-resources"

@@ -28,11 +28,12 @@
     <!-- ***********************************************************************
     * Default coverage tool. This can be overridden to select a different
     * coverage tool. Valid values are:
+    * - none 
     * - cobertura
     * - emma
     * - clover
     ************************************************************************ -->
-    <property name="java-coverage.tool" value="cobertura"/>
+    <property name="java-coverage.tool" value="none"/>
 
     <!-- ***********************************************************************
     * Import the targets for the coverage tool, as specified by the property
