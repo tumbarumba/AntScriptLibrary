@@ -71,7 +71,6 @@
         <ivy:info />
         <ivy:publish
             artifactspattern="${repo-ivy.publish-pattern}"
-            status="integration"
             resolver="shared"
             overwrite="true"
             pubrevision="${ivy.revision}"/>
@@ -85,7 +84,6 @@
         <ivy:info />
         <ivy:publish
             artifactspattern="${repo-ivy.publish-pattern}"
-            status="integration"
             resolver="local"
             overwrite="true"
             pubrevision="${ivy.revision}"/>
