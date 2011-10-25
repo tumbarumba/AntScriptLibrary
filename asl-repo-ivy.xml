@@ -26,7 +26,7 @@
     <property name="repo-ivy.lib-dir"           location="lib"/>
     <property name="repo-ivy.report-dir"        location="target/dist/reports/ivy-report"/>
     <property name="repo-ivy.retrieve-pattern"  value="${repo-ivy.lib-dir}/[artifact]-[revision].[ext]"/>
-    <property name="repo-ivy.publish-pattern"   value="${common.dist-dir}/[artifact].[ext]"/>
+    <property name="repo-ivy.publish-pattern"   value="${common.dist-dir}/[artifact]-[revision].[ext]"/>
 
     <!-- ***********************************************************************
     * Set up the Ivy tasks
