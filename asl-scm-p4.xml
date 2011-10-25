@@ -96,7 +96,6 @@
                 <param name="scm.p4-label-path" value="@{dir}"/>
                 <param name="scm.p4-label-name" value="@{tag}"/>
             </antcall>
-            </antcall>
             <antcall target="-p4-lock-label">
                 <param name="scm.p4-label-path" value="@{dir}"/>
                 <param name="scm.p4-label-name" value="@{tag}"/>
