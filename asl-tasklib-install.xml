@@ -107,4 +107,15 @@
         <delete dir="${findbugs-tmp-dir}" failonerror="false"/>
     </target>
     
+    <!-- ***********************************************************************
+    * target: install-sonar
+    ************************************************************************ -->
+    <target name="install-sonar"
+            description="Installs the libraries required by the sonar task">
+        <property name="sonar-install-dir" location="${tasklib-install.basedir}/lib/sonar"/>    	
+        <property name="sonar-version" value="1.2"/>
+        <property name="sonar-jar-url" value="http://repository.codehaus.org/org/codehaus/sonar-plugins/sonar-ant-task/${sonar-version}/sonar-ant-task-${sonar-version}.jar"/>
+    	<mkdir dir="${sonar-install-dir}"/>
+    	<get dest="${sonar-install-dir}/sonar-ant-task.jar" src="${sonar-jar-url}" verbose="true"/>
+    </target>	
 </project>

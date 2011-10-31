@@ -60,7 +60,8 @@
     <property name="java-report.findbugs-dir"           location="${java-report.report-dir}/findbugs"/>
     <property name="java-report.findbugs-report-file"   location="${java-report.findbugs-dir}/index.html"/>
     <property name="java-report.findbugs-jvmargs"       value="-Xmx512m"/>
-
+    <property name="java-report.sonar-libdir"           location="${java-report.basedir}/lib/sonar"/>
+	 
     <!-- ***********************************************************************
     * target: report-all
     ************************************************************************ -->
@@ -322,4 +323,54 @@
                style="${ant.home}/etc/jdepend.xsl"/>
     </target>    
     
+    <!-- ***********************************************************************
+    * target: report-sonar
+    ************************************************************************ -->
+    <target name="report-sonar" depends="-report-init-sonar, -report-init-sonar-version, -report-init-sonar-properties"
+	        description="Analyzes project with Sonar">
+        <property name="java-report.sonar-key"     value="${ant.project.name}"/>
+        <property name="java-report.sonar-version" value="${release.version}"/>
+    	<sonar key="${java-report.sonar-key}" version="${java-report.sonar-version}"/>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: -report-init-sonar
+    ************************************************************************ -->
+    <target name="-report-init-sonar">
+        <asl-check-libs libname="sonar" jar="${java-report.sonar-libdir}/sonar-ant-task.jar"/>
+        
+        <taskdef resource="org/sonar/ant/antlib.xml">
+            <classpath>
+                <fileset dir="${java-report.sonar-libdir}">
+                    <include name="*.jar"/>
+                </fileset>
+            </classpath>
+        </taskdef>
+    </target>
+	
+    <!-- ***********************************************************************
+    * target: -report-init-sonar-version
+    ************************************************************************ -->
+    <target name="-report-init-sonar-version" depends="-init-time" unless="release.version">
+        <property name="java-report.sonar-version" value="dev-${common.date-iso}"/>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: -report-init-sonar-properties
+    ************************************************************************ -->
+    <target name="-report-init-sonar-properties">
+        <property name="sonar.jdbc.url"             value="jdbc:derby://localhost:1527/sonar;create=true"/>
+        <property name="sonar.jdbc.driverClassName" value="org.apache.derby.jdbc.ClientDriver"/>
+        <property name="sonar.jdbc.username"        value="sonar"/>
+        <property name="sonar.jdbc.password"        value="sonar"/>
+        <property name="sonar.host.url"             value="http://localhost:9000"/>
+        <property name="sonar.sources"              value="${java-build.src-dir}"/>
+        <property name="sonar.projectName"          value="${ant.project.name}"/>
+        <property name="sonar.binaries"             value="${java-build.classes-dir}"/>
+        <property name="sonar.tests"                value="${java-test.src-dir}"/>
+        <property name="sonar.dynamicAnalysis"      value="reuseReports"/>
+        <property name="sonar.surefire.reportsPath" value="${java-test.test-data-dir}"/>
+        <property name="sonar.cobertura.reportPath" value="${java-coverage.report-dir}/coverage.xml"/>
+    </target>    	
+
 </project>
