@@ -87,6 +87,7 @@
                 <formatter type="brief" usefile="false"/>
                 <formatter type="xml"/>
                 <test if="java-test.test-class"
+                      todir="${java-test.test-data-dir}"
                       name="${java-test.test-class}"/>
                 <batchtest unless="java-test.test-class"
                       todir="${java-test.test-data-dir}">
