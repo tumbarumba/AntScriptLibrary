@@ -5,7 +5,8 @@
 * Tested with cvs 1.12.13 on Linux
 * Module property prefix: "scm"
 ********************************************************************************
-* Copyright 2009 Joe Schmetzer, Ales Nosek
+* Copyright 2009 Joe Schmetzer
+* Copyright 2011 Ales Nosek
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
