@@ -35,7 +35,7 @@
     * target: project-show-dirs
     ************************************************************************ -->
     <target name="project-show-dirs"
-    		description="Shows the directories configured for this project">
+            description="Shows the directories configured for this project">
         
         <echo>Directories for Java Project ${ant.project.name}</echo>
         <echo>=========================================================================</echo>

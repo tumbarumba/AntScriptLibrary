@@ -75,8 +75,8 @@
         <path id="java-war.libs-path">
             <path refid="java-build.runtime-classpath"/>
         </path>
-	</target>
-	
+    </target>
+
     <!-- ***********************************************************************
     * target: war-deploy
     ************************************************************************ -->

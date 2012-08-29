@@ -124,12 +124,10 @@
     * target: -test-compile
     ************************************************************************ -->
     <target name="-test-compile" depends="dist, -test-init-classpath, -test-show-classpath">
-
         <asl-compile name="test"
             src-dir="${java-test.src-dir}"
             classes-dir="${java-test.classes-dir}"
             classpath-ref="java-test.classpath"/>
-    	
     </target>
     
     <!-- ***********************************************************************

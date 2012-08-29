@@ -22,11 +22,11 @@
  -->
 <project name="asl-common">
     <dirname property="asl-common.basedir" file="${ant.file.asl-common}"/>
-	<!-- User specific property overrides -->
-	<property file="${user.home}/asl.properties"/>
- 	
- 	<!-- Project specific property overrides -->
- 	<property file="asl.properties"/>
+    <!-- User specific property overrides -->
+    <property file="${user.home}/asl.properties"/>
+     
+    <!-- Project specific property overrides -->
+    <property file="asl.properties"/>
 
     <!-- ***********************************************************************
     * Common properties.
@@ -53,7 +53,7 @@
             <format property="common.year" pattern="yyyy"/>
         </tstamp>
     </target>
- 	
+     
     <!-- ***********************************************************************
     * target: -init-version
     * This is an empty target that allows users to override how the property

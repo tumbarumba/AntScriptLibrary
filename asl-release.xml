@@ -28,14 +28,14 @@
     * target: release
     ************************************************************************ -->
     <target name="release"
-    	    depends="release-tag, release-export, release-compile, release-package"
+            depends="release-tag, release-export, release-compile, release-package"
             description="Creates a new release version, tagging, checkout, build and package"/>
 
     <!-- ***********************************************************************
     * target: release-version
     ************************************************************************ -->
     <target name="-release-init-properties" depends="-init-time, -init-version">
-    	<echo message="Release version is ${release.version}"/>
+        <echo message="Release version is ${release.version}"/>
         <property name="release.tag.prefix" value="${ant.project.name}-"/>
         <property name="release.tag" value="${release.tag.prefix}${release.version}"/>
         <echo message="Release tag is ${release.tag}"/>
@@ -50,19 +50,19 @@
     ************************************************************************ -->
     <target name="release-tag" depends="-release-init-properties,-release-check-dir"
             description="Tags the code in scm using the release version">
-    	
+
         <echo message="Tagging '${release.server-path}' with tag '${release.tag}'"/>
         <scm-tag dir="${release.server-path}" tag="${release.tag}"/>
-    	
+    
     </target>
 
     <!-- ***********************************************************************
     * target: -release-check-dir
     ************************************************************************ -->
     <target name="-release-check-dir" unless="release.server-path">
-    	<fail message="The property 'release.server-path' must be defined"/>
+        <fail message="The property 'release.server-path' must be defined"/>
     </target>
-	
+
     <!-- ***********************************************************************
     * target: release-export
     ************************************************************************ -->

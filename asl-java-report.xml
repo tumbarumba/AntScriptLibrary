@@ -296,11 +296,11 @@
     ************************************************************************ -->
     <target name="report-jdepend" depends="-report-jdepend-run, -report-jdepend-xslt"
             description="Creates a package dependency report"/>
-	
+
     <!-- ***********************************************************************
     * target: -report-jdepend-run
     ************************************************************************ -->
-	<target name="-report-jdepend-run" depends="compile">
+    <target name="-report-jdepend-run" depends="compile">
         <mkdir dir="${java-report.jdepend-data-dir}"/>
         <jdepend outputfile="${java-report.jdepend-data-dir}/jdepend.xml" format="xml">
             <exclude name="java.*"/>
@@ -309,13 +309,13 @@
                 <pathelement location="${java-build.classes-dir}"/>
             </classespath>
         </jdepend>
-	</target>
+    </target>
     
     <!-- ***********************************************************************
     * target: -report-jdepend-xslt
     ************************************************************************ -->
-	<target name="-report-jdepend-xslt">
-	    <mkdir dir="${java-report.jdepend-dir}"/>
+    <target name="-report-jdepend-xslt">
+        <mkdir dir="${java-report.jdepend-dir}"/>
         <xslt basedir="${java-report.jdepend-data-dir}"
                destdir="${java-report.jdepend-dir}"
                includes="jdepend.xml"

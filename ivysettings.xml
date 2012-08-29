@@ -9,9 +9,9 @@
     <settings defaultResolver="default"/>
     <resolvers>
         <url name="exubero">
-	        <ivy      pattern="http://www.exubero.com/repo/[organisation]/[module]/[revision]/[type]s/[artifact].[ext]" />
-	        <artifact pattern="http://www.exubero.com/repo/[organisation]/[module]/[revision]/[type]s/[artifact]-[revision].[ext]" />
-	        <artifact pattern="http://www.exubero.com/repo/[organisation]/[module]/[revision]/[type]s/[artifact].[ext]" />
+            <ivy      pattern="http://www.exubero.com/repo/[organisation]/[module]/[revision]/[type]s/[artifact].[ext]" />
+            <artifact pattern="http://www.exubero.com/repo/[organisation]/[module]/[revision]/[type]s/[artifact]-[revision].[ext]" />
+            <artifact pattern="http://www.exubero.com/repo/[organisation]/[module]/[revision]/[type]s/[artifact].[ext]" />
         </url>
         <ibiblio name="maven2" m2compatible="true" />
         <chain name="default" returnFirst="true">

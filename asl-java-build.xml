@@ -27,31 +27,31 @@
     <!-- ***********************************************************************
     * Default values for java-build properties.
     ************************************************************************ -->
-    <property name="java-build.src-dir" 		location="src/main/java"/>
+    <property name="java-build.src-dir"         location="src/main/java"/>
     <property name="java-build.resources-dir"   location="src/main/resources"/>
-    <property name="java-build.lib-dir" 		location="lib"/>
-    <property name="java-build.classes-dir" 	location="${common.target-dir}/classes"/>
-    <property name="java-build.dist-ext" 		value=".jar"/>
-    <property name="java-build.dist-filename" 	value="${ant.project.name}${java-build.dist-ext}"/>
-    <property name="java-build.dist-file" 		location="${common.dist-dir}/${java-build.dist-filename}"/>
+    <property name="java-build.lib-dir"         location="lib"/>
+    <property name="java-build.classes-dir"     location="${common.target-dir}/classes"/>
+    <property name="java-build.dist-ext"        value=".jar"/>
+    <property name="java-build.dist-filename"   value="${ant.project.name}${java-build.dist-ext}"/>
+    <property name="java-build.dist-file"       location="${common.dist-dir}/${java-build.dist-filename}"/>
     <property name="java-build.jar-dir"         location="${common.dist-dir}"/>
-	<property name="java-build.jar-file"        location="${java-build.dist-file}"/>
-    <property name="java-build.source-ver" 		value="1.5"/>
-    <property name="java-build.target-ver" 		value="1.5"/>
-    <property name="java-build.debug" 			value="on"/>
+    <property name="java-build.jar-file"        location="${java-build.dist-file}"/>
+    <property name="java-build.source-ver"      value="1.5"/>
+    <property name="java-build.target-ver"      value="1.5"/>
+    <property name="java-build.debug"           value="on"/>
     
     <!-- ***********************************************************************
     * target: dist
     ************************************************************************ -->
     <target name="dist" depends="jar"
-    		description="Create a distributable for this java project"/>
+            description="Create a distributable for this java project"/>
 
     <!-- ***********************************************************************
     * target: jar
     ************************************************************************ -->
     <target name="jar" depends="compile, copy-resources, -init-time, -init-version, -init-jar-classpath, -init-jar-version-release, -init-jar-version-dev"
-    		description="Create a jar for this java project">
-    		
+            description="Create a jar for this java project">
+
         <mkdir dir="${java-build.jar-dir}"/>
         
         <property name="java-build.jar-title"       value="${ant.project.name}"/>
@@ -65,7 +65,7 @@
             <manifest>
                 <attribute name="Implementation-Title"   value="${java-build.jar-title}"/>
                 <attribute name="Implementation-Version" value="${java-build.jar-version}"/>
-                <attribute name="Implementation-Vendor"	 value="${java-build.jar-vendor}"/>
+                <attribute name="Implementation-Vendor"  value="${java-build.jar-vendor}"/>
                 <attribute name="Build-Id"               value="${java-build.jar-build-id}"/>
                 <attribute name="Main-Class"             value="${java-build.jar-main-class}"/>
                 <attribute name="Class-Path"             value="${java-build.jar-classpath}"/>
@@ -92,25 +92,25 @@
                     includeantruntime="false"/>
         </sequential>
     </macrodef>
-	
+
     <!-- ***********************************************************************
     * target: compile
     ************************************************************************ -->
     <target name="compile" depends="generate,-init-classpath"
             description="Compiles the java source">
-    	
-    	<asl-compile name="main"
-    		src-dir="${java-build.src-dir}"
-    		classes-dir="${java-build.classes-dir}"
-    		classpath-ref="java-build.classpath"/>
-    	
+        
+        <asl-compile name="main"
+            src-dir="${java-build.src-dir}"
+            classes-dir="${java-build.classes-dir}"
+            classpath-ref="java-build.classpath"/>
+        
     </target>
 
     <!-- ***********************************************************************
     * target: generate
     ************************************************************************ -->
     <target name="generate"
-    		description="Generates source code"/>
+            description="Generates source code"/>
 
     <!-- ***********************************************************************
     * target: -init-classpath
@@ -130,11 +130,11 @@
     * target: -init-classpath-with-lib-dir
     ************************************************************************ -->
     <target name="-init-classpath-with-lib-dir" if="java-build.lib-dir-exists">
-    	<path id="java-build.classpath">
-    		<fileset dir="${java-build.lib-dir}">
-    			<include name="**/*.jar"/>
-    		</fileset>
-    	</path>
+        <path id="java-build.classpath">
+            <fileset dir="${java-build.lib-dir}">
+                <include name="**/*.jar"/>
+            </fileset>
+        </path>
     </target>
     
     <!-- ***********************************************************************
@@ -163,19 +163,19 @@ Library directory '${java-build.lib-dir}' does not exist, using empty classpath.
         <pathconvert property="java-build.jar-lib-classpath"  
                 refid="java-build.runtime-classpath" pathsep=" ">
             <chainedmapper>
-    			<flattenmapper/>
-	       		<globmapper from="*.jar" to="lib/*.jar"/>
+                <flattenmapper/>
+                   <globmapper from="*.jar" to="lib/*.jar"/>
             </chainedmapper>
         </pathconvert>
         <property name="java-build.jar-classpath" value="config/ ${java-build.jar-lib-classpath}"/>
     </target>
-	
+    
     <!-- ***********************************************************************
     * target: -init-jar-version-release
     ************************************************************************ -->
     <target name="-init-jar-version-release" if="release.version">
         <property name="java-build.jar-version" value="${release.version}" />
-	</target>
+    </target>
     
     <!-- ***********************************************************************
     * target: -init-jar-version-dev
@@ -188,31 +188,31 @@ Library directory '${java-build.lib-dir}' does not exist, using empty classpath.
     * target: copy-resources
     ************************************************************************ -->
     <target name="copy-resources"
-    	    depends="-check-resources-exist,-copy-resources-dir,-copy-source-resources"
+            depends="-check-resources-exist,-copy-resources-dir,-copy-source-resources"
             description="Copies resources in preparation to be packaged in jar"/>
-	
+    
     <!-- ***********************************************************************
     * target: -check-resources-exist
     ************************************************************************ -->
     <target name="-check-resources-exist">
-    	<available property="java-build.resources-dir-exists"
+        <available property="java-build.resources-dir-exists"
                    file="${java-build.resources-dir}"
-    	           type="dir"/>
+                   type="dir"/>
     </target>
-	
+    
     <!-- ***********************************************************************
     * target: -copy-resources-dir
     ************************************************************************ -->
-	<target name="-copy-resources-dir" if="java-build.resources-dir-exists">
+    <target name="-copy-resources-dir" if="java-build.resources-dir-exists">
         <copy todir="${java-build.classes-dir}">
             <fileset dir="${java-build.resources-dir}"/>
         </copy>
-	</target>
-	
+    </target>
+    
     <!-- ***********************************************************************
     * target: -copy-source-resources
     ************************************************************************ -->
-	<target name="-copy-source-resources">
+    <target name="-copy-source-resources">
         <copy todir="${java-build.classes-dir}">
             <fileset dir="${java-build.src-dir}">
                 <exclude name="**/*.java"/>

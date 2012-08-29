@@ -64,6 +64,6 @@
     ************************************************************************ -->
     <target name="-init-version">
         <ivy:info/>
-    	<property name="release.version" value="${ivy.revision}"/>
-	</target>
+        <property name="release.version" value="${ivy.revision}"/>
+    </target>
 </project>
