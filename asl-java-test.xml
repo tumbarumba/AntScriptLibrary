@@ -29,6 +29,7 @@
     * Default values for java-report properties.
     ************************************************************************ -->
     <property name="java-test.src-dir" location="src/test/java"/>
+    <property name="java-test.resources-dir" location="src/test/resources"/>
     <property name="java-test.classes-dir" location="${common.target-dir}/test-classes"/>
     <property name="java-test.test-data-dir" location="${common.target-dir}/test-data"/>
     <property name="java-test.maxmem" value="128m"/>
@@ -86,6 +87,7 @@
                 <formatter type="brief" usefile="false"/>
                 <formatter type="xml"/>
                 <test if="java-test.test-class"
+                      todir="${java-test.test-data-dir}"
                       name="${java-test.test-class}"/>
                 <batchtest unless="java-test.test-class"
                       todir="${java-test.test-data-dir}">
@@ -171,7 +173,37 @@
     <!-- ***********************************************************************
     * target: -test-copy-resources
     ************************************************************************ -->
-    <target name="-test-copy-resources">
+    <target name="-test-copy-resources"
+        depends="-test-check-resources-exist,-test-copy-resources-dir,-test-copy-source-resources">
+        <copy todir="${java-test.classes-dir}">
+            <fileset dir="${java-test.src-dir}">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+  
+    <!-- ***********************************************************************
+    * target: -test-check-resources-exist
+    ************************************************************************ -->
+    <target name="-test-check-resources-exist">
+        <available property="java-test.resources-dir-exists"
+            file="${java-test.resources-dir}"
+            type="dir"/>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: -test-copy-resources-dir
+    ************************************************************************ -->
+    <target name="-test-copy-resources-dir" if="java-test.resources-dir-exists">
+        <copy todir="${java-test.classes-dir}">
+            <fileset dir="${java-test.resources-dir}"/>
+        </copy>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: -test-copy-source-resources
+    ************************************************************************ -->
+    <target name="-test-copy-source-resources">
         <copy todir="${java-test.classes-dir}">
             <fileset dir="${java-test.src-dir}">
                 <exclude name="**/*.java"/>

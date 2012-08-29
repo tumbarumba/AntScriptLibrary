@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!--
+********************************************************************************
+* Ant Script Library - Source Control Management for CVS
+* Tested with cvs 1.12.13 on Linux
+* Module property prefix: "scm"
+********************************************************************************
+* Copyright 2009 Joe Schmetzer
+* Copyright 2011 Ales Nosek
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+********************************************************************************
+ -->
+<project name="asl-scm-cvs">
+    <dirname property="asl-scm-cvs.basedir" file="${ant.file.asl-scm-cvs}"/>
+
+    <import file="${asl-scm-cvs.basedir}/asl-common.xml"/>
+    
+    <property name="scm.cvs-executable" value="cvs"/>
+
+    <!-- ***********************************************************************
+    * macro: scm-export
+    * <scm-export serverpath="${scm.server-project-dir}" localpath="${release.workspace}"/>
+    ************************************************************************ -->
+    <macrodef name="scm-export">
+        <attribute name="serverpath"/>
+        <attribute name="version"/>
+        <attribute name="localpath"/>
+        <sequential>
+            <!-- cvs doesn't like target directory specified as absolute path -->
+            <pathconvert property="localpath-relative">
+                <path location="@{localpath}"/>
+                <globmapper from="${basedir}/*" to="./*"/>
+            </pathconvert> 
+            <exec executable="${scm.cvs-executable}" failonerror="true">
+                <arg value="export"/>
+                <arg value="-r"/>
+                <arg value="@{version}"/>
+                <arg value="-d"/>
+                <arg value="${localpath-relative}"/>
+                <arg value="@{serverpath}"/>
+            </exec>
+        </sequential>
+    </macrodef>
+
+    <!-- ***********************************************************************
+    * macro: scm-update
+    ************************************************************************ -->
+    <macrodef name="scm-update">
+        <sequential>
+            <exec executable="${scm.cvs-executable}" failonerror="true">
+                <arg value="update"/>
+                <arg value="-d"/>
+            </exec>
+        </sequential>
+    </macrodef>
+
+    <!-- ***********************************************************************
+    * macro: scm-tag
+    ************************************************************************ -->
+    <macrodef name="scm-tag">
+        <attribute name="dir"/>
+        <attribute name="tag"/>
+        <sequential>
+            <exec executable="${scm.cvs-executable}" failonerror="true">
+                <arg value="tag"/>
+                <arg value="@{tag}"/>
+            </exec>
+        </sequential>
+    </macrodef>
+
+    <!-- ***********************************************************************
+    * target: -release-init-tag
+    * cvs tag must not contain the characters '$,.:;@'
+    ************************************************************************ -->
+    <target name="-release-init-tag">
+        <property name="release.tag.prefix" value="${ant.project.name}-"/>       
+        <pathconvert property="release.tag" dirsep="" pathsep="">
+            <path path="${release.tag.prefix}${release.version}" />
+            <!-- pathconvert will try to add the root directory to the "path", so replace with empty string -->
+            <map from="${basedir}" to="" />
+            <filtermapper>
+                <replacestring from="$" to="_" />
+                <replacestring from="," to="_" />
+                <replacestring from="." to="_" />
+                <replacestring from=":" to="_" />
+                <replacestring from=";" to="_" />
+                <replacestring from="@" to="_" />
+            </filtermapper>
+        </pathconvert>
+    </target>
+
+</project>

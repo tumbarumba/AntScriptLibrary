@@ -34,15 +34,21 @@
     <!-- ***********************************************************************
     * target: release-version
     ************************************************************************ -->
-    <target name="-release-init-properties" depends="-init-time, -init-version">
+    <target name="-release-init-properties" depends="-init-time, -init-version, -release-init-tag">
         <echo message="Release version is ${release.version}"/>
-        <property name="release.tag.prefix" value="${ant.project.name}-"/>
-        <property name="release.tag" value="${release.tag.prefix}${release.version}"/>
         <echo message="Release tag is ${release.tag}"/>
     
         <property name="release.workspace" location="${common.target-dir}/release/${release.version}"/>
         <property name="release.buildfile-name" value="build.xml"/>
         <property name="release.buildfile-path" location="${release.workspace}/${release.buildfile-name}"/>
+    </target>
+	
+    <!-- ***********************************************************************
+    * target: -release-init-tag
+    ************************************************************************ -->
+    <target name="-release-init-tag">
+        <property name="release.tag.prefix" value="${ant.project.name}-"/>
+        <property name="release.tag" value="${release.tag.prefix}${release.version}"/>
     </target>
 
     <!-- ***********************************************************************

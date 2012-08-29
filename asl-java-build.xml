@@ -32,10 +32,7 @@
     <property name="java-build.lib-dir"         location="lib"/>
     <property name="java-build.classes-dir"     location="${common.target-dir}/classes"/>
     <property name="java-build.dist-ext"        value=".jar"/>
-    <property name="java-build.dist-filename"   value="${ant.project.name}${java-build.dist-ext}"/>
-    <property name="java-build.dist-file"       location="${common.dist-dir}/${java-build.dist-filename}"/>
     <property name="java-build.jar-dir"         location="${common.dist-dir}"/>
-    <property name="java-build.jar-file"        location="${java-build.dist-file}"/>
     <property name="java-build.source-ver"      value="1.5"/>
     <property name="java-build.target-ver"      value="1.5"/>
     <property name="java-build.debug"           value="on"/>
@@ -49,9 +46,9 @@
     <!-- ***********************************************************************
     * target: jar
     ************************************************************************ -->
-    <target name="jar" depends="compile, copy-resources, -init-time, -init-version, -init-jar-classpath, -init-jar-version-release, -init-jar-version-dev"
+    <target name="jar" depends="compile, copy-resources, -init-time, -init-version, -init-jar-classpath, -init-jar-version-release, -init-jar-version-dev, -init-jar-file-name"
             description="Create a jar for this java project">
-
+    
         <mkdir dir="${java-build.jar-dir}"/>
         
         <property name="java-build.jar-title"       value="${ant.project.name}"/>
@@ -170,6 +167,15 @@ Library directory '${java-build.lib-dir}' does not exist, using empty classpath.
         <property name="java-build.jar-classpath" value="config/ ${java-build.jar-lib-classpath}"/>
     </target>
     
+    <!-- ***********************************************************************
+    * target: -init-jar-file-name
+    ************************************************************************ -->
+    <target name="-init-jar-file-name">
+        <property name="java-build.dist-filename"   value="${ant.project.name}-${java-build.jar-version}${java-build.dist-ext}"/>
+        <property name="java-build.dist-file"       location="${common.dist-dir}/${java-build.dist-filename}"/>
+        <property name="java-build.jar-file"        location="${java-build.dist-file}"/>
+    </target>
+
     <!-- ***********************************************************************
     * target: -init-jar-version-release
     ************************************************************************ -->

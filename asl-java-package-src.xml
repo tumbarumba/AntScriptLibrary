@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!--
+********************************************************************************
+* Ant Script Library - Java source package module
+* Module creates source distribution package.
+* Module property prefix: "java-package-src"
+********************************************************************************
+* Copyright 2009 Joe Schmetzer
+* Copyright 2011 Ales Nosek
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+********************************************************************************
+ -->
+<project name="asl-java-package-src">
+    <dirname property="asl-java-package-src.basedir" file="${ant.file.asl-java-package-src}"/>
+    <import file="${asl-java-package-src.basedir}/asl-common.xml"/>
+        
+    <!-- ***********************************************************************
+    * target: package-src
+    ************************************************************************ -->
+    <target name="package-src" depends="-init-version, -package-src-init, -package-src, -package-src-zip"
+            description="Zips the project files in a distributable archive file"/>
+    
+    <!-- ***********************************************************************
+    * target: -package-init
+    ************************************************************************ -->
+    <target name="-package-src-init" depends="-package-src-init-version">
+        <property name="java-package-src.pkg-dir"           location="${common.target-dir}/package-src"/>
+        <property name="java-package-src.package-version"   value="${release.version}"/>
+        <property name="java-package-src.zip-dir"           location="${common.dist-dir}"/>
+        <property name="java-package-src.zip-file"          location="${java-package-src.zip-dir}/${ant.project.name}-${java-package-src.package-version}.zip"/>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: -package-src-init-version
+    ************************************************************************ -->
+    <target name="-package-src-init-version" depends="-init-time" unless="release.version">
+        <property name="java-package-src.package-version" value="dev-${common.date-iso}"/>
+    </target>
+    
+    <!-- ***********************************************************************
+    * target: -package-src
+    ************************************************************************ -->
+    <target name="-package-src">
+        <mkdir dir="${java-package-src.pkg-dir}"/>
+        <!-- convert absolute path common.target-dir to relative --> 
+        <pathconvert property="rel-target-dir">
+            <map from="${basedir}/" to=""/>
+            <path location="${common.target-dir}"/>
+        </pathconvert>
+        <!-- copy files excluding target directory -->
+        <copy todir="${java-package-src.pkg-dir}">
+            <fileset dir="${basedir}">
+              <exclude name="${rel-target-dir}/**"/>
+            </fileset>
+        </copy>
+    </target> 
+    
+    <!-- ***********************************************************************
+    * target: -package-src-zip
+    ************************************************************************ -->
+    <target name="-package-src-zip">
+        <mkdir dir="${java-package-src.zip-dir}" />
+        <zip destfile="${java-package-src.zip-file}">
+            <fileset dir="${java-package-src.pkg-dir}"/>
+        </zip>
+    </target>    
+    
+</project>
