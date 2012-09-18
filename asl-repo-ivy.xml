@@ -25,7 +25,7 @@
     <property name="repo-ivy.settings-file"     location="${repo-ivy.basedir}/ivysettings.xml" />
     <property name="repo-ivy.lib-dir"           location="lib"/>
     <property name="repo-ivy.report-dir"        location="target/dist/reports/ivy-report"/>
-    <property name="repo-ivy.retrieve-pattern"  value="${repo-ivy.lib-dir}/[artifact]-[revision].[ext]"/>
+    <property name="repo-ivy.retrieve-pattern"  value="${repo-ivy.lib-dir}/[artifact]-[revision](-[classifier]).[ext]"/>
     <property name="repo-ivy.publish-pattern"   value="${common.dist-dir}/[artifact]-[revision].[ext]"/>
 
     <!-- ***********************************************************************
@@ -77,16 +77,18 @@
     </target>
 
     <!-- ***********************************************************************
-    * target: repo-publish
+    * target: repo-publish-local
     ************************************************************************ -->
-    <target name="repo-publish-local" depends="-repo-configure-ivy"  
+    <target name="repo-publish-local" depends="-repo-configure-ivy, dist" 
             description="Publish artifacts to Ivy local repository">
+        <fail unless="release.version"
+              message="'release.version' property must be set to publish"/>
         <ivy:info />
         <ivy:publish
             artifactspattern="${repo-ivy.publish-pattern}"
             resolver="local"
             overwrite="true"
-            pubrevision="${ivy.revision}"/>
+            pubrevision="${release.version}"/>
     </target>
 
     <!-- ***********************************************************************
