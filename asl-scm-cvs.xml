@@ -38,21 +38,21 @@
         <attribute name="localpath"/>
         <sequential>
             <!-- cvs doesn't like target directory specified as absolute path -->
-            <pathconvert property="localpath-relative">
-                <path location="@{localpath}"/>
-                <globmapper from="${basedir}/*" to="./*"/>
+        	  <pathconvert property="localpath-relative">
+        	      <path location="@{localpath}"/>
+        	      <globmapper from="${basedir}/*" to="./*"/>
             </pathconvert> 
             <exec executable="${scm.cvs-executable}" failonerror="true">
                 <arg value="export"/>
                 <arg value="-r"/>
-                <arg value="@{version}"/>
+            	  <arg value="@{version}"/>
                 <arg value="-d"/>
                 <arg value="${localpath-relative}"/>
                 <arg value="@{serverpath}"/>
             </exec>
         </sequential>
     </macrodef>
-
+	
     <!-- ***********************************************************************
     * macro: scm-update
     ************************************************************************ -->
@@ -60,7 +60,7 @@
         <sequential>
             <exec executable="${scm.cvs-executable}" failonerror="true">
                 <arg value="update"/>
-                <arg value="-d"/>
+            	  <arg value="-d"/>
             </exec>
         </sequential>
     </macrodef>
@@ -69,8 +69,8 @@
     * macro: scm-tag
     ************************************************************************ -->
     <macrodef name="scm-tag">
-        <attribute name="dir"/>
-        <attribute name="tag"/>
+	      <attribute name="dir"/>
+	      <attribute name="tag"/>
         <sequential>
             <exec executable="${scm.cvs-executable}" failonerror="true">
                 <arg value="tag"/>
@@ -78,7 +78,7 @@
             </exec>
         </sequential>
     </macrodef>
-
+	
     <!-- ***********************************************************************
     * target: -release-init-tag
     * cvs tag must not contain the characters '$,.:;@'
@@ -90,14 +90,14 @@
             <!-- pathconvert will try to add the root directory to the "path", so replace with empty string -->
             <map from="${basedir}" to="" />
             <filtermapper>
-                <replacestring from="$" to="_" />
-                <replacestring from="," to="_" />
+            	  <replacestring from="$" to="_" />
+            	  <replacestring from="," to="_" />
                 <replacestring from="." to="_" />
-                <replacestring from=":" to="_" />
-                <replacestring from=";" to="_" />
-                <replacestring from="@" to="_" />
+            	  <replacestring from=":" to="_" />
+            	  <replacestring from=";" to="_" />
+            	  <replacestring from="@" to="_" />
             </filtermapper>
         </pathconvert>
     </target>
-
+	
 </project>

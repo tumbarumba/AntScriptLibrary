@@ -61,7 +61,7 @@
     <property name="java-report.findbugs-report-file"   location="${java-report.findbugs-dir}/index.html"/>
     <property name="java-report.findbugs-jvmargs"       value="-Xmx512m"/>
     <property name="java-report.sonar-libdir"           location="${java-report.basedir}/lib/sonar"/>
- 
+
     <!-- ***********************************************************************
     * target: report-all
     ************************************************************************ -->

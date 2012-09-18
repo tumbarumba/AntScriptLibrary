@@ -166,6 +166,15 @@ Library directory '${java-build.lib-dir}' does not exist, using empty classpath.
         </pathconvert>
         <property name="java-build.jar-classpath" value="config/ ${java-build.jar-lib-classpath}"/>
     </target>
+	
+    <!-- ***********************************************************************
+    * target: -init-jar-file-name
+    ************************************************************************ -->
+    <target name="-init-jar-file-name">
+        <property name="java-build.dist-filename" 	value="${ant.project.name}-${java-build.jar-version}${java-build.dist-ext}"/>
+        <property name="java-build.dist-file" 		location="${common.dist-dir}/${java-build.dist-filename}"/>
+    	<property name="java-build.jar-file"        location="${java-build.dist-file}"/>
+	</target>
     
     <!-- ***********************************************************************
     * target: -init-jar-file-name

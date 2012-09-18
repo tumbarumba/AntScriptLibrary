@@ -25,8 +25,6 @@
 
     <import file="${asl-java-war.basedir}/asl-java-build.xml"/>
 
-    <property name="java-war.dist-filename"     value="${ant.project.name}.war"/>
-    <property name="java-war.dist-file"         location="${common.dist-dir}/${java-war.dist-filename}"/>
     <property name="java-war.libs-dir"          location="${common.target-dir}/war-libs"/>
     <property name="java-war.web-content-dir"   location="src/main/webapp"/>
     <property name="java-war.web-xml-file"      location="${java-war.web-content-dir}/WEB-INF/web.xml"/>
@@ -37,7 +35,7 @@
     <!-- ***********************************************************************
     * target: war
     ************************************************************************ -->
-    <target name="war" depends="compile, copy-resources, jar, -init-time, -war-prepare-libs"
+    <target name="war" depends="compile, copy-resources, jar, -init-time, -init-war-file-name, -war-prepare-libs"
             description="Create a war for this web project">
             
         <mkdir dir="${common.dist-dir}"/>
@@ -54,6 +52,14 @@
             </manifest>
             <lib dir="${java-war.libs-dir}"/>
         </war>
+    </target>
+
+    <!-- ***********************************************************************
+    * target: -init-war-file-name
+    ************************************************************************ -->
+    <target name="-init-war-file-name">
+        <property name="java-war.dist-filename"   value="${ant.project.name}-${java-build.jar-version}.war"/>
+        <property name="java-war.dist-file"       location="${common.dist-dir}/${java-war.dist-filename}"/>
     </target>
 
     <!-- ***********************************************************************
