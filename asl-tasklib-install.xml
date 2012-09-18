@@ -39,6 +39,7 @@
                 organisation="@{organisation}" 
                 module="@{module}"
                 revision="@{revision}"
+                type="jar"
                 inline="true" />
         </sequential>
     </macrodef>
@@ -76,7 +77,7 @@
     <target name="install-cobertura" depends="-repo-configure-ivy"
             description="Installs the libraries required by the cobertura task">
         <asl-install-tool-ivy libdir="${tasklib-install.basedir}/lib/cobertura"
-            organisation="net.sf.cobertura" module="cobertura" revision="1.9"/>
+            organisation="net.sourceforge.cobertura" module="cobertura" revision="1.9.4.1"/>
     </target>
     
     <!-- ***********************************************************************
@@ -85,9 +86,9 @@
     <target name="install-checkstyle" depends="-repo-configure-ivy"
             description="Installs the libraries required by the checkstyle task">
         <asl-install-tool-ivy libdir="${tasklib-install.basedir}/lib/checkstyle"
-            organisation="net.sf.checkstyle" module="checkstyle" revision="5.0"/>
+            organisation="checkstyle" module="checkstyle" revision="5.0"/>
     </target>
-    
+
     <!-- ***********************************************************************
     * target: install-findbugs
     ************************************************************************ -->
